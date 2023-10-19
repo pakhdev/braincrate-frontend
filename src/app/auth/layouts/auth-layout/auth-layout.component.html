@@ -1,0 +1,48 @@
+<div class="auth-page-centering">
+    <div class="auth-main-container">
+        <div class="auth">
+            <div class="auth__left-menu">
+                <div class="auth__left-menu-item"
+                     routerLinkActive="auth__menu-item--active"
+                     routerLink="/auth/register">
+                    <div class="auth__menu-item-title">Registrarse
+                    </div>
+                    <span class="auth__menu-item-icon icon-register"></span>
+                </div>
+                <div class="auth__left-menu-item"
+                     routerLinkActive="auth__menu-item--active"
+                     routerLink="/auth/login">
+                    <div class="auth__menu-item-title" routerLink="/auth/login">Entrar</div>
+                    <span class="auth__menu-item-icon icon-enter"></span>
+                </div>
+            </div>
+            <div class="auth__content-container">
+                <div class="auth__form">
+                    <div class="auth__logo-container">
+                        <img src="assets/images/logo-light.svg" alt="BrainCrate logo"/>
+                    </div>
+                    <router-outlet/>
+                </div>
+                <div class="auth__slogan">Recordar para Triunfar</div>
+            </div>
+            <div class="auth__right-menu">
+                <div class="auth__right-menu-item"
+                     routerLinkActive="auth__menu-item--active"
+                     routerLink="/auth/about">
+                    <div class="auth__menu-item-title">BrainCrate</div>
+                    <span class="auth__menu-item-icon icon-about"></span>
+                </div>
+                <div class="auth__right-menu-item">
+                    <div class="auth__menu-item-title">Github</div>
+                    <span class="auth__menu-item-icon icon-github"></span>
+                </div>
+            </div>
+        </div>
+        <div class="decor-layer decor-layer--first"></div>
+        <div class="decor-layer decor-layer--second"></div>
+        <div class="decor-layer decor-layer--third"></div>
+    </div>
+    <div class="auth-copyright">
+        <img src="assets/images/pakhmutov-dark.svg" alt="Pakhmutov logo"/>
+    </div>
+</div>

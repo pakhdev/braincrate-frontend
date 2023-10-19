@@ -1,0 +1,30 @@
+<form [formGroup]="loginForm">
+    <div class="auth__inputs">
+        <input
+            type="text"
+            placeholder="Correo electrónico"
+            formControlName="email"
+            class="panel__text-input">
+        <div
+            errorMessage
+            *ngIf="authService.showErrorMessage(loginForm, 'email')"
+            [errors]="loginForm.get('email')?.errors"
+            class="auth__form-error"></div>
+
+        <input
+            type="password"
+            placeholder="Contraseña"
+            formControlName="password"
+            class="panel__text-input">
+        <div
+            errorMessage
+            *ngIf="authService.showErrorMessage(loginForm, 'password')"
+            [errors]="loginForm.get('password')?.errors"
+            class="auth__form-error"></div>
+    </div>
+    <div
+        (click)="login()"
+        class="button-auth button button-medium">
+        Entrar
+    </div>
+</form>

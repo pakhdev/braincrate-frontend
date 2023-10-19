@@ -1,0 +1,43 @@
+<form [formGroup]="registerForm">
+    <div class="auth__inputs">
+
+        <input
+            type="text"
+            placeholder="Correo electrónico"
+            formControlName="email"
+            class="panel__text-input">
+        <div
+            errorMessage
+            *ngIf="authService.showErrorMessage(registerForm, 'email')"
+            [errors]="registerForm.get('email')?.errors"
+            class="auth__form-error"></div>
+
+        <input
+            type="password"
+            placeholder="Contraseña"
+            formControlName="password"
+            class="panel__text-input">
+        <div
+            errorMessage
+            *ngIf="authService.showErrorMessage(registerForm, 'password')"
+            [errors]="registerForm.get('password')?.errors"
+            class="auth__form-error"></div>
+
+        <input
+            type="password"
+            placeholder="Confirmar contraseña"
+            formControlName="repeatPassword"
+            class="panel__text-input">
+        <div
+            errorMessage
+            *ngIf="authService.showErrorMessage(registerForm, 'repeatPassword')"
+            [errors]="registerForm.get('repeatPassword')?.errors"
+            class="auth__form-error"></div>
+
+    </div>
+    <div
+        (click)="register()"
+        class="button-auth button button-medium">
+        Registrarse
+    </div>
+</form>

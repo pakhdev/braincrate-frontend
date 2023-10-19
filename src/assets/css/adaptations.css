@@ -1,0 +1,214 @@
+@media (max-width: 1140px) {
+    .editor-toolbar {
+        margin: 0 -30px;
+        padding: 0;
+        flex-direction: column;
+        background-color: transparent;
+        height: auto;
+    }
+
+    .editor-toolbar__buttons {
+        order: 1;
+    }
+
+    .editor-toolbar__icons {
+        width: 100%;
+        margin-top: 10px;
+        padding: 10px 20px;
+        gap: 10px 20px;
+        order: 2;
+        flex-wrap: wrap;
+        background-color: var(--ethereal-blue);
+    }
+}
+
+@media (max-width: 1000px) {
+
+    /* IF PANEL OPENED*/
+    body {
+        /*overflow: hidden;*/
+    }
+
+    .main-container {
+        margin: 15px
+    }
+
+    .mobile-panel-fixer-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: calc(100vh + 25px);
+        z-index: 999;
+        overflow: hidden auto;
+        padding: 15px 0;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .mobile-panel-background {
+        position: relative;
+        display: flex;
+        width: auto;
+        max-width: 800px;
+        margin: 0 auto;
+        border-radius: 10px 10px 0 0;
+        background-color: rgba(255, 255, 255, 1);
+    }
+
+    .left-menu {
+        background-color: #465B76;
+        border-radius: 10px 0 0 10px;
+        min-height: calc(100% - 10px);
+        height: 100%;
+        position: sticky;
+    }
+
+    .left-menu__sticky-container {
+        top: -25px;
+    }
+
+
+    #panel {
+        z-index: 999;
+        display: block;
+        min-height: 100%;
+        width: calc(100vw - 80px);
+        height: max-content;
+        border-radius: 0 10px 10px 0;
+        margin: 0;
+    }
+
+    .panel__close-button-container {
+        display: block;
+        position: sticky;
+        margin: -20px -15px 0 0;
+        text-align: right;
+        top: -10px;
+    }
+
+    .panel__close-button {
+        color: var(--subtle-blue);
+    }
+
+    .panel__close-button:hover {
+        cursor: pointer;
+        filter: brightness(115%);
+    }
+
+    .logo-container {
+        margin-top: -10px;
+    }
+
+    .content {
+        width: 100%;
+        margin: 15px;
+    }
+
+    .content__mobile-header {
+        display: block;
+        position: sticky;
+        top: 0;
+        z-index: 99;
+        margin: -15px;
+        padding: 10px 15px;
+        background: linear-gradient(to bottom, rgba(212, 226, 231, 1) 82%, rgba(212, 226, 231, 0));
+    }
+
+    .primary-buttons {
+        min-width: 215px;
+        max-width: 350px;
+        justify-content: space-between;
+        margin: 0 auto 30px auto;
+    }
+
+    .note {
+        padding: 15px;
+    }
+
+    .note__header-toolbar-container {
+        display: none;
+    }
+
+    .note__footer {
+        display: flex;
+        margin: 15px -15px -15px;
+    }
+
+    .note__review-popup {
+        position: absolute;
+        top: -200px;
+        right: -10px;
+        background-color: white;
+        color: #717E96;
+        font-size: 12px;
+        padding: 15px;
+        border-radius: 10px;
+        width: 180px;
+    }
+
+    .note__delete-popup {
+        position: absolute;
+        top: -140px;
+        right: 14px;
+        background-color: white;
+        color: #717E96;
+        font-size: 12px;
+        padding: 15px;
+        border-radius: 10px;
+        width: 180px;
+    }
+
+    .note__delete-popup::after,
+    .note__review-popup::after {
+        content: "";
+        position: absolute;
+        bottom: -17px;
+        right: 19px;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-top: 17px solid white;
+    }
+
+    .note__delete-popup::before,
+    .note__review-popup::before {
+        content: none;
+    }
+
+    .panel__copyright {
+        margin: 30px 0 0 -30px;
+        text-align: center;
+    }
+
+    .content-copyright-container {
+        display: block;
+        text-align: center;
+    }
+
+    .editor-toolbar {
+        margin: 0 -15px;
+    }
+
+    /* IF PANEL CLOSED*/
+    .mobile-panel-fixer-container {
+        display: none;
+    }
+}
+
+@media (max-width: 860px) {
+    #panel {
+        width: calc(100vw - 80px);
+    }
+    /* IF PANEL CLOSED*/
+    .mobile-panel-fixer-container {
+        display: none;
+    }
+}
+
+@media (max-width: 450px) {
+    .auth__form {
+        width: calc(100vw - 115px);
+        min-width: 275px;
+    }
+}
