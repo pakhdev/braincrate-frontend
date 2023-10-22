@@ -1,0 +1,9 @@
+<div class="panel__input-with-icon">
+    <input type="text" class="panel__text-input" placeholder="Buscar etiquetas">
+    <span class="icon-tag"></span>
+</div>
+<div class="panel__tags-container">
+    <div
+        *ngFor="let tag of tagsList"
+        class="panel__tag">{{ tag.name }}</div>
+</div>

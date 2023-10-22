@@ -15,6 +15,7 @@ export class RegisterPageComponent {
     private router = inject(Router);
     private emailValidator = inject(EmailValidator);
     public authService = inject(AuthService);
+    public backendError: string | null = null;
 
     public registerForm = this.fb.group({
         email: ['',
@@ -51,7 +52,15 @@ export class RegisterPageComponent {
 
     register() {
         this.registerForm.markAllAsTouched();
-        console.log(this.registerForm.valid);
-        // if(!this.registerForm.valid) return;
+        if (!this.registerForm.valid) return;
+        const email: string = this.registerForm.value.email!.toString().trim();
+        const password: string = this.registerForm.value.password!;
+
+        this.authService.register(email, password).subscribe({
+            next: () => this.router.navigateByUrl('/dashboard'),
+            error: (message) => {
+                this.backendError = message;
+            },
+        });
     }
 }

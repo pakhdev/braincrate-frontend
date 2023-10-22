@@ -76,6 +76,7 @@ html, body {
 }
 
 .button-medium {
+    width: 100%;
     height: 31px;
 }
 
@@ -137,6 +138,10 @@ body {
     background-color: #B6D0DA;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
+}
+
+.dashboard-page-centering {
+    height: 100%;
     display: flex;
     justify-content: center;
 }
@@ -146,7 +151,7 @@ body {
     background-color: #D4E2E7;
     max-width: 1210px;
     min-height: calc(90vh - 100px);
-    margin: 50px 15px;
+    margin: 30px 15px;
     border-radius: 10px;
     display: flex;
 }
@@ -204,6 +209,11 @@ body {
 .left-menu__item {
     position: relative;
     width: 30px;
+}
+
+.left-menu__item a {
+    color: white;
+    text-decoration: none;
 }
 
 .left-menu__item:hover {
@@ -277,7 +287,6 @@ body {
 
 #panel__sticky-container {
     min-height: calc(100vh - 30px);
-    /*min-height: calc(100vh - 160px);*/
     display: flex;
     flex-direction: column;
 }
@@ -345,7 +354,7 @@ body {
 }
 
 .panel__tags-container {
-    margin-top: -20px;
+    margin-top: -25px;
     flex: 1;
 }
 
@@ -387,6 +396,7 @@ body {
 
 .content__mobile-header {
     display: none;
+    border-radius: 10px 10px 0;
 }
 
 .content-copyright-container {
@@ -398,7 +408,7 @@ body {
     border-radius: 7px;
     padding: 30px 30px 15px 30px;
     margin-bottom: 30px;
-    filter: drop-shadow(0px 3px 4px rgba(79, 90, 110, 0.1));
+    box-shadow: 0 3px 4px rgba(79, 90, 110, 0.1);
 }
 
 .note__header {
@@ -472,6 +482,7 @@ body {
 
 .note__review-popup {
     position: absolute;
+    z-index: 2;
     top: 45px;
     right: -10px;
     background-color: white;
@@ -480,6 +491,7 @@ body {
     padding: 15px;
     border-radius: 10px;
     width: 180px;
+    filter: drop-shadow(0px 3px 4px rgba(79, 90, 110, 0.1));
 }
 
 .note__review-popup::before {
@@ -560,7 +572,7 @@ body {
 
 .tag-suggestions {
     position: absolute;
-    z-index: 999;
+    z-index: 2;
     top: 30px;
     filter: drop-shadow(0px 3px 4px rgba(79, 90, 110, 0.1));
     background-color: #F8F9FA;
@@ -794,6 +806,12 @@ body {
     cursor: pointer;
 }
 
+.auth__left-menu-item a,
+.auth__right-menu-item a {
+    color: white;
+    text-decoration: none;
+}
+
 .auth__menu-item--active {
     background-color: #c75a2a !important;
 }
@@ -855,6 +873,14 @@ body {
     color: var(--brownish-orange);
     margin: -10px 0 12px;
     padding: 0 5px;
+}
+
+.auth__form-error--server {
+    font-size: 11px;
+    color: var(--brownish-orange);
+    margin: 15px 0 -10px;
+    padding: 0 5px;
+    text-align: center;
 }
 
 .auth__about {

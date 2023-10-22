@@ -1,0 +1,17 @@
+<div class="logo-container">
+    <img src="assets/images/logo-{{ logoMode }}.svg" alt="BrainCrate logo"/>
+</div>
+
+<div class="primary-buttons">
+    <div *ngIf="mobile" class="button-dark button button-burger" (click)="openMobilePanelHandler()">
+        <span class="icon-menu"></span>
+    </div>
+    <div class="button-open-form button">
+        <span class="icon-create"></span>
+        Crear nota
+    </div>
+    <div class="button-review-notes button">
+        <span class="icon-review"></span>
+        Repasar(21)
+    </div>
+</div>

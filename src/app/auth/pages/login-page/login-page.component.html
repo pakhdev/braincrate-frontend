@@ -1,4 +1,4 @@
-<form [formGroup]="loginForm">
+<form [formGroup]="loginForm" (ngSubmit)="login()">
     <div class="auth__inputs">
         <input
             type="text"
@@ -22,9 +22,11 @@
             [errors]="loginForm.get('password')?.errors"
             class="auth__form-error"></div>
     </div>
-    <div
-        (click)="login()"
+    <button
         class="button-auth button button-medium">
         Entrar
-    </div>
+    </button>
+    <div
+        *ngIf="backendError"
+        class="auth__form-error--server">{{ backendError }}</div>
 </form>

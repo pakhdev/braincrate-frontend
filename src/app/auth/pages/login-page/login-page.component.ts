@@ -14,6 +14,7 @@ export class LoginPageComponent {
     private fb = inject(FormBuilder);
     private router = inject(Router);
     public authService = inject(AuthService);
+    public backendError: string | null = null;
 
     public loginForm = this.fb.group({
         email: ['',
@@ -22,14 +23,19 @@ export class LoginPageComponent {
         password: ['',
             [Validators.required, Validators.minLength(6)],
         ],
-        repeatPassword: ['',
-            [Validators.required, Validators.minLength(6)],
-        ],
     });
 
     login() {
         this.loginForm.markAllAsTouched();
-        console.log(this.loginForm.valid);
-        // if(!this.registerForm.valid) return;
+        if (!this.loginForm.valid) return;
+        const email: string = this.loginForm.value.email!.toString().trim();
+        const password: string = this.loginForm.value.password!;
+
+        this.authService.login(email, password).subscribe({
+            next: () => this.router.navigateByUrl('/dashboard'),
+            error: (message) => {
+                this.backendError = message;
+            },
+        });
     }
 }

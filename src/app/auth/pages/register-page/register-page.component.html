@@ -1,4 +1,4 @@
-<form [formGroup]="registerForm">
+<form [formGroup]="registerForm" (ngSubmit)="register()">
     <div class="auth__inputs">
 
         <input
@@ -35,9 +35,11 @@
             class="auth__form-error"></div>
 
     </div>
-    <div
-        (click)="register()"
+    <button
         class="button-auth button button-medium">
         Registrarse
-    </div>
+    </button>
+    <div
+        *ngIf="backendError"
+        class="auth__form-error--server">{{ backendError }}</div>
 </form>

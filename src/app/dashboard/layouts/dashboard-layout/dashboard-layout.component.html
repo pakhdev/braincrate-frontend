@@ -1,1 +1,51 @@
-<p>dashboard-layout works!</p>
+<div class="dashboard-page-centering">
+    <div class="main-container">
+        <div #mobilePanelFixer class="mobile-panel-fixer-container">
+            <div class="mobile-panel-background">
+
+                <dashboard-left-menu/>
+
+                <div id="panel">
+                    <div #panelTopMargin></div>
+                    <div class="panel__close-button-container">
+                        <span (click)="closeMobilePanel()" class="icon-close panel__close-button"></span>
+                    </div>
+
+                    <div #stickyPanelContainer id="panel__sticky-container" class="panel-bottom-sticky">
+                        <dashboard-header-navigation [mobile]="false" logoMode="light"/>
+
+                        <panel-note-management
+                            *ngIf="openedSection === 'notes'"
+                            style="flex: 1"/>
+                        <panel-account-management
+                            *ngIf="openedSection === 'account'"
+                            style="flex: 1"/>
+
+                        <div #panelCopyright class="panel__copyright">
+                            <img src="assets/images/pakhmutov-light.svg" alt="Pakhmutov logo"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="content" class="content">
+            <div #contentMobileHeader class="content__mobile-header">
+                <dashboard-header-navigation
+                    [mobile]="true"
+                    logoMode="dark"
+                    (openMobilePanel)="openMobilePanel()"/>
+            </div>
+            <div #notesContainer class="notes-container">
+                <router-outlet/>
+            </div>
+            <div class="content-copyright-container">
+                <div class="copyright">
+                    <img src="assets/images/pakhmutov-dark.svg"/>
+                </div>
+            </div>
+        </div>
+        <div class="decor-layer decor-layer--first"></div>
+        <div class="decor-layer decor-layer--second"></div>
+        <div class="decor-layer decor-layer--third"></div>
+    </div>
+</div>

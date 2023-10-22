@@ -1,4 +1,4 @@
-export interface CheckTokenResponse {
+export interface RegisterResponse {
     id: number;
     email: string;
     token: string;
