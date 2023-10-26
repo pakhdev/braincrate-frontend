@@ -10,7 +10,15 @@
         <span class="icon-create"></span>
         Crear nota
     </div>
-    <div class="button-review-notes button">
+    <div
+        *ngIf="isReviewSectionActive"
+        class="button-review-notes button" routerLink="/dashboard/all">
+        <span class="icon-review"></span>
+        Mostrar todas
+    </div>
+    <div
+        *ngIf="!isReviewSectionActive"
+        class="button-review-notes button" routerLink="/dashboard/for-review">
         <span class="icon-review"></span>
         Repasar(21)
     </div>

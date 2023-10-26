@@ -1,4 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
+
+import { environments } from '../../../environments/environment';
+import { DashboardStateService } from './dashboard-state.service';
 import { Note } from '../interfaces/note.interface';
 
 @Injectable({
@@ -6,78 +12,55 @@ import { Note } from '../interfaces/note.interface';
 })
 export class NotesService {
 
-    public notes: Note[] = [
-        {
-            'id': 1,
-            'title': 'Test',
-            'content': 'You can identify heavy computations with Angular DevTools’ profiler. In the performance timeline, click a bar to preview a particular change detection cycle. This displays a bar chart, which shows how long the framework spent in change detection for each component. When you click a component, you can preview how long Angular spent evaluating its template and lifecycle hooks.',
-            'difficulty': 0,
-            'reviewsLeft': 5,
-            'nextReviewAt': null,
-            'reviewedAt': null,
-            'createdAt': '2023-10-19T19:58:22.000Z',
-            'tags': [
-                {
-                    'id': 1,
-                    'name': 'U1T1',
-                    'notesCount': 4,
-                },
-                {
-                    'id': 2,
-                    'name': 'U1T2',
-                    'notesCount': 2,
-                },
-                {
-                    'id': 3,
-                    'name': 'U1T3',
-                    'notesCount': 3,
-                },
-            ],
-        },
-        {
-            'id': 2,
-            'title': 'Test',
-            'content': 'Change detection is the process through which Angular checks to see whether your application state has changed, and if any DOM needs to be updated. At a high level, Angular walks your components from top to bottom, looking for changes. Angular runs its change detection mechanism periodically so that changes to the data model are reflected in an application’s view. Change detection can be triggered either manually or through an asynchronous event (for example, a user interaction or an XMLHttpRequest completion).',
-            'difficulty': 0,
-            'reviewsLeft': 5,
-            'nextReviewAt': null,
-            'reviewedAt': null,
-            'createdAt': '2023-10-19T19:58:22.000Z',
-            'tags': [
-                {
-                    'id': 1,
-                    'name': 'U1T1',
-                    'notesCount': 4,
-                },
-                {
-                    'id': 3,
-                    'name': 'U1T3',
-                    'notesCount': 3,
-                },
-            ],
-        },
-        {
-            'id': 3,
-            'title': 'Test',
-            'content': 'Change detection is the process',
-            'difficulty': 0,
-            'reviewsLeft': 5,
-            'nextReviewAt': null,
-            'reviewedAt': null,
-            'createdAt': '2023-10-19T19:58:22.000Z',
-            'tags': [
-                {
-                    'id': 1,
-                    'name': 'U1T1',
-                    'notesCount': 4,
-                },
-                {
-                    'id': 3,
-                    'name': 'U1T3',
-                    'notesCount': 3,
-                },
-            ],
-        },
-    ];
+    private readonly baseUrl: string = environments.baseUrl;
+    private readonly http = inject(HttpClient);
+    private readonly dashboardStateService = inject(DashboardStateService);
+    private dashboardState$ = toObservable(this.dashboardStateService.dashboardState);
 
+    public notes: WritableSignal<Note[]> = signal([]);
+    public isLoading: WritableSignal<boolean> = signal(false);
+
+    constructor() {
+        this.dashboardState$.subscribe((dashboardState) => {
+            if (!dashboardState.notesType) return;
+
+            if (dashboardState.page === 1) {
+                this.getNotes(dashboardState.selectedTags, dashboardState.searchWord, dashboardState.notesType)
+                    .subscribe((notes) => {
+                        this.isLoading.set(false);
+                        this.notes.set(notes);
+                    });
+            } else {
+                this.getNotes(dashboardState.selectedTags, dashboardState.searchWord, dashboardState.notesType)
+                    .subscribe((loadedNotes) => {
+                        this.isLoading.set(false);
+                        this.notes.update(existingNotes => [...existingNotes, ...loadedNotes]);
+                    });
+            }
+        });
+    }
+
+    private getNotes(tagIds: number[], searchWord: string, notesType: string, offset?: number): Observable<Note[]> {
+
+        this.isLoading.set(true);
+
+        const url = notesType === 'for-review'
+            ? `${ this.baseUrl }/notes/for-review`
+            : `${ this.baseUrl }/notes`;
+
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${ token }`);
+
+        let params = new HttpParams();
+        if (searchWord)
+            params = params.append('title', searchWord);
+        if (offset)
+            params = params.append('offset', offset.toString());
+        tagIds.forEach(id => {
+            params = params.append('tagIds[]', id.toString());
+        });
+
+        return this.http.get<Note[]>(url, { headers, params });
+    }
 }

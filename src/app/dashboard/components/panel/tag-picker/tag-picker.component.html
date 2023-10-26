@@ -4,6 +4,12 @@
 </div>
 <div class="panel__tags-container">
     <div
-        *ngFor="let tag of tagsList"
+        *ngFor="let tag of selectedTags"
+        (click)="unselectTag(tag.id)"
+        class="panel__tag panel__tag--selected">{{ tag.name }}</div>
+    <div
+        *ngFor="let tag of notSelectedTags"
+        (click)="selectTag(tag.id)"
+        [ngStyle]="{ opacity: areTagsLoading ? 0.5 : 1 }"
         class="panel__tag">{{ tag.name }}</div>
 </div>

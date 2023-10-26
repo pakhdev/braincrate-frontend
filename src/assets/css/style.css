@@ -10,7 +10,7 @@
     --medium-blue: #424B5F;
     --bright-blue: #48ABCF;
     --subtle-blue: #A7B3CB;
-    --ethereal-blue: #EFECF4;;
+    --ethereal-blue: #EFECF4;
     --dark-turquoise: #1E799A;
     --golden-orange: #CBA648;
     --pastel-orange: #F9AE78;
@@ -73,6 +73,7 @@ html, body {
     justify-content: center;
     height: 27px;
     border: none;
+    user-select: none;
 }
 
 .button-medium {
@@ -105,8 +106,16 @@ html, body {
     background-color: var(--golden-orange);
 }
 
+.button-close-form {
+    background-color: var(--bright-blue);
+}
+
 .button-review-notes {
     background-color: var(--brownish-orange);
+}
+
+.button-all-notes {
+    background-color: #E47350;
 }
 
 .button-burger {
@@ -122,6 +131,65 @@ html, body {
     background-color: var(--bright-blue);
     color: #EDF3F5;
     padding: 0 2px;
+}
+
+.toggle {
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+}
+
+.toggle-switch {
+    display: inline-block;
+    background: #ccc;
+    border-radius: 12px;
+    width: 32px;
+    height: 21px;
+    position: relative;
+    vertical-align: middle;
+    transition: background 0.25s;
+}
+
+.toggle-switch:before, .toggle-switch:after {
+    content: "";
+}
+
+.toggle-switch:before {
+    display: block;
+    background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    top: 4px;
+    left: 5px;
+    transition: left 0.25s;
+}
+
+.toggle:hover .toggle-switch:before {
+    background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.toggle-checkbox:checked + .toggle-switch {
+    background: #56c080;
+}
+
+.toggle-checkbox:checked + .toggle-switch:before {
+    left: 15px;
+}
+
+.toggle-checkbox {
+    position: absolute;
+    visibility: hidden;
+    width: auto !important;
+}
+
+.toggle-label {
+    margin-left: 5px;
+    position: relative;
+    top: 2px;
 }
 
 .code-text {
@@ -367,6 +435,7 @@ body {
     padding: 6px 10px;
     margin: 3px;
     font-size: 11px;
+    user-select: none;
 }
 
 .panel__tag:hover {
@@ -403,9 +472,17 @@ body {
     display: none;
 }
 
+.notes-container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
 .note {
     background-color: #EEF4F8;
     border-radius: 7px;
+    max-width: 790px;
+    width: calc(100vw - 450px);
     padding: 30px 30px 15px 30px;
     margin-bottom: 30px;
     box-shadow: 0 3px 4px rgba(79, 90, 110, 0.1);
@@ -579,7 +656,7 @@ body {
     color: var(--dark-blue);
     border-radius: 3px;
     font-size: 11px;
-    /*display: none;*/
+    display: none;
 }
 
 .tag-suggestions__item {
@@ -707,7 +784,7 @@ body {
 }
 
 .editor-toolbar__icons span {
-    font-size: 15px;
+    font-size: 13px;
     color: var(--dark-turquoise);
     cursor: pointer;
 }
@@ -730,18 +807,87 @@ body {
     pointer-events: none;
 }
 
-.editor-toolbar__review-select {
+.editor-toolbar__review-select-button {
+    position: relative;
+    width: 135px;
+    background-color: white;
     color: var(--dark-turquoise);
     border: 1px solid #e9f3fa;
     font-size: 10px;
     height: 25px;
     padding: 5px 25px 5px 10px;
-    text-transform: uppercase;
-    outline: none;
     margin-right: 10px;
-    background-color: #fff;
-    appearance: none;
-    position: relative;
+    text-transform: uppercase;
+    cursor: default;
+    user-select: none;
+}
+
+.editor-toolbar__review-select-button::after {
+    font-family: 'icons' !important;
+    content: "\e913";
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    color: var(--bright-blue);
+    z-index: 0;
+}
+
+.review-settings {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    z-index: 1;
+    background-color: #EEF4F8;
+    font-size: 11px;
+    color: #126786;
+    padding: 10px 5px;
+    box-shadow: 0 3px 3px rgba(79, 90, 110, 0.05);
+    border-radius: 5px;
+    min-width: 270px;
+}
+
+.review-settings__options-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+}
+
+.review-settings__option-green {
+    color: #6EC295;
+}
+
+.review-settings__option-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 10px;
+}
+
+.review-settings__option-row--selected {
+    background-color: var(--ethereal-blue);
+}
+
+.review-settings__option-row:hover {
+    background-color: #e7e0f3;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.review-settings__option-title {
+    text-transform: uppercase;
+}
+
+.review-settings__automatic-removing {
+    background-color: var(--ethereal-blue);
+    margin: 10px 5px 0 5px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.review-settings__toggle-text {
+    padding-left: 15px;
 }
 
 .note__editor-save {
@@ -757,6 +903,87 @@ body {
     color: #30435A;
 }
 
+/* #################################################### */
+/*     Parte de la Bienvenida y búsqueda sin resultados    */
+
+.welcome {
+    font-size: 13px;
+}
+
+.welcome__header {
+    text-align: center;
+    padding-bottom: 20px;
+    font-size: 15px;
+}
+
+.welcome__description-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.welcome__description-paragraph b {
+    display: block;
+    color: var(--bright-blue);
+    padding-bottom: 4px;
+}
+
+.welcome__big-icon {
+    padding: 15px 30px 15px 15px;
+}
+
+.welcome__big-icon span {
+    font-size: 73px;
+    color: var(--bright-blue);
+}
+
+.tags-not-found {
+    text-align: center;
+    font-size: 12px;
+    color: var(--subtle-blue);
+    padding: 10px;
+}
+
+.no-results {
+    margin: 40px auto;
+    max-width: 275px;
+    display: flex;
+    flex-direction: column;
+    color: #7BACBD;
+}
+
+.no-results__icon {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.no-results__icon span {
+    font-size: 85px;
+}
+
+.no-results__title {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.no-results__description {
+    font-size: 12px;
+    color: #7BACBD;
+    text-align: center;
+}
+
+.review-settings-example {
+    background-color: #EEF4F8;
+    font-size: 11px;
+    color: #126786;
+    padding: 10px 5px;
+    box-shadow: 0 3px 3px rgba(79, 90, 110, 0.05);
+    border-radius: 5px;
+    min-width: 270px;
+    margin: 30px 20px 0 5px;
+    pointer-events: none;
+}
 
 /* ##################### */
 /*     Parte de login    */

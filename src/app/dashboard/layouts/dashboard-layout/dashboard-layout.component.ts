@@ -2,15 +2,15 @@ import {
     AfterViewChecked,
     AfterViewInit,
     Component,
-    ElementRef, Inject,
-    inject, NgZone,
+    ElementRef,
     OnInit,
     ViewChild,
+    inject,
+    Inject,
+    NgZone,
 } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
-
-import { TagsService } from '../../services/tags.service';
 
 @Component({
     selector: 'app-dashboard-layout',
@@ -31,7 +31,6 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
     private panelState: 'bottom' | 'up' | 'margin' | boolean = false;
 
     private ngZone = inject(NgZone);
-    private tagsService = inject(TagsService);
 
     constructor(@Inject(DOCUMENT) private document: Document) {
         this.documentBody = document.body;
@@ -41,7 +40,6 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
         const viewPortHeight = window.innerHeight + window.scrollY - window.scrollY;
 
         const direction = this.scrollDirection();
-        console.log(direction);
 
         const panelHeight = this.stickyPanelContainerDiv.nativeElement.clientHeight;
         const contentHeight = this.notesContainerDiv.nativeElement.clientHeight;
@@ -99,7 +97,7 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
     ngOnInit(): void {
         this.ngZone.runOutsideAngular(() => {
             const scroll$ = fromEvent(window, 'scroll');
-            scroll$.subscribe(event => {
+            scroll$.subscribe(() => {
                 this.handlePanelClasses();
             });
         });
