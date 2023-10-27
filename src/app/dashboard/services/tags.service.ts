@@ -16,7 +16,7 @@ export class TagsService {
     private readonly baseUrl: string = environments.baseUrl;
     private readonly http = inject(HttpClient);
     private readonly dashboardStateService = inject(DashboardStateService);
-    private dashboardState$ =
+    private readonly dashboardState$ =
         toObservable(this.dashboardStateService.dashboardState).pipe(pairwise());
 
     public tags: WritableSignal<Tag[]> = signal([]);
@@ -38,7 +38,6 @@ export class TagsService {
     }
 
     public getTags(parentTagIds: number[], searchWord: string, notesType: string): Observable<Tag[]> {
-
         this.isLoading.set(true);
 
         const url = notesType === 'for-review'
@@ -51,7 +50,7 @@ export class TagsService {
 
         let params = new HttpParams();
         if (searchWord)
-            params = params.append('title', searchWord);
+            params = params.append('searchTerm', searchWord);
         parentTagIds.forEach(id => {
             params = params.append('parentTagIds[]', id.toString());
         });
@@ -64,6 +63,7 @@ export class TagsService {
 
     private isTagsLoadRequired(previous: DashboardState, current: DashboardState) {
         if (previous.notesType !== current.notesType) return true;
+        if (previous.searchWord !== current.searchWord) return true;
 
         const previousTagIds = previous.selectedTags.slice().sort();
         const currentTagIds = current.selectedTags.slice().sort();

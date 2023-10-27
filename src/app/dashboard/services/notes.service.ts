@@ -15,7 +15,7 @@ export class NotesService {
     private readonly baseUrl: string = environments.baseUrl;
     private readonly http = inject(HttpClient);
     private readonly dashboardStateService = inject(DashboardStateService);
-    private dashboardState$ = toObservable(this.dashboardStateService.dashboardState);
+    private readonly dashboardState$ = toObservable(this.dashboardStateService.dashboardState);
 
     public notes: WritableSignal<Note[]> = signal([]);
     public isLoading: WritableSignal<boolean> = signal(false);
@@ -54,7 +54,7 @@ export class NotesService {
 
         let params = new HttpParams();
         if (searchWord)
-            params = params.append('title', searchWord);
+            params = params.append('searchTerm', searchWord);
         if (offset)
             params = params.append('offset', offset.toString());
         tagIds.forEach(id => {

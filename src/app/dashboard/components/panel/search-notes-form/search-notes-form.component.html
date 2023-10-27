@@ -1,4 +1,9 @@
 <div class="panel__input-with-icon">
-    <input type="text" class="panel__text-input" placeholder="Palabra clave">
+    <input
+        #searchInput
+        type="text"
+        class="panel__text-input"
+        placeholder="Palabra clave"
+        (keyup.enter)="searchNotes()">
     <span class="icon-search"></span>
 </div>

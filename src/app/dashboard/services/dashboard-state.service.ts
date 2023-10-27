@@ -18,7 +18,7 @@ export class DashboardStateService {
         if (state.notesType) {
             this.dashboardState.set({
                 selectedTags: [],
-                searchWord: '',
+                searchWord: state.searchWord ? state.searchWord : '',
                 notesType: state.notesType,
                 page: 1,
             });

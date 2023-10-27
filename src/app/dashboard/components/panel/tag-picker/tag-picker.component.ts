@@ -1,7 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 
 import { TagsService } from '../../../services/tags.service';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { pairwise } from 'rxjs';
+import { DashboardState } from '../../../interfaces/dashboard-state.interface';
 
 @Component({
     selector: 'dashboard-tag-picker',
@@ -9,8 +12,22 @@ import { DashboardStateService } from '../../../services/dashboard-state.service
 })
 export class TagPickerComponent {
 
-    private dashboardStateService = inject(DashboardStateService);
-    public tagsService = inject(TagsService);
+    @ViewChild('searchTagsInput') private readonly searchTagsInput!: ElementRef;
+    private readonly tagsService = inject(TagsService);
+    private readonly dashboardStateService = inject(DashboardStateService);
+    private readonly dashboardState$ =
+        toObservable(this.dashboardStateService.dashboardState).pipe(pairwise());
+    private readonly visibleTagLimit = 30;
+    private searchTagsTerm: string = '';
+
+    constructor() {
+        this.dashboardState$.subscribe(([previous, current]) => {
+            if (this.isSearchTagsInputToBeCleared(previous, current)) {
+                this.searchTagsInput.nativeElement.value = '';
+                this.searchTagsTerm = '';
+            }
+        });
+    }
 
     get selectedTags() {
         return this.tagsService.tags()
@@ -19,9 +36,11 @@ export class TagPickerComponent {
     }
 
     get notSelectedTags() {
-        return this.tagsService.tags()
+        let tags = this.tagsService.tags()
             .filter(tag => !this.dashboardStateService.selectedTags.includes(tag.id))
             .sort((a, b) => b.notesCount - a.notesCount);
+        if (this.searchTagsTerm) tags = tags.filter(tag => tag.name.toLowerCase().includes(this.searchTagsTerm));
+        return tags.splice(0, this.visibleTagLimit);
     }
 
     get areTagsLoading() {
@@ -49,4 +68,18 @@ export class TagPickerComponent {
         });
     }
 
+    public searchTags() {
+        const searchTerm = this.searchTagsInput.nativeElement.value;
+        if (!searchTerm && !this.searchTagsTerm) return;
+        this.searchTagsTerm = searchTerm.toLowerCase();
+    }
+
+    private isSearchTagsInputToBeCleared(previous: DashboardState, current: DashboardState): boolean {
+        if (previous.notesType !== current.notesType) return true;
+        if (previous.searchWord !== current.searchWord) return true;
+
+        const previousTagIds = previous.selectedTags.slice().sort();
+        const currentTagIds = current.selectedTags.slice().sort();
+        return JSON.stringify(previousTagIds) !== JSON.stringify(currentTagIds);
+    }
 }
