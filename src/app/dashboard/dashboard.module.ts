@@ -16,6 +16,7 @@ import { ReviewOptionsComponent } from './components/note/review-options/review-
 import { AllNotesPageComponent } from './pages/all-notes-page/all-notes-page.component';
 import { ReviewNotesPageComponent } from './pages/review-notes-page/review-notes-page.component';
 import { NewNotePageComponent } from './pages/new-note-page/new-note-page.component';
+import { ViewToolbarComponent } from './components/note/view-toolbar/view-toolbar.component';
 
 @NgModule({
     declarations: [
@@ -33,6 +34,7 @@ import { NewNotePageComponent } from './pages/new-note-page/new-note-page.compon
         AllNotesPageComponent,
         ReviewNotesPageComponent,
         NewNotePageComponent,
+        ViewToolbarComponent,
     ],
     imports: [
         CommonModule,

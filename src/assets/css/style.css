@@ -361,12 +361,12 @@ body {
 
 .panel-bottom-sticky {
     position: sticky;
-    bottom: 20px;
+    bottom: 10px;
 }
 
 .panel-top-sticky {
     position: sticky;
-    top: 15px;
+    top: 20px;
 }
 
 .panel__copyright {
@@ -457,7 +457,7 @@ body {
 /* Visualización de las notas */
 
 .content {
-    margin: 30px;
+    margin: 30px 30px 0;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -482,10 +482,19 @@ body {
     background-color: #EEF4F8;
     border-radius: 7px;
     max-width: 790px;
-    width: calc(100vw - 450px);
+    width: calc(100vw - 483px);
+    /*width: calc(100vw - 450px);*/
     padding: 30px 30px 15px 30px;
     margin-bottom: 30px;
     box-shadow: 0 3px 4px rgba(79, 90, 110, 0.1);
+}
+
+.note a {
+    color: var(--bright-blue);
+}
+
+.note a:hover {
+    text-decoration: none;
 }
 
 .note__header {
@@ -536,6 +545,7 @@ body {
     border-radius: 10px;
     width: 160px;
     text-align: center;
+    user-select: none;
 }
 
 .note__delete-popup::before,
@@ -569,6 +579,7 @@ body {
     border-radius: 10px;
     width: 180px;
     filter: drop-shadow(0px 3px 4px rgba(79, 90, 110, 0.1));
+    user-select: none;
 }
 
 .note__review-popup::before {

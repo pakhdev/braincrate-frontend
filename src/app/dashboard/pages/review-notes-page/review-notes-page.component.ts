@@ -17,6 +17,6 @@ export class ReviewNotesPageComponent implements OnInit {
     }
 
     get notes() {
-        return this.notesService.notes();
+        return this.notesService.notesList();
     }
 }

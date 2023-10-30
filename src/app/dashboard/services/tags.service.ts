@@ -7,6 +7,7 @@ import { environments } from '../../../environments/environment';
 import { DashboardStateService } from './dashboard-state.service';
 import { DashboardState } from '../interfaces/dashboard-state.interface';
 import { Tag } from '../interfaces/tag.interface';
+import { Note } from '../interfaces/note.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -68,5 +69,31 @@ export class TagsService {
         const previousTagIds = previous.selectedTags.slice().sort();
         const currentTagIds = current.selectedTags.slice().sort();
         return JSON.stringify(previousTagIds) !== JSON.stringify(currentTagIds);
+    }
+
+    public updateTags(tagsToUpdate: Tag[]) {
+        this.tags.update((existingTags) => {
+            tagsToUpdate.forEach((tag) => {
+                const existingTag = existingTags.find(existingTag => existingTag.id === tag.id);
+                existingTag
+                    ? existingTag.notesCount = tag.notesCount
+                    : existingTags.push(tag);
+            });
+            return existingTags.filter(tag => tag.notesCount > 0);
+        });
+    }
+
+    public decreaseTagsOfNote(note: Note) {
+        const tagIdsForDecrease = note.tags.map(tag => tag.id);
+        this.tags.update((existingTags) => {
+            const processedTags = existingTags.map((tag) => {
+                if (tagIdsForDecrease.includes(tag.id)) {
+                    tag.notesCount -= 1;
+                }
+                return tag;
+            });
+            return processedTags.filter(tag => tag.notesCount > 0);
+        });
+        console.log(this.tags());
     }
 }

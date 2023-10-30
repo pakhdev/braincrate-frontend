@@ -29,6 +29,7 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
     public openedSection: 'notes' | 'account' = 'notes';
     private lastScrollPos = 0;
     private panelState: 'bottom' | 'up' | 'margin' | boolean = false;
+    private panelMinHeightCorrection: null | number = null;
 
     private ngZone = inject(NgZone);
 
@@ -37,27 +38,32 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
     }
 
     private handlePanelClasses() {
-        const viewPortHeight = window.innerHeight + window.scrollY - window.scrollY;
+        const notesContainerHeight = this.notesContainerDiv.nativeElement.clientHeight;
+        const stickyPanelHeight = this.stickyPanelContainerDiv.nativeElement.clientHeight;
+        const viewPortHeight = window.innerHeight;
+
+        if (viewPortHeight >= stickyPanelHeight) {
+            let minHeightCorrection = viewPortHeight - notesContainerHeight + 10;
+            if (minHeightCorrection < 30) minHeightCorrection = 30;
+            if (minHeightCorrection > 100) minHeightCorrection = 100;
+            if (minHeightCorrection !== this.panelMinHeightCorrection)
+                this.stickyPanelContainerDiv.nativeElement.style.minHeight = `calc(100vh - ${ minHeightCorrection }px)`;
+            this.panelMinHeightCorrection = minHeightCorrection;
+            this.panelCopyrightDiv.nativeElement.style.position = 'sticky';
+            this.panelCopyrightDiv.nativeElement.style.bottom = '35px';
+        } else if (this.panelMinHeightCorrection !== null) {
+            this.stickyPanelContainerDiv.nativeElement.removeAttribute('style');
+            this.panelCopyrightDiv.nativeElement.removeAttribute('style');
+            this.panelMinHeightCorrection = null;
+        }
+
+        if (stickyPanelHeight > notesContainerHeight) return;
 
         const direction = this.scrollDirection();
 
-        const panelHeight = this.stickyPanelContainerDiv.nativeElement.clientHeight;
-        const contentHeight = this.notesContainerDiv.nativeElement.clientHeight;
-        if (panelHeight > contentHeight) return;
-
-        if (viewPortHeight > this.stickyPanelContainerDiv.nativeElement.clientHeight) {
-            this.stickyPanelContainerDiv.nativeElement.className = 'panel-top-sticky';
-            this.panelTopMarginDiv.nativeElement.removeAttribute('style');
-            this.panelCopyrightDiv.nativeElement.style.position = 'sticky';
-            this.panelCopyrightDiv.nativeElement.style.bottom = '35px';
-            return;
-        } else {
-            this.panelCopyrightDiv.nativeElement.removeAttribute('style');
-        }
-
         if (direction === 'down') {
             const copyrightOnScreen = this.panelCopyrightDiv.nativeElement.getBoundingClientRect().top;
-            if (this.panelState !== 'bottom' && copyrightOnScreen <= viewPortHeight) {
+            if (this.panelState !== 'bottom' && copyrightOnScreen + 50 <= viewPortHeight) {
                 this.stickyPanelContainerDiv.nativeElement.className = 'panel-bottom-sticky';
                 this.panelTopMarginDiv.nativeElement.className = 'flex-it';
                 this.panelState = 'bottom';
@@ -65,8 +71,9 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
             } else if (this.panelState === 'bottom') return;
         } else if (direction === 'up') {
             const panelOnScreen = this.stickyPanelContainerDiv.nativeElement.getBoundingClientRect().top;
-            if (this.panelState !== 'up' && panelOnScreen >= 0) {
+            if (this.panelState !== 'up' && panelOnScreen - 20 >= 0) {
                 this.stickyPanelContainerDiv.nativeElement.className = 'panel-top-sticky';
+                this.panelTopMarginDiv.nativeElement.removeAttribute('class');
                 this.panelTopMarginDiv.nativeElement.removeAttribute('style');
                 this.panelState = 'up';
                 return;

@@ -5,14 +5,21 @@
         </div>
         <div class="note__review-info">
             <b>Repasos</b>
-            Realizados: 2/5
+            Realizados: {{ reviewsCount() }}<br>
         </div>
     </div>
-    <div class="button-danger button">Cancelar repasos</div>
-    <div class="button-warning button">Restablecer repasos</div>
+    <div
+        *ngIf="showCancelReviewsButton()"
+        (click)="cancelReviews()"
+        class="button-danger button">Cancelar repasos
+    </div>
+    <div
+        (click)="resetReviews()"
+        class="button-warning button">Restablecer repasos
+    </div>
     <div class="note__review-dates">
-        Creada: 08.03.2023<br>
-        Modificada: 09.03.2023<br>
-        Último repaso: 17.03.2023<br>
+        Creada: {{ note.createdAt | date: 'dd.MM.yyyy' }}<br>
+        Modificada: {{ note.updatedAt | date: 'dd.MM.yyyy' }}<br>
+        Último repaso: {{ note.reviewedAt ? (note.reviewedAt | date: 'dd.MM.yyyy') : 'Nunca' }}<br>
     </div>
 </div>

@@ -1,4 +1,4 @@
-@media (max-width: 1140px) {
+@media (max-width: 1230px) {
     .editor-toolbar {
         margin: 0 -30px;
         padding: 0;
@@ -125,6 +125,8 @@
 
     .note {
         padding: 15px;
+        max-width: none;
+        width: calc(100vw - 93px);
     }
 
     .note__header-toolbar-container {
@@ -193,6 +195,14 @@
     /* IF PANEL CLOSED*/
     .mobile-panel-fixer-container {
         display: none;
+    }
+
+    .welcome__description-container {
+        flex-direction: column;
+    }
+
+    .welcome__big-icon {
+        text-align: center;
     }
 }
 

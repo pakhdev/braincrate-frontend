@@ -1,5 +1,11 @@
 <div class="note__delete-popup" *ngIf="visible">
     <div>¿Desea eliminar ésta nota?</div>
-    <div class="button-danger button">Eliminar nota</div>
-    <div class="button-success button">No eliminar</div>
+    <div
+        (click)="remove()"
+        class="button-danger button">Eliminar nota
+    </div>
+    <div
+        (click)="close()"
+        class="button-success button">No eliminar
+    </div>
 </div>

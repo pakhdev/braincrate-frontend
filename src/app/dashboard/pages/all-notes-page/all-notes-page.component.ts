@@ -17,7 +17,7 @@ export class AllNotesPageComponent implements OnInit {
     }
 
     get notes() {
-        return this.notesService.notes();
+        return this.notesService.notesList();
     }
 
 }

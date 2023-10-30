@@ -15,7 +15,7 @@ export class AppComponent {
     public finishedAuthCheck = computed<boolean>(() => {
         return this.authService.authStatus() !== AuthStatus.checking;
     });
-    
+
     public authStatusChangedEffect = effect(() => {
         switch (this.authService.authStatus()) {
             case AuthStatus.checking:

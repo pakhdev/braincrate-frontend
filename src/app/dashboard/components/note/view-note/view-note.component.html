@@ -4,26 +4,14 @@
             <a>{{ note.title }}</a>
         </div>
         <div class="note__header-toolbar-container">
-            <div class="note__toolbar">
-                <div class="button button-success note__reviewed-button">Marcar como repasado</div>
-                <span class="icon-edit"></span>
-                <span class="icon-delete" (click)="toggleRemoveConfirmation()"></span>
-                <span class="icon-menu-dots" (click)="toggleReviewOptions()"></span>
-                <note-review-options [visible]="isReviewOptionsVisible()"/>
-                <note-remove-confirmation [visible]="isRemoveConfirmationVisible()"/>
-            </div>
+            <note-view-toolbar [note]="note"/>
         </div>
     </div>
     <div class="note__content">{{ note.content }}</div>
     <div class="note__tags">{{ tags }}</div>
     <div class="note__footer">
         <div class="note__toolbar">
-            <div class="button button-success note__reviewed-button">Marcar como repasado</div>
-            <span class="icon-edit"></span>
-            <span class="icon-delete" (click)="toggleRemoveConfirmation()"></span>
-            <span class="icon-menu-dots" (click)="toggleReviewOptions()"></span>
-            <note-review-options [visible]="isReviewOptionsVisible()"/>
-            <note-remove-confirmation [visible]="isRemoveConfirmationVisible()"/>
+            <note-view-toolbar [note]="note"/>
         </div>
     </div>
 </div>

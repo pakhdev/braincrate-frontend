@@ -8,6 +8,9 @@ export interface Note {
     reviewsLeft: number;
     nextReviewAt: string | null;
     reviewedAt: string | null;
+    removeAfterReviews: boolean;
     createdAt: string | null;
+    updatedAt: string | null;
+    removedAt: string | null;
     tags: Tag[];
 }
