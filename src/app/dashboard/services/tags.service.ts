@@ -83,8 +83,10 @@ export class TagsService {
         });
     }
 
+    // TODO: remove this method
     public decreaseTagsOfNote(note: Note) {
         const tagIdsForDecrease = note.tags.map(tag => tag.id);
+        console.log(tagIdsForDecrease);
         this.tags.update((existingTags) => {
             const processedTags = existingTags.map((tag) => {
                 if (tagIdsForDecrease.includes(tag.id)) {
@@ -95,5 +97,13 @@ export class TagsService {
             return processedTags.filter(tag => tag.notesCount > 0);
         });
         console.log(this.tags());
+    }
+
+    public removeTagsFromList(tags: Tag[] | null) {
+        if (!tags) return;
+        this.tags.update((existingTags) => {
+            const tagIdsToRemove = tags.map(tag => tag.id);
+            return existingTags.filter(tag => !tagIdsToRemove.includes(tag.id));
+        });
     }
 }

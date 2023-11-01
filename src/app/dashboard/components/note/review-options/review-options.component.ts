@@ -39,14 +39,24 @@ export class ReviewOptionsComponent {
     });
 
     public showCancelReviewsButton(): boolean {
-        return !this.note.removeAfterReviews;
+        return this.areProgrammedReviews() && !this.note.removeAfterReviews;
+    }
+
+    public showResetReviewsButton(): boolean {
+        return this.areProgrammedReviews();
     }
 
     public resetReviews(): void {
         this.notesService.resetReviews(this.note.id);
     }
 
-    cancelReviews() {
+    public cancelReviews() {
         this.notesService.cancelReviews(this.note.id);
+    }
+
+    private areProgrammedReviews(): boolean {
+        return this.note.nextReviewAt !== null
+            && this.note.reviewsLeft > 0
+            && this.note.removedAt === null;
     }
 }

@@ -1,4 +1,11 @@
 <div class="note__toolbar">
+
+    <div
+        *ngIf="isNoteRemoved()"
+        (click)="restore()"
+        class="button note__restore-button">Restaurar ésta nota
+    </div>
+
     <div
         *ngIf="showMarkAsReviewedButton()"
         (click)="markAsReviewed()"
@@ -13,9 +20,17 @@
         Repasado, eliminar nota
     </div>
 
-    <span class="icon-edit"></span>
-    <span class="icon-delete" (click)="toggleRemoveConfirmation()"></span>
-    <span class="icon-menu-dots" (click)="toggleReviewOptions()"></span>
+    <span
+        *ngIf="!isNoteRemoved()"
+        class="icon-edit"></span>
+    <span
+        *ngIf="!isNoteRemoved()"
+        (click)="toggleRemoveConfirmation()"
+        class="icon-delete"></span>
+    <span
+        *ngIf="!isNoteRemoved()"
+        (click)="toggleReviewOptions()"
+        class="icon-menu-dots"></span>
     <note-review-options
         [note]="note"
         [visible]="isReviewOptionsVisible()"/>

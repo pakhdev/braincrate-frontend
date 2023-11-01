@@ -78,7 +78,7 @@ export class NotesService {
                 return;
             }
             if (this.dashboardStateService.dashboardState().notesType === 'for-review') {
-                this.tagsService.decreaseTagsOfNote(response.note);
+                this.tagsService.removeTagsFromList(response.tags);
                 this.removeNoteFromList(id);
             } else {
                 this.updateNoteList(id, {
@@ -97,7 +97,7 @@ export class NotesService {
                 return;
             }
             if (this.dashboardStateService.dashboardState().notesType === 'for-review') {
-                this.tagsService.decreaseTagsOfNote(response.note);
+                this.tagsService.removeTagsFromList(response.tags);
                 this.removeNoteFromList(id);
             } else {
                 this.updateNoteList(id, {

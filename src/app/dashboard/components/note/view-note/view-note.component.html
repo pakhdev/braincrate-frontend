@@ -1,6 +1,6 @@
-<div class="note">
+<div class="note" [ngClass]="{ 'note-removed': note.removedAt !== null }">
     <div class="note__header">
-        <div class="note__title">
+        <div class="note__title" [ngClass]="{ 'note__title-removed': note.removedAt !== null }">
             <a>{{ note.title }}</a>
         </div>
         <div class="note__header-toolbar-container">

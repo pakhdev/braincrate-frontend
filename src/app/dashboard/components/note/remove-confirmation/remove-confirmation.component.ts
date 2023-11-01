@@ -19,6 +19,6 @@ export class RemoveConfirmationComponent {
 
     remove() {
         this.removeNote.emit();
-        this.closeConfirmation.emit();
+        this.closeConfirmation.emit(); // ?
     }
 }

@@ -199,6 +199,10 @@ html, body {
     margin: 10px 0;
 }
 
+.expander {
+    flex: 1;
+}
+
 /* ######################################################### */
 /* Estructura primaria y decoración del contenedor principal */
 
@@ -497,6 +501,11 @@ body {
     text-decoration: none;
 }
 
+.note-removed,
+.note-removed a {
+    color: #C9C9C9 !important;
+}
+
 .note__header {
     display: flex;
 }
@@ -509,6 +518,10 @@ body {
     text-transform: uppercase;
     color: var(--bright-blue);
     font-weight: bold;
+}
+
+.note__title-removed a {
+    text-decoration: line-through;
 }
 
 .note__toolbar {
@@ -532,6 +545,10 @@ body {
 
 .note__reviewed-button {
     margin-right: 10px;
+}
+
+.note__restore-button {
+    background-color: var(--bright-blue);
 }
 
 .note__delete-popup {
@@ -996,8 +1013,8 @@ body {
     pointer-events: none;
 }
 
-/* ##################### */
-/*     Parte de login    */
+/* ############################################ */
+/*     Parte de login y ajustes de la cuenta    */
 
 .auth-page-centering {
     width: 100%;
@@ -1156,5 +1173,17 @@ body {
 .auth-copyright {
     margin: 15px 0;
     text-align: center;
+}
+
+.user-settings__email {
+    margin-top: 10px
+}
+
+.user-settings__password {
+    margin-top: 30px
+}
+
+.user-settings__inputs {
+    margin-top: 15px
 }
 
