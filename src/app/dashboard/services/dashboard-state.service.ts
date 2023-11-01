@@ -14,7 +14,7 @@ export class DashboardStateService {
         page: 0,
     });
 
-    public setState(state: Partial<DashboardState>) {
+    public setState(state: Partial<DashboardState>): void {
         if (state.notesType) {
             this.dashboardState.set({
                 selectedTags: [],
@@ -28,6 +28,12 @@ export class DashboardStateService {
                 ...state,
             });
         }
+    }
+
+    public nextPage(): void {
+        this.setState({
+            page: this.dashboardState().page + 1,
+        });
     }
 
     get selectedTags(): number[] {

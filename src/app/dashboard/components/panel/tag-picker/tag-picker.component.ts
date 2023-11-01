@@ -52,6 +52,7 @@ export class TagPickerComponent {
         if (selectedTags.includes(tagId)) return;
 
         this.dashboardStateService.setState({
+            page: 1,
             selectedTags: [
                 ...selectedTags,
                 tagId,
@@ -64,6 +65,7 @@ export class TagPickerComponent {
         if (!selectedTags.includes(tagId)) return;
 
         this.dashboardStateService.setState({
+            page: 1,
             selectedTags: selectedTags.filter(id => id !== tagId),
         });
     }

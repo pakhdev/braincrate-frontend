@@ -19,9 +19,11 @@ export class NotesService {
     private readonly tagsService = inject(TagsService);
     private readonly dashboardStateService = inject(DashboardStateService);
     private readonly dashboardState$ = toObservable(this.dashboardStateService.dashboardState);
+    private readonly notesPerPage = 15;
 
     public notesList: WritableSignal<Note[]> = signal([]);
     public isLoading: WritableSignal<boolean> = signal(false);
+    public allNotesLoaded: WritableSignal<boolean> = signal(false);
 
     constructor() {
         this.dashboardState$.subscribe((dashboardState) => {
@@ -30,12 +32,14 @@ export class NotesService {
             if (dashboardState.page === 1) {
                 this.getNotes(dashboardState.selectedTags, dashboardState.searchWord, dashboardState.notesType)
                     .subscribe((notes) => {
+                        this.controlEndOfNotes(notes.length);
                         this.isLoading.set(false);
                         this.notesList.set(notes);
                     });
             } else {
-                this.getNotes(dashboardState.selectedTags, dashboardState.searchWord, dashboardState.notesType)
+                this.getNotes(dashboardState.selectedTags, dashboardState.searchWord, dashboardState.notesType, this.calcOffset())
                     .subscribe((loadedNotes) => {
+                        this.controlEndOfNotes(loadedNotes.length);
                         this.isLoading.set(false);
                         this.notesList.update(existingNotes => [...existingNotes, ...loadedNotes]);
                     });
@@ -131,6 +135,7 @@ export class NotesService {
             .set('Authorization', `Bearer ${ token }`);
 
         let params = new HttpParams();
+        params = params.append('limit', this.notesPerPage.toString());
         if (searchWord)
             params = params.append('searchTerm', searchWord);
         if (offset)
@@ -171,6 +176,15 @@ export class NotesService {
     private removeNoteFromList(id: number) {
         this.notesList.update(notes => notes.filter(note => note.id !== id));
         // TODO: Offset Correction -1
+    }
+
+    private controlEndOfNotes(notesLength: number): void {
+        this.allNotesLoaded.set(notesLength < this.notesPerPage);
+    }
+
+    private calcOffset(): number {
+        const page = this.dashboardStateService.dashboardState().page;
+        return page * this.notesPerPage - this.notesPerPage;
     }
 
 }

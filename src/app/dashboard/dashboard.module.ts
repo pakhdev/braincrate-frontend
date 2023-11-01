@@ -17,6 +17,7 @@ import { AllNotesPageComponent } from './pages/all-notes-page/all-notes-page.com
 import { ReviewNotesPageComponent } from './pages/review-notes-page/review-notes-page.component';
 import { NewNotePageComponent } from './pages/new-note-page/new-note-page.component';
 import { ViewToolbarComponent } from './components/note/view-toolbar/view-toolbar.component';
+import { InfiniteScrollComponent } from './components/infinite-scroll/infinite-scroll.component';
 
 @NgModule({
     declarations: [
@@ -35,6 +36,7 @@ import { ViewToolbarComponent } from './components/note/view-toolbar/view-toolba
         ReviewNotesPageComponent,
         NewNotePageComponent,
         ViewToolbarComponent,
+        InfiniteScrollComponent,
     ],
     imports: [
         CommonModule,
