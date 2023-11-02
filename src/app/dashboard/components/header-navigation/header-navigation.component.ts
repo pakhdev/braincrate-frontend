@@ -1,6 +1,7 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 
 import { DashboardStateService } from '../../services/dashboard-state.service';
+import { NotesService } from '../../services/notes.service';
 
 @Component({
     selector: 'dashboard-header-navigation',
@@ -10,6 +11,7 @@ export class HeaderNavigationComponent {
 
     @Input() public mobile: boolean = false;
     @Input() public logoMode: 'dark' | 'light' = 'light';
+    private readonly notesService = inject(NotesService);
 
     @Output()
     public openMobilePanel: EventEmitter<void> = new EventEmitter();
@@ -18,6 +20,11 @@ export class HeaderNavigationComponent {
 
     get isReviewSectionActive() {
         return this.dashboardStateService.selectedSection === 'for-review';
+    }
+
+    get notesForReviewCount() {
+        const notesForReviewCount = this.notesService.countNotesForReview();
+        return notesForReviewCount > 0 ? `(${ notesForReviewCount })` : null;
     }
 
     public openMobilePanelHandler(): void {

@@ -37,7 +37,6 @@ export class ViewToolbarComponent {
         return new Date(this.note.nextReviewAt) <= new Date()
             && !this.isNoteRemoved()
             && this.note.reviewsLeft > 0
-            && this.note.removedAt === null
             && !this.showDeleteInsteadReview();
     }
 
@@ -46,7 +45,6 @@ export class ViewToolbarComponent {
         return new Date(this.note.nextReviewAt) <= new Date()
             && !this.isNoteRemoved()
             && this.note.reviewsLeft === 1
-            && this.note.removedAt === null
             && this.note.removeAfterReviews;
     }
 

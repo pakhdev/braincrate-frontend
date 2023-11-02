@@ -24,12 +24,16 @@ export class NotesService {
     public notesList: WritableSignal<Note[]> = signal([]);
     public isLoading: WritableSignal<boolean> = signal(false);
     public allNotesLoaded: WritableSignal<boolean> = signal(false);
+    public countNotesForReview: WritableSignal<number> = signal(0);
+    public notesOffsetCorrection: WritableSignal<number> = signal(0);
 
     constructor() {
         this.dashboardState$.subscribe((dashboardState) => {
             if (!dashboardState.notesType) return;
 
             if (dashboardState.page === 1) {
+                this.notesOffsetCorrection.set(0);
+                if (dashboardState.notesType === 'all') this.loadNotesForReviewCounter();
                 this.getNotes(dashboardState.selectedTags, dashboardState.searchWord, dashboardState.notesType)
                     .subscribe((notes) => {
                         this.controlEndOfNotes(notes.length);
@@ -53,9 +57,11 @@ export class NotesService {
                 console.error(response.errors);
                 return;
             }
+            this.calcNotesForReviewCounter(id, 'decrement');
             this.updateNoteList(id, {
                 removedAt: response.note.removedAt,
             });
+            this.notesOffsetCorrection.update(offsetCorrection => offsetCorrection - 1);
             if (response.tags)
                 this.tagsService.updateTags(response.tags);
         });
@@ -67,12 +73,14 @@ export class NotesService {
                 console.error(response.errors);
                 return;
             }
+            this.calcNotesForReviewCounter(id, 'increment');
             this.updateNoteList(id, {
                 removedAt: null,
             });
             if (response.tags)
                 this.tagsService.updateTags(response.tags);
         });
+        this.notesOffsetCorrection.update(offsetCorrection => offsetCorrection + 1);
     }
 
     public markAsReviewed(id: number): void {
@@ -81,6 +89,7 @@ export class NotesService {
                 console.error(response.errors);
                 return;
             }
+            this.calcNotesForReviewCounter(id, 'decrement');
             if (this.dashboardStateService.dashboardState().notesType === 'for-review') {
                 this.tagsService.removeTagsFromList(response.tags);
                 this.removeNoteFromList(id);
@@ -100,6 +109,7 @@ export class NotesService {
                 console.error(response.errors);
                 return;
             }
+            this.calcNotesForReviewCounter(id, 'decrement');
             if (this.dashboardStateService.dashboardState().notesType === 'for-review') {
                 this.tagsService.removeTagsFromList(response.tags);
                 this.removeNoteFromList(id);
@@ -139,7 +149,7 @@ export class NotesService {
         if (searchWord)
             params = params.append('searchTerm', searchWord);
         if (offset)
-            params = params.append('offset', offset.toString());
+            params = params.append('offset', (offset + this.notesOffsetCorrection()).toString());
         tagIds.forEach(id => {
             params = params.append('tagIds[]', id.toString());
         });
@@ -170,12 +180,11 @@ export class NotesService {
             if (!note) return notes;
             return notes.map(note => note.id === id ? { ...note, ...properties } : note);
         });
-        console.log(this.notesList());
     }
 
     private removeNoteFromList(id: number) {
         this.notesList.update(notes => notes.filter(note => note.id !== id));
-        // TODO: Offset Correction -1
+        this.notesOffsetCorrection.update(offsetCorrection => offsetCorrection - 1);
     }
 
     private controlEndOfNotes(notesLength: number): void {
@@ -185,6 +194,28 @@ export class NotesService {
     private calcOffset(): number {
         const page = this.dashboardStateService.dashboardState().page;
         return page * this.notesPerPage - this.notesPerPage;
+    }
+
+    private loadNotesForReviewCounter(): void {
+        const url = `${ this.baseUrl }/notes/count-for-review`;
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${ token }`);
+        this.http.get<number>(url, { headers }).subscribe((counter) => {
+            this.countNotesForReview.set(counter);
+        });
+    }
+
+    private calcNotesForReviewCounter(id: number, action: 'decrement' | 'increment'): void {
+        const note = this.notesList().find(note => note.id === id);
+        if (!note) return;
+        if (note.nextReviewAt === null || note.reviewsLeft < 1 || new Date(note.nextReviewAt) > new Date()) return;
+
+        if (action === 'decrement' && note.removedAt === null) {
+            this.countNotesForReview.update(counter => counter > 0 ? counter - 1 : 0);
+        } else if (action === 'increment') {
+            this.countNotesForReview.update(counter => counter + 1);
+        }
     }
 
 }

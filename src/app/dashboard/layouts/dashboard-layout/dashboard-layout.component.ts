@@ -11,6 +11,8 @@ import {
 } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
+import { DashboardStateService } from '../../services/dashboard-state.service';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-dashboard-layout',
@@ -24,17 +26,22 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
     @ViewChild('notesContainer') private readonly notesContainerDiv!: ElementRef;
     @ViewChild('contentMobileHeader') private readonly contentMobileHeaderDiv!: ElementRef;
     @ViewChild('mobilePanelFixer') private readonly mobilePanelFixerDiv!: ElementRef;
-    private documentBody!: HTMLElement;
+    private readonly documentBody!: HTMLElement;
+    private readonly ngZone = inject(NgZone);
+    private readonly dashboardStateService = inject(DashboardStateService);
+    private readonly dashboardState$ = toObservable(this.dashboardStateService.dashboardState);
 
-    public openedSection: 'notes' | 'account' = 'notes';
     private lastScrollPos = 0;
-    private panelState: 'bottom' | 'up' | 'margin' | boolean = false;
     private panelMinHeightCorrection: null | number = null;
-
-    private ngZone = inject(NgZone);
+    private panelState: 'bottom' | 'up' | 'margin' | boolean = false;
+    public openedSection: 'notes' | 'account' = 'notes';
 
     constructor(@Inject(DOCUMENT) private document: Document) {
         this.documentBody = document.body;
+        this.dashboardState$.subscribe((dashboardState) => {
+            if (!dashboardState.notesType) return;
+            if (dashboardState.page === 1) window.scrollTo(0, 0);
+        });
     }
 
     private handlePanelClasses() {
