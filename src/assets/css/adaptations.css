@@ -123,6 +123,11 @@
         margin: 0 auto 30px auto;
     }
 
+    .notes-container {
+        width: calc(100vw - 93px);
+        max-width: none;
+    }
+
     .note {
         padding: 15px;
         max-width: none;

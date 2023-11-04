@@ -18,6 +18,12 @@ import { ReviewNotesPageComponent } from './pages/review-notes-page/review-notes
 import { NewNotePageComponent } from './pages/new-note-page/new-note-page.component';
 import { ViewToolbarComponent } from './components/note/view-toolbar/view-toolbar.component';
 import { InfiniteScrollComponent } from './components/infinite-scroll/infinite-scroll.component';
+import { WelcomeNoteComponent } from './components/no-content-messages/welcome-note/welcome-note.component';
+import { NoSearchResultsNoteComponent } from './components/no-content-messages/no-search-results-note/no-search-results-note.component';
+import { ReviewsCompletedNoteComponent } from './components/no-content-messages/reviews-completed-note/reviews-completed-note.component';
+import { WelcomeTagComponent } from './components/no-content-messages/welcome-tag/welcome-tag.component';
+import { NoSearchResultsTagComponent } from './components/no-content-messages/no-search-results-tag/no-search-results-tag.component';
+import { LoadingNoteComponent } from './components/no-content-messages/loading-note/loading-note.component';
 
 @NgModule({
     declarations: [
@@ -37,6 +43,12 @@ import { InfiniteScrollComponent } from './components/infinite-scroll/infinite-s
         NewNotePageComponent,
         ViewToolbarComponent,
         InfiniteScrollComponent,
+        WelcomeNoteComponent,
+        NoSearchResultsNoteComponent,
+        ReviewsCompletedNoteComponent,
+        WelcomeTagComponent,
+        NoSearchResultsTagComponent,
+        LoadingNoteComponent,
     ],
     imports: [
         CommonModule,

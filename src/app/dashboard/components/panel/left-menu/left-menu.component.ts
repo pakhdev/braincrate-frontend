@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({
@@ -6,7 +6,12 @@ import { AuthService } from '../../../../auth/services/auth.service';
     templateUrl: './left-menu.component.html',
 })
 export class LeftMenuComponent {
+    @Output() public activateManagementView: EventEmitter<'notes' | 'account'> = new EventEmitter();
     private authService = inject(AuthService);
+
+    public activateManagementViewHandler(view: 'notes' | 'account'): void {
+        this.activateManagementView.emit(view);
+    }
 
     public logout(): void {
         this.authService.logout();

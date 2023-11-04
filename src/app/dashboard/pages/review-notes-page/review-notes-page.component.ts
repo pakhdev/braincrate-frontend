@@ -9,8 +9,8 @@ import { NotesService } from '../../services/notes.service';
 })
 export class ReviewNotesPageComponent implements OnInit {
 
-    private dashboardStateService = inject(DashboardStateService);
-    public notesService = inject(NotesService);
+    private readonly dashboardStateService = inject(DashboardStateService);
+    private readonly notesService = inject(NotesService);
 
     ngOnInit(): void {
         this.dashboardStateService.setState({ notesType: 'for-review' });
@@ -18,5 +18,10 @@ export class ReviewNotesPageComponent implements OnInit {
 
     get notes() {
         return this.notesService.notesList();
+    }
+
+    showReviewsCompleted() {
+        return !this.notesService.isLoading()
+            && this.notesService.notesList().length === 0;
     }
 }

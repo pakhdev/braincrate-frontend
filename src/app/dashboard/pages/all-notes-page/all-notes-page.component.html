@@ -1,2 +1,4 @@
+<dashboard-welcome-note *ngIf="showWelcomeMessage()"/>
+<dashboard-no-search-results-note *ngIf="showEmptySearchResult()"/>
 <dashboard-view-note *ngFor="let note of notes" [note]="note"/>
 <dashboard-infinite-scroll/>

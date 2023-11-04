@@ -13,6 +13,7 @@ import { fromEvent } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { DashboardStateService } from '../../services/dashboard-state.service';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { NotesService } from '../../services/notes.service';
 
 @Component({
     selector: 'app-dashboard-layout',
@@ -28,6 +29,7 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
     @ViewChild('mobilePanelFixer') private readonly mobilePanelFixerDiv!: ElementRef;
     private readonly documentBody!: HTMLElement;
     private readonly ngZone = inject(NgZone);
+    private readonly notesService = inject(NotesService);
     private readonly dashboardStateService = inject(DashboardStateService);
     private readonly dashboardState$ = toObservable(this.dashboardStateService.dashboardState);
 
@@ -132,16 +134,25 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
         }
     }
 
-    openMobilePanel() {
+    public openMobilePanel() {
         this.documentBody.style.overflow = 'hidden';
         this.contentMobileHeaderDiv.nativeElement.style.visibility = 'hidden';
         this.mobilePanelFixerDiv.nativeElement.style.display = 'flex';
         this.panelCopyrightDiv.nativeElement.style = '';
     }
 
-    closeMobilePanel() {
+    public closeMobilePanel() {
         this.documentBody.removeAttribute('style');
         this.contentMobileHeaderDiv.nativeElement.removeAttribute('style');
         this.mobilePanelFixerDiv.nativeElement.removeAttribute('style');
     }
+
+    public showLoadingNotes() {
+        return this.notesService.isLoading();
+    }
+
+    public activateManagementViewHandler(view: 'notes' | 'account'): void {
+        this.openedSection = view;
+    }
+
 }

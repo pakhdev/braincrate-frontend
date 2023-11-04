@@ -22,6 +22,18 @@
 .icon-notes-stack:before {
     content: "\e926";
 }
+.icon-no-results:before {
+    content: "\e924";
+}
+.icon-set-hidden:before {
+    content: "\e923";
+}
+.icon-set-text-color:before {
+    content: "\e917";
+}
+.icon-set-text-background-color:before {
+    content: "\e920";
+}
 .icon-arrow-down:before {
     content: "\e913";
 }
@@ -33,9 +45,6 @@
 }
 .icon-insert-image:before {
     content: "\e916";
-}
-.icon-set-important:before {
-    content: "\e917";
 }
 .icon-set-italic:before {
     content: "\e918";

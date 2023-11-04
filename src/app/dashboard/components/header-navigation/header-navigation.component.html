@@ -2,7 +2,7 @@
     <img src="assets/images/logo-{{ logoMode }}.svg" alt="BrainCrate logo"/>
 </div>
 
-<div class="primary-buttons">
+<div *ngIf="showButtons" class="primary-buttons">
     <div *ngIf="mobile" class="button-dark button button-burger" (click)="openMobilePanelHandler()">
         <span class="icon-menu"></span>
     </div>

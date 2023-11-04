@@ -9,8 +9,8 @@ import { DashboardStateService } from '../../services/dashboard-state.service';
 })
 export class AllNotesPageComponent implements OnInit {
 
-    private dashboardStateService = inject(DashboardStateService);
-    public notesService = inject(NotesService);
+    private readonly dashboardStateService = inject(DashboardStateService);
+    private readonly notesService = inject(NotesService);
 
     ngOnInit(): void {
         this.dashboardStateService.setState({ notesType: 'all' });
@@ -18,6 +18,18 @@ export class AllNotesPageComponent implements OnInit {
 
     get notes() {
         return this.notesService.notesList();
+    }
+
+    public showWelcomeMessage() {
+        return !this.dashboardStateService.dashboardState().searchWord
+            && !this.notesService.isLoading()
+            && this.notesService.notesList().length === 0;
+    }
+
+    public showEmptySearchResult() {
+        return this.dashboardStateService.dashboardState().searchWord
+            && !this.notesService.isLoading()
+            && this.notesService.notesList().length === 0;
     }
 
 }

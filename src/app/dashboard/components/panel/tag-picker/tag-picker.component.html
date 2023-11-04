@@ -17,4 +17,7 @@
         (click)="selectTag(tag.id)"
         [ngStyle]="{ opacity: areTagsLoading ? 0.5 : 1 }"
         class="panel__tag">{{ tag.name }}</div>
+
+    <dashboard-welcome-tag *ngIf="showWelcomeTag()"/>
+    <dashboard-no-search-results-tag *ngIf="showNoResultsTag()"/>
 </div>

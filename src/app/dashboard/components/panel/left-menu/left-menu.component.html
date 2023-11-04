@@ -1,11 +1,17 @@
 <div class="left-menu">
     <div class="left-menu__sticky-container">
-        <div class="left-menu__item">
-            <div class="left-menu__item-title">Gestionar notas</div>
+        <div
+            (click)="activateManagementViewHandler('notes')"
+            class="left-menu__item">
+            <div class="left-menu__item-title">Gestionar notas
+            </div>
             <span class="left-menu__item-icon icon-note"></span>
         </div>
-        <div class="left-menu__item">
-            <div class="left-menu__item-title">Ajustes</div>
+        <div
+            (click)="activateManagementViewHandler('account')"
+            class="left-menu__item">
+            <div class="left-menu__item-title">Ajustes
+            </div>
             <span class="left-menu__item-icon icon-account-settings"></span>
         </div>
         <div class="left-menu__item">

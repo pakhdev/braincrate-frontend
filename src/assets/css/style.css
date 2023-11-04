@@ -476,6 +476,11 @@ body {
     display: none;
 }
 
+.note, .notes-container {
+    max-width: 790px;
+    width: calc(100vw - 483px);
+}
+
 .notes-container {
     display: flex;
     flex-direction: column;
@@ -486,8 +491,6 @@ body {
     background-color: #EEF4F8;
     border-radius: 7px;
     max-width: 790px;
-    width: calc(100vw - 483px);
-    /*width: calc(100vw - 450px);*/
     padding: 30px 30px 15px 30px;
     margin-bottom: 30px;
     box-shadow: 0 3px 4px rgba(79, 90, 110, 0.1);

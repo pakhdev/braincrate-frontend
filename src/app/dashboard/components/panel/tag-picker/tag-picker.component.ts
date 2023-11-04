@@ -76,6 +76,21 @@ export class TagPickerComponent {
         this.searchTagsTerm = searchTerm.toLowerCase();
     }
 
+    public showWelcomeTag() {
+        return this.tagsService.tags().length === 0
+            && !this.searchTagsTerm
+            && !this.tagsService.isLoading()
+            && !this.dashboardStateService.dashboardState().searchWord
+            && this.dashboardStateService.dashboardState().notesType === 'all';
+    }
+
+    public showNoResultsTag() {
+        const notesType = this.dashboardStateService.dashboardState().notesType;
+        if (this.searchTagsTerm && !this.selectedTags.length) return true;
+        if (this.tagsService.tags().length > 0 || this.tagsService.isLoading()) return false;
+        return !(notesType === 'all' && !this.dashboardStateService.dashboardState().searchWord);
+    }
+
     private isSearchTagsInputToBeCleared(previous: DashboardState, current: DashboardState): boolean {
         if (previous.notesType !== current.notesType) return true;
         if (previous.searchWord !== current.searchWord) return true;
@@ -84,4 +99,5 @@ export class TagPickerComponent {
         const currentTagIds = current.selectedTags.slice().sort();
         return JSON.stringify(previousTagIds) !== JSON.stringify(currentTagIds);
     }
+
 }

@@ -3,7 +3,7 @@
         <div #mobilePanelFixer class="mobile-panel-fixer-container">
             <div class="mobile-panel-background">
 
-                <dashboard-left-menu/>
+                <dashboard-left-menu (activateManagementView)="activateManagementViewHandler($event)"/>
 
                 <div id="panel">
                     <div #panelTopMargin></div>
@@ -12,7 +12,9 @@
                     </div>
 
                     <div #stickyPanelContainer id="panel__sticky-container" class="panel-bottom-sticky">
-                        <dashboard-header-navigation [mobile]="false" logoMode="light"/>
+                        <dashboard-header-navigation
+                            [showButtons]="openedSection === 'notes'"
+                            [mobile]="false" logoMode="light"/>
 
                         <panel-note-management
                             *ngIf="openedSection === 'notes'"
@@ -36,6 +38,7 @@
                     (openMobilePanel)="openMobilePanel()"/>
             </div>
             <div #notesContainer class="notes-container">
+                <dashboard-loading-note *ngIf="showLoadingNotes()"/>
                 <router-outlet/>
             </div>
             <div class="content-copyright-container">

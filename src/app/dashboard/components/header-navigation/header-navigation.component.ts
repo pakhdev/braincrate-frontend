@@ -11,6 +11,7 @@ export class HeaderNavigationComponent {
 
     @Input() public mobile: boolean = false;
     @Input() public logoMode: 'dark' | 'light' = 'light';
+    @Input() public showButtons: boolean = true;
     private readonly notesService = inject(NotesService);
 
     @Output()
