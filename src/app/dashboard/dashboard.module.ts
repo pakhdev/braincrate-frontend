@@ -19,11 +19,19 @@ import { NewNotePageComponent } from './pages/new-note-page/new-note-page.compon
 import { ViewToolbarComponent } from './components/note/view-toolbar/view-toolbar.component';
 import { InfiniteScrollComponent } from './components/infinite-scroll/infinite-scroll.component';
 import { WelcomeNoteComponent } from './components/no-content-messages/welcome-note/welcome-note.component';
-import { NoSearchResultsNoteComponent } from './components/no-content-messages/no-search-results-note/no-search-results-note.component';
-import { ReviewsCompletedNoteComponent } from './components/no-content-messages/reviews-completed-note/reviews-completed-note.component';
+import {
+    NoSearchResultsNoteComponent,
+} from './components/no-content-messages/no-search-results-note/no-search-results-note.component';
+import {
+    ReviewsCompletedNoteComponent,
+} from './components/no-content-messages/reviews-completed-note/reviews-completed-note.component';
 import { WelcomeTagComponent } from './components/no-content-messages/welcome-tag/welcome-tag.component';
-import { NoSearchResultsTagComponent } from './components/no-content-messages/no-search-results-tag/no-search-results-tag.component';
+import {
+    NoSearchResultsTagComponent,
+} from './components/no-content-messages/no-search-results-tag/no-search-results-tag.component';
 import { LoadingNoteComponent } from './components/no-content-messages/loading-note/loading-note.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
     declarations: [
@@ -53,6 +61,8 @@ import { LoadingNoteComponent } from './components/no-content-messages/loading-n
     imports: [
         CommonModule,
         DashboardRoutingModule,
+        ReactiveFormsModule,
+        SharedModule,
     ],
 })
 export class DashboardModule {

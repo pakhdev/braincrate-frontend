@@ -7,7 +7,7 @@ import { AboutPageComponent } from './pages/about-page/about-page.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { AuthRoutingModule } from './auth-routing.module';
-import { ErrorMessageDirective } from '../shared/directives/error-message.directive';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
     declarations: [
@@ -15,13 +15,13 @@ import { ErrorMessageDirective } from '../shared/directives/error-message.direct
         AboutPageComponent,
         RegisterPageComponent,
         LoginPageComponent,
-        ErrorMessageDirective,
     ],
     imports: [
         CommonModule,
         AuthRoutingModule,
         ReactiveFormsModule,
         FormsModule,
+        SharedModule,
     ],
 })
 export class AuthModule {

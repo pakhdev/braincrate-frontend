@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 
 import { AuthStatus } from '../enums/auth-status.enum';
-import { CheckTokenResponse, LoginResponse, User } from '../interfaces';
+import { AuthResponse, CheckTokenResponse, LoginResponse, User } from '../interfaces';
 import { FormGroup } from '@angular/forms';
 import { environments } from '../../../environments/environment';
 
@@ -21,7 +21,7 @@ export class AuthService {
         this.checkAuthStatus().subscribe();
     }
 
-    register(email: string, password: string): Observable<boolean> {
+    public register(email: string, password: string): Observable<boolean> {
         const url = `${ this.baseUrl }/auth/register`;
         const body = { email, password };
         return this.http.post<LoginResponse>(url, body)
@@ -31,7 +31,7 @@ export class AuthService {
             );
     }
 
-    login(email: string, password: string): Observable<boolean> {
+    public login(email: string, password: string): Observable<boolean> {
         const url = `${ this.baseUrl }/auth/login`;
         const body = { email, password };
         return this.http.post<LoginResponse>(url, body)
@@ -41,13 +41,13 @@ export class AuthService {
             );
     }
 
-    logout(): void {
+    public logout(): void {
         localStorage.removeItem('token');
         this._currentUser.set(null);
         this._authStatus.set(AuthStatus.notAuthenticated);
     }
 
-    checkAuthStatus(): Observable<boolean> {
+    public checkAuthStatus(): Observable<boolean> {
         const url = `${ this.baseUrl }/auth/check-auth-status`;
         const token = localStorage.getItem('token');
         if (!token) {
@@ -68,8 +68,54 @@ export class AuthService {
             );
     }
 
-    showErrorMessage(form: FormGroup, field: string): boolean | null {
+    public showErrorMessage(form: FormGroup, field: string): boolean | null {
         return form.controls[field].errors && form.controls[field].touched;
+    }
+
+    public updateEmail(email: string): Observable<boolean> {
+        const url = `${ this.baseUrl }/auth/update-email`;
+        const token = localStorage.getItem('token');
+        if (!token) {
+            this.logout();
+            return of(false);
+        }
+
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${ token }`);
+
+        const body = { email };
+        return this.http.patch<AuthResponse>(url, body, { headers })
+            .pipe(
+                map((response) => {
+                    const { id, email, token } = response.user;
+                    return this.setAuthentication({ id: +id, email }, token);
+                }),
+                catchError(err => throwError(() => err.error.message)),
+            );
+    }
+
+    public updatePassword(oldPassword: string, newPassword: string): Observable<boolean> {
+        const url = `${ this.baseUrl }/auth/update-password`;
+        const token = localStorage.getItem('token');
+        if (!token) {
+            this.logout();
+            return of(false);
+        }
+
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${ token }`);
+        const body = { oldPassword, newPassword };
+        return this.http.patch<AuthResponse>(url, body, { headers })
+            .pipe(
+                map((response) => {
+                    if (response.error) {
+                        console.log(response.error);
+                        return false;
+                    }
+                    const { id, email, token } = response.user;
+                    return this.setAuthentication({ id: +id, email }, token);
+                }),
+            );
     }
 
     private setAuthentication(user: User, token: string): boolean {

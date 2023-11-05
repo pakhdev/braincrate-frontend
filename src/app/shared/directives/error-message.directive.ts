@@ -43,6 +43,9 @@ export class ErrorMessageDirective {
         } else if (errors.includes('emailTaken')) {
             this.htmlElement.nativeElement.innerText = `Este correo electrónico ya está registrado`;
             return;
+        } else if (errors.includes('emailMatchesOld')) {
+            this.htmlElement.nativeElement.innerText = `El correo electrónico coincide con el antiguo`;
+            return;
         }
     }
 

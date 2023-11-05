@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { emailPattern } from '../../../shared/validators/validators';
+
+import { AuthService } from '../../services/auth.service';
+import { emailPattern, isFieldOneEqualFieldTwo } from '../../../shared/validators/validators';
 import { EmailValidator } from '../../../shared/validators/email-validator.service';
 
 @Component({
@@ -30,25 +31,9 @@ export class RegisterPageComponent {
         ],
     }, {
         validators: [
-            this.isFieldOneEqualFieldTwo('password', 'repeatPassword'),
+            isFieldOneEqualFieldTwo('password', 'repeatPassword'),
         ],
     });
-
-    isFieldOneEqualFieldTwo(field1: string, field2: string) {
-        return (formGroup: AbstractControl): ValidationErrors | null => {
-
-            const fieldValue1 = formGroup.get(field1)?.value;
-            const fieldValue2 = formGroup.get(field2)?.value;
-
-            if (fieldValue1 !== fieldValue2) {
-                formGroup.get(field2)?.setErrors({ notEqual: true });
-                return { notEqual: true };
-            }
-
-            formGroup.get(field2)?.setErrors(null);
-            return null;
-        };
-    }
 
     register() {
         this.registerForm.markAllAsTouched();
