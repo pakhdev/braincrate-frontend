@@ -13,4 +13,5 @@ export interface Note {
     updatedAt: string | null;
     removedAt: string | null;
     tags: Tag[];
+    editMode?: boolean;
 }

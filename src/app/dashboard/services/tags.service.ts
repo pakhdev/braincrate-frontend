@@ -37,6 +37,18 @@ export class TagsService {
         });
     }
 
+    get selectedTags(): Tag[] {
+        return this.tags()
+            .filter(tag => this.dashboardStateService.selectedTags.includes(tag.id))
+            .sort((a, b) => b.notesCount - a.notesCount);
+    }
+
+    get notSelectedTags(): Tag[] {
+        return this.tags()
+            .filter(tag => !this.dashboardStateService.selectedTags.includes(tag.id))
+            .sort((a, b) => b.notesCount - a.notesCount);
+    }
+
     public getTags(parentTagIds: number[], searchWord: string, notesType: string): Observable<Tag[]> {
         this.isLoading.set(true);
 
@@ -61,7 +73,7 @@ export class TagsService {
             );
     }
 
-    private isTagsLoadRequired(previous: DashboardState, current: DashboardState) {
+    private isTagsLoadRequired(previous: DashboardState, current: DashboardState): boolean {
         if (previous.notesType !== current.notesType) return true;
         if (previous.searchWord !== current.searchWord) return true;
 
@@ -70,7 +82,7 @@ export class TagsService {
         return JSON.stringify(previousTagIds) !== JSON.stringify(currentTagIds);
     }
 
-    public updateTags(tagsToUpdate: Tag[]) {
+    public updateTags(tagsToUpdate: Tag[]): void {
         this.tags.update((existingTags) => {
             tagsToUpdate.forEach((tag) => {
                 const existingTag = existingTags.find(existingTag => existingTag.id === tag.id);
@@ -82,11 +94,12 @@ export class TagsService {
         });
     }
 
-    public removeTagsFromList(tags: Tag[] | null) {
+    public removeTagsFromList(tags: Tag[] | null): void {
         if (!tags) return;
         this.tags.update((existingTags) => {
             const tagIdsToRemove = tags.map(tag => tag.id);
             return existingTags.filter(tag => !tagIdsToRemove.includes(tag.id));
         });
     }
+
 }

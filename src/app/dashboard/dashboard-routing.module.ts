@@ -12,7 +12,7 @@ const routes: Routes = [{
     children: [
         { path: 'all', component: AllNotesPageComponent },
         { path: 'for-review', component: ReviewNotesPageComponent },
-        { path: 'create-note', component: NewNotePageComponent },
+        { path: 'new-note', component: NewNotePageComponent },
         { path: '', redirectTo: 'all', pathMatch: 'full' },
     ],
 }];

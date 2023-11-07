@@ -30,8 +30,13 @@ import {
     NoSearchResultsTagComponent,
 } from './components/no-content-messages/no-search-results-tag/no-search-results-tag.component';
 import { LoadingNoteComponent } from './components/no-content-messages/loading-note/loading-note.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
+import { EditorComponent } from './components/note/editor/editor.component';
+import { EditTagItemComponent } from './components/note/edit-tag-item/edit-tag-item.component';
+import {
+    EditInputTagWithSuggestionsComponent,
+} from './components/note/edit-input-tag-with-suggestions/edit-input-tag-with-suggestions.component';
 
 @NgModule({
     declarations: [
@@ -57,10 +62,14 @@ import { SharedModule } from '../shared/shared.module';
         WelcomeTagComponent,
         NoSearchResultsTagComponent,
         LoadingNoteComponent,
+        EditorComponent,
+        EditTagItemComponent,
+        EditInputTagWithSuggestionsComponent,
     ],
     imports: [
         CommonModule,
         DashboardRoutingModule,
+        FormsModule,
         ReactiveFormsModule,
         SharedModule,
     ],

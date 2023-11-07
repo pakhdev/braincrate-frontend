@@ -59,4 +59,8 @@ export class ViewToolbarComponent {
     restore() {
         this.notesService.restore(this.note.id);
     }
+
+    edit() {
+        this.notesService.updateNoteList(this.note.id, { editMode: true });
+    }
 }

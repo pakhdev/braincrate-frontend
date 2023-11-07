@@ -1,3 +1,7 @@
 <dashboard-reviews-completed-note *ngIf="showReviewsCompleted()"/>
-<dashboard-view-note *ngFor="let note of notes" [note]="note"/>
+<div class="note" *ngFor="let note of notes"
+     [ngClass]="{ 'note-removed': note.removedAt !== null }">
+    <dashboard-view-note [note]="note" *ngIf="!note.editMode"/>
+    <dashboard-edit-note [note]="note" *ngIf="note.editMode"/>
+</div>
 <dashboard-infinite-scroll/>

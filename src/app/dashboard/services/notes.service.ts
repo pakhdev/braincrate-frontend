@@ -32,6 +32,7 @@ export class NotesService {
             if (!dashboardState.notesType) return;
 
             if (dashboardState.page === 1) {
+                console.log(dashboardState.notesType);
                 this.notesOffsetCorrection.set(0);
                 if (dashboardState.notesType === 'all') this.loadNotesForReviewCounter();
                 this.getNotes(dashboardState.selectedTags, dashboardState.searchWord, dashboardState.notesType)
@@ -174,7 +175,7 @@ export class NotesService {
         return this.http.delete<NoteUpdateResponse>(url, { headers });
     }
 
-    private updateNoteList(id: number, properties: Partial<Note>) {
+    public updateNoteList(id: number, properties: Partial<Note>) {
         this.notesList.update(notes => {
             const note = notes.find(note => note.id === id);
             if (!note) return notes;

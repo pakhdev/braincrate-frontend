@@ -1,1 +1,53 @@
-<p>edit-note works!</p>
+<div class="note-edition">
+
+    <input
+        [value]="title"
+        type="text"
+        class="note-edition__title"
+        placeholder="Escriba aquí el titulo de la nota">
+
+    <div class="note-edition__tags">
+        <span class="icon-tag note-edition__tags-icon"></span>
+        <edit-tag-item
+            *ngFor="let tagName of tagNames"
+            [tagName]="tagName"
+            (onRemoveTag)="removeTag($event)"
+        />
+        <div class="note-edition__tag-input-container">
+            <edit-input-tag-with-suggestions
+                [selectedTags]="tagNames"
+                (onInsertTag)="insertTag($event)"/>
+        </div>
+    </div>
+    <div class="editor-toolbar">
+        <div class="editor-toolbar__icons">
+            <span class="icon-set-bold"></span>
+            <span class="icon-set-italic"></span>
+            <span class="icon-set-underline"></span>
+            <span class="icon-set-code"></span>
+            <span class="icon-set-list-numbered"></span>
+            <span class="icon-set-list-dots"></span>
+            <span class="icon-set-paragraph-left"></span>
+            <span class="icon-set-paragraph-center"></span>
+            <span class="icon-set-paragraph-right"></span>
+            <span class="icon-insert-table"></span>
+            <span class="icon-set-hidden"></span>
+            <span class="icon-insert-link"></span>
+            <span class="icon-insert-image"></span>
+            <span class="icon-set-text-color"></span>
+            <span class="icon-set-text-background-color"></span>
+        </div>
+        <div class="editor-toolbar__buttons">
+            <div class="editor-toolbar__review-select-container">
+                <div class="editor-toolbar__review-select-button">REPASO INTENSIVO</div>
+            </div>
+            <div class="button button-success note__editor-save">
+                <span class="icon-save"></span>
+                Guardar
+            </div>
+        </div>
+    </div>
+    <div contenteditable="true" class="note__editor-textarea">
+        {{ content }}
+    </div>
+</div>

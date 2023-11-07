@@ -1,4 +1,5 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { DashboardStateService } from '../../services/dashboard-state.service';
 import { NotesService } from '../../services/notes.service';
@@ -12,15 +13,23 @@ export class HeaderNavigationComponent {
     @Input() public mobile: boolean = false;
     @Input() public logoMode: 'dark' | 'light' = 'light';
     @Input() public showButtons: boolean = true;
+    private readonly router = inject(Router);
     private readonly notesService = inject(NotesService);
+    private readonly dashboardStateService = inject(DashboardStateService);
 
     @Output()
     public openMobilePanel: EventEmitter<void> = new EventEmitter();
 
-    private dashboardStateService = inject(DashboardStateService);
-
     get isReviewSectionActive() {
         return this.dashboardStateService.selectedSection === 'for-review';
+    }
+
+    get isNoteCreationActive() {
+        return this.router.url === '/dashboard/new-note';
+    }
+
+    get currentSection() {
+        return this.dashboardStateService.dashboardState().notesType;
     }
 
     get notesForReviewCount() {

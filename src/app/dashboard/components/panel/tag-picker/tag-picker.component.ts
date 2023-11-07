@@ -30,15 +30,11 @@ export class TagPickerComponent {
     }
 
     get selectedTags() {
-        return this.tagsService.tags()
-            .filter(tag => this.dashboardStateService.selectedTags.includes(tag.id))
-            .sort((a, b) => b.notesCount - a.notesCount);
+        return this.tagsService.selectedTags;
     }
 
     get notSelectedTags() {
-        let tags = this.tagsService.tags()
-            .filter(tag => !this.dashboardStateService.selectedTags.includes(tag.id))
-            .sort((a, b) => b.notesCount - a.notesCount);
+        let tags = this.tagsService.notSelectedTags;
         if (this.searchTagsTerm) tags = tags.filter(tag => tag.name.toLowerCase().includes(this.searchTagsTerm));
         return tags.splice(0, this.visibleTagLimit);
     }

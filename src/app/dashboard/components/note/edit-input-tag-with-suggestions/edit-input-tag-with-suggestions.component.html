@@ -1,0 +1,14 @@
+<input
+    #tagInputElement
+    type="text"
+    class="note-edition__tag-input"
+    (keyup)="manageKeyPress($event)"
+    [(ngModel)]="inputText"
+    placeholder="añadir etiqueta">
+<div class="tag-suggestions" *ngIf="suggestedTags.length">
+    <div
+        class="tag-suggestions__item"
+        [ngClass]="{ 'tag-suggestions__item--selected': isSelectedSuggestion(tag.name) }"
+        (click)="selectSuggestion(tag.name)"
+        *ngFor="let tag of suggestedTags">{{ tag.name }}</div>
+</div>

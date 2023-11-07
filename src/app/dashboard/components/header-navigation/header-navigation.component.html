@@ -6,9 +6,17 @@
     <div *ngIf="mobile" class="button-dark button button-burger" (click)="openMobilePanelHandler()">
         <span class="icon-menu"></span>
     </div>
-    <div class="button-open-form button">
+    <div
+        *ngIf="!isNoteCreationActive"
+        class="button-open-form button" routerLink="/dashboard/new-note">
         <span class="icon-create"></span>
         Crear nota
+    </div>
+    <div
+        *ngIf="isNoteCreationActive"
+        class="button-close-form button" [routerLink]="'/dashboard/' + currentSection">
+        <span class="icon-create"></span>
+        Cancelar
     </div>
     <div
         *ngIf="isReviewSectionActive"
