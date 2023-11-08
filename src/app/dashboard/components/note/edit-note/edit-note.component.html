@@ -1,5 +1,4 @@
 <div class="note-edition">
-
     <input
         [value]="title"
         type="text"
@@ -39,7 +38,12 @@
         </div>
         <div class="editor-toolbar__buttons">
             <div class="editor-toolbar__review-select-container">
-                <div class="editor-toolbar__review-select-button">REPASO INTENSIVO</div>
+                <edit-review-settings
+                    [selectedDifficulty]="difficulty"
+                    [removeAfterReviews]="removeAfterReviews"
+                    (onDifficultyChange)="changeDifficulty($event)"
+                    (onRemoveAfterReviewsChange)="changeRemoveAfterReviews($event)"
+                />
             </div>
             <div class="button button-success note__editor-save">
                 <span class="icon-save"></span>

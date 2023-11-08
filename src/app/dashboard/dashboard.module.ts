@@ -37,6 +37,7 @@ import { EditTagItemComponent } from './components/note/edit-tag-item/edit-tag-i
 import {
     EditInputTagWithSuggestionsComponent,
 } from './components/note/edit-input-tag-with-suggestions/edit-input-tag-with-suggestions.component';
+import { EditReviewSettingsComponent } from './components/note/edit-review-settings/edit-review-settings.component';
 
 @NgModule({
     declarations: [
@@ -65,6 +66,7 @@ import {
         EditorComponent,
         EditTagItemComponent,
         EditInputTagWithSuggestionsComponent,
+        EditReviewSettingsComponent,
     ],
     imports: [
         CommonModule,
