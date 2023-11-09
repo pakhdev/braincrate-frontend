@@ -13,7 +13,7 @@ export class AllNotesPageComponent implements OnInit {
     private readonly notesService = inject(NotesService);
 
     ngOnInit(): void {
-        this.dashboardStateService.setState({ notesType: 'all' });
+        // this.dashboardStateService.setState({ notesType: 'all' });
     }
 
     get notes() {

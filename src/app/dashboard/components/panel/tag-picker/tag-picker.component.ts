@@ -5,6 +5,7 @@ import { DashboardStateService } from '../../../services/dashboard-state.service
 import { toObservable } from '@angular/core/rxjs-interop';
 import { pairwise } from 'rxjs';
 import { DashboardState } from '../../../interfaces/dashboard-state.interface';
+import { Tag } from '../../../interfaces/tag.interface';
 
 @Component({
     selector: 'dashboard-tag-picker',
@@ -29,21 +30,21 @@ export class TagPickerComponent {
         });
     }
 
-    get selectedTags() {
+    get selectedTags(): Tag[] {
         return this.tagsService.selectedTags;
     }
 
-    get notSelectedTags() {
+    get notSelectedTags(): Tag[] {
         let tags = this.tagsService.notSelectedTags;
         if (this.searchTagsTerm) tags = tags.filter(tag => tag.name.toLowerCase().includes(this.searchTagsTerm));
         return tags.splice(0, this.visibleTagLimit);
     }
 
-    get areTagsLoading() {
+    get areTagsLoading(): boolean {
         return this.tagsService.isLoading();
     }
 
-    public selectTag(tagId: number) {
+    public selectTag(tagId: number): void {
         const selectedTags = this.dashboardStateService.selectedTags;
         if (selectedTags.includes(tagId)) return;
 
@@ -56,7 +57,7 @@ export class TagPickerComponent {
         });
     }
 
-    public unselectTag(tagId: number) {
+    public unselectTag(tagId: number): void {
         const selectedTags = this.dashboardStateService.selectedTags;
         if (!selectedTags.includes(tagId)) return;
 
@@ -66,13 +67,13 @@ export class TagPickerComponent {
         });
     }
 
-    public searchTags() {
+    public searchTags(): void {
         const searchTerm = this.searchTagsInput.nativeElement.value;
         if (!searchTerm && !this.searchTagsTerm) return;
         this.searchTagsTerm = searchTerm.toLowerCase();
     }
 
-    public showWelcomeTag() {
+    public showWelcomeTag(): boolean {
         return this.tagsService.tags().length === 0
             && !this.searchTagsTerm
             && !this.tagsService.isLoading()
@@ -80,11 +81,11 @@ export class TagPickerComponent {
             && this.dashboardStateService.dashboardState().notesType === 'all';
     }
 
-    public showNoResultsTag() {
-        const notesType = this.dashboardStateService.dashboardState().notesType;
-        if (this.searchTagsTerm && !this.selectedTags.length) return true;
-        if (this.tagsService.tags().length > 0 || this.tagsService.isLoading()) return false;
-        return !(notesType === 'all' && !this.dashboardStateService.dashboardState().searchWord);
+    public showNoResultsTag(): boolean {
+        return !(this.tagsService.isLoading()
+            || this.notSelectedTags.length > 0
+            || (!this.searchTagsTerm && !this.dashboardStateService.dashboardState().searchWord));
+
     }
 
     private isSearchTagsInputToBeCleared(previous: DashboardState, current: DashboardState): boolean {

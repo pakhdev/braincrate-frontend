@@ -1,7 +1,7 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 
 import { environments } from '../../../environments/environment';
 import { DashboardStateService } from './dashboard-state.service';
@@ -28,28 +28,7 @@ export class NotesService {
     public notesOffsetCorrection: WritableSignal<number> = signal(0);
 
     constructor() {
-        this.dashboardState$.subscribe((dashboardState) => {
-            if (!dashboardState.notesType) return;
-
-            if (dashboardState.page === 1) {
-                console.log(dashboardState.notesType);
-                this.notesOffsetCorrection.set(0);
-                if (dashboardState.notesType === 'all') this.loadNotesForReviewCounter();
-                this.getNotes(dashboardState.selectedTags, dashboardState.searchWord, dashboardState.notesType)
-                    .subscribe((notes) => {
-                        this.controlEndOfNotes(notes.length);
-                        this.isLoading.set(false);
-                        this.notesList.set(notes);
-                    });
-            } else {
-                this.getNotes(dashboardState.selectedTags, dashboardState.searchWord, dashboardState.notesType, this.calcOffset())
-                    .subscribe((loadedNotes) => {
-                        this.controlEndOfNotes(loadedNotes.length);
-                        this.isLoading.set(false);
-                        this.notesList.update(existingNotes => [...existingNotes, ...loadedNotes]);
-                    });
-            }
-        });
+        this.subscribeToDashboardState();
     }
 
     public remove(id: number): void {
@@ -155,7 +134,9 @@ export class NotesService {
             params = params.append('tagIds[]', id.toString());
         });
 
-        return this.http.get<Note[]>(url, { headers, params });
+        return this.http.get<Note[]>(url, { headers, params }).pipe(
+            finalize(() => this.isLoading.set(false)),
+        );
     }
 
     private updateNoteQuery(id: number, route: string, body?: any): Observable<NoteUpdateResponse> {
@@ -217,6 +198,28 @@ export class NotesService {
         } else if (action === 'increment') {
             this.countNotesForReview.update(counter => counter + 1);
         }
+    }
+
+    private subscribeToDashboardState(): void {
+        this.dashboardState$.subscribe((dashboardState) => {
+            if (!dashboardState.notesType) return;
+
+            if (dashboardState.page === 1) {
+                this.notesOffsetCorrection.set(0);
+                if (dashboardState.notesType === 'all') this.loadNotesForReviewCounter();
+                this.getNotes(dashboardState.selectedTags, dashboardState.searchWord, dashboardState.notesType)
+                    .subscribe((notes) => {
+                        this.controlEndOfNotes(notes.length);
+                        this.notesList.set(notes);
+                    });
+            } else {
+                this.getNotes(dashboardState.selectedTags, dashboardState.searchWord, dashboardState.notesType, this.calcOffset())
+                    .subscribe((loadedNotes) => {
+                        this.controlEndOfNotes(loadedNotes.length);
+                        this.notesList.update(existingNotes => [...existingNotes, ...loadedNotes]);
+                    });
+            }
+        });
     }
 
 }

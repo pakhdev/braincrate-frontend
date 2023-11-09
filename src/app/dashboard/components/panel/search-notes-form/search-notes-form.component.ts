@@ -13,10 +13,6 @@ export class SearchNotesFormComponent implements OnInit {
     private readonly dashboardStateService = inject(DashboardStateService);
     private readonly dashboardState$ = toObservable(this.dashboardStateService.dashboardState);
 
-    constructor() {
-
-    }
-
     public searchNotes(): void {
         const stateSearchWord = this.dashboardStateService.dashboardState().searchWord;
         if (this.searchInput?.nativeElement.value === stateSearchWord) return;

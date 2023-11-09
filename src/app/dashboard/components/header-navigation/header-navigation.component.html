@@ -14,7 +14,7 @@
     </div>
     <div
         *ngIf="isNoteCreationActive"
-        class="button-close-form button" [routerLink]="'/dashboard/' + currentSection">
+        class="button-close-form button" (click)="cancelNoteCreation()">
         <span class="icon-create"></span>
         Cancelar
     </div>

@@ -729,7 +729,6 @@ body {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    flex: 1;
 }
 
 .note-edition__tags span {
@@ -744,6 +743,7 @@ body {
 
 .note-edition__tag-input-container {
     position: relative;
+    flex: 1;
 }
 
 .note-edition__tags-item {

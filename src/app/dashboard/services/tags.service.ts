@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { catchError, Observable, pairwise, throwError } from 'rxjs';
+import { catchError, finalize, Observable, pairwise, startWith, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { toObservable } from '@angular/core/rxjs-interop';
 
@@ -17,24 +17,15 @@ export class TagsService {
     private readonly http = inject(HttpClient);
     private readonly dashboardStateService = inject(DashboardStateService);
     private readonly dashboardState$ =
-        toObservable(this.dashboardStateService.dashboardState).pipe(pairwise());
+        toObservable(this.dashboardStateService.dashboardState).pipe(
+            startWith(this.dashboardStateService.dashboardState()), pairwise(),
+        );
 
     public tags: WritableSignal<Tag[]> = signal([]);
     public isLoading: WritableSignal<boolean> = signal(false);
 
     constructor() {
-        this.dashboardState$.subscribe(([previous, current]) => {
-            if (this.isTagsLoadRequired(previous, current)) {
-                this.getTags(
-                    current.selectedTags,
-                    current.searchWord,
-                    current.notesType,
-                ).subscribe((tags) => {
-                    this.isLoading.set(false);
-                    this.tags.set(tags);
-                });
-            }
-        });
+        this.subscribeToDashboardState();
     }
 
     get selectedTags(): Tag[] {
@@ -70,6 +61,7 @@ export class TagsService {
         return this.http.get<Tag[]>(url, { headers, params })
             .pipe(
                 catchError(err => throwError(() => err.error.message)),
+                finalize(() => this.isLoading.set(false)),
             );
     }
 
@@ -99,6 +91,20 @@ export class TagsService {
         this.tags.update((existingTags) => {
             const tagIdsToRemove = tags.map(tag => tag.id);
             return existingTags.filter(tag => !tagIdsToRemove.includes(tag.id));
+        });
+    }
+
+    private subscribeToDashboardState(): void {
+        this.dashboardState$.subscribe(([previous, current]) => {
+            if (this.isTagsLoadRequired(previous, current)) {
+                this.getTags(
+                    current.selectedTags,
+                    current.searchWord,
+                    current.notesType,
+                ).subscribe((tags) => {
+                    this.tags.set(tags);
+                });
+            }
         });
     }
 

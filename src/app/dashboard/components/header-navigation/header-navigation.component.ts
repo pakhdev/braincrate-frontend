@@ -32,6 +32,11 @@ export class HeaderNavigationComponent {
         return this.dashboardStateService.dashboardState().notesType;
     }
 
+    cancelNoteCreation() {
+        const currentSection = this.dashboardStateService.dashboardState().notesType;
+        this.router.navigate(['dashboard', currentSection], { queryParams: { preserveState: 'true' } });
+    }
+
     get notesForReviewCount() {
         const notesForReviewCount = this.notesService.countNotesForReview();
         return notesForReviewCount > 0 ? `(${ notesForReviewCount })` : null;
@@ -40,4 +45,5 @@ export class HeaderNavigationComponent {
     public openMobilePanelHandler(): void {
         this.openMobilePanel.emit();
     }
+
 }
