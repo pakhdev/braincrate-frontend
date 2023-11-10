@@ -8,15 +8,15 @@ export const authRoutes: Routes = [{
     children: [
         {
             path: 'login',
-            loadChildren: () => import('./pages/login-page/login-page.component').then(m => m.LoginPageComponent),
+            loadComponent: () => import('./pages/login-page/login-page.component').then(c => c.LoginPageComponent),
         },
         {
             path: 'register',
-            loadChildren: () => import('./pages/register-page/register-page.component').then(m => m.RegisterPageComponent),
+            loadComponent: () => import('./pages/register-page/register-page.component').then(c => c.RegisterPageComponent),
         },
         {
             path: 'about',
-            loadChildren: () => import('./pages/about-page/about-page.component').then(m => m.AboutPageComponent),
+            loadComponent: () => import('./pages/about-page/about-page.component').then(c => c.AboutPageComponent),
         },
         { path: '**', redirectTo: 'register' },
     ],
