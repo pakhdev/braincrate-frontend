@@ -7,8 +7,8 @@
             class="panel__text-input">
         <div
             errorMessage
-            *ngIf="authService.showErrorMessage(loginForm, 'email')"
-            [errors]="loginForm.get('email')?.errors"
+            *ngIf="hasError('email')"
+            [errors]="getError('email')"
             class="auth__form-error"></div>
 
         <input
@@ -18,8 +18,8 @@
             class="panel__text-input">
         <div
             errorMessage
-            *ngIf="authService.showErrorMessage(loginForm, 'password')"
-            [errors]="loginForm.get('password')?.errors"
+            *ngIf="hasError('password')"
+            [errors]="getError('password')"
             class="auth__form-error"></div>
     </div>
     <button

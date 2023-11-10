@@ -10,14 +10,35 @@ import {
     NgZone,
 } from '@angular/core';
 import { fromEvent } from 'rxjs';
-import { DOCUMENT } from '@angular/common';
-import { DashboardStateService } from '../../services/dashboard-state.service';
+import { DOCUMENT, NgIf } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { RouterOutlet } from '@angular/router';
+
+import { DashboardStateService } from '../../services/dashboard-state.service';
 import { NotesService } from '../../services/notes.service';
+import {
+    NotesLoadingIndicatorComponent,
+} from '../../components/note-visualization/notes-loading-indicator/notes-loading-indicator.component';
+import { NotesManagementComponent } from '../../components/panel/notes-management/notes-management.component';
+import { LeftMenuComponent } from '../../components/panel/left-menu/left-menu.component';
+import { AccountManagementComponent } from '../../components/panel/account-management/account-management.component';
+import { SearchAndPickTagsComponent } from '../../components/panel/search-and-pick-tags/search-and-pick-tags.component';
+import { HeaderNavigationComponent } from '../../components/panel/header-navigation/header-navigation.component';
 
 @Component({
+    standalone: true,
     selector: 'app-dashboard-layout',
     templateUrl: './dashboard-layout.component.html',
+    imports: [
+        RouterOutlet,
+        NgIf,
+        NotesLoadingIndicatorComponent,
+        NotesManagementComponent,
+        LeftMenuComponent,
+        AccountManagementComponent,
+        SearchAndPickTagsComponent,
+        HeaderNavigationComponent,
+    ],
 })
 export class DashboardLayoutComponent implements OnInit, AfterViewChecked, AfterViewInit {
 
@@ -46,7 +67,7 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
         });
     }
 
-    private handlePanelClasses() {
+    private handlePanelClasses(): void {
         const notesContainerHeight = this.notesContainerDiv.nativeElement.clientHeight;
         const stickyPanelHeight = this.stickyPanelContainerDiv.nativeElement.clientHeight;
         const viewPortHeight = window.innerHeight;
@@ -100,7 +121,7 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
         }
     }
 
-    private scrollDirection() {
+    private scrollDirection(): 'down' | 'up' {
         const direction =
             this.lastScrollPos === undefined ||
             this.lastScrollPos === 0 ||
@@ -110,7 +131,7 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
         return direction;
     }
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.ngZone.runOutsideAngular(() => {
             const scroll$ = fromEvent(window, 'scroll');
             scroll$.subscribe(() => {
@@ -119,11 +140,11 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
         });
     }
 
-    ngAfterViewChecked(): void {
+    public ngAfterViewChecked(): void {
         this.handlePanelClasses();
     }
 
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         if (window.innerHeight + window.scrollY > this.stickyPanelContainerDiv.nativeElement.clientHeight) {
             this.panelCopyrightDiv.nativeElement.style.position = 'sticky';
             this.panelCopyrightDiv.nativeElement.style.bottom = '35px';
@@ -134,20 +155,20 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
         }
     }
 
-    public openMobilePanel() {
+    public openMobilePanel(): void {
         this.documentBody.style.overflow = 'hidden';
         this.contentMobileHeaderDiv.nativeElement.style.visibility = 'hidden';
         this.mobilePanelFixerDiv.nativeElement.style.display = 'flex';
         this.panelCopyrightDiv.nativeElement.style = '';
     }
 
-    public closeMobilePanel() {
+    public closeMobilePanel(): void {
         this.documentBody.removeAttribute('style');
         this.contentMobileHeaderDiv.nativeElement.removeAttribute('style');
         this.mobilePanelFixerDiv.nativeElement.removeAttribute('style');
     }
 
-    public showLoadingNotes() {
+    public showLoadingNotes(): boolean {
         return this.notesService.isLoading();
     }
 

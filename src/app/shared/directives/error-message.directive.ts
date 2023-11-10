@@ -2,6 +2,7 @@ import { Directive, ElementRef, Input } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 
 @Directive({
+    standalone: true,
     selector: '[errorMessage]',
 })
 export class ErrorMessageDirective {

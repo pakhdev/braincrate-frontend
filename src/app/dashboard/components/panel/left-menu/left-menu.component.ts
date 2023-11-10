@@ -1,8 +1,10 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
+
 import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({
-    selector: 'dashboard-left-menu',
+    standalone: true,
+    selector: 'left-menu',
     templateUrl: './left-menu.component.html',
 })
 export class LeftMenuComponent {

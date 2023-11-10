@@ -1,11 +1,14 @@
 import { Component, computed, effect, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
+
 import { AuthService } from './auth/services/auth.service';
 import { AuthStatus } from './auth/enums/auth-status.enum';
 
 @Component({
+    standalone: true,
+    imports: [RouterOutlet],
     selector: 'app-root',
-    templateUrl: './app.component.html',
+    template: '<router-outlet></router-outlet>',
 })
 export class AppComponent {
     title = 'BrainCrate';

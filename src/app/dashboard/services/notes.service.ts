@@ -164,7 +164,7 @@ export class NotesService {
         });
     }
 
-    private removeNoteFromList(id: number) {
+    private removeNoteFromList(id: number): void {
         this.notesList.update(notes => notes.filter(note => note.id !== id));
         this.notesOffsetCorrection.update(offsetCorrection => offsetCorrection - 1);
     }

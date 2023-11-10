@@ -1,9 +1,9 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
 
-import { AuthStatus } from '../enums/auth-status.enum';
 import { AuthResponse, CheckTokenResponse, LoginResponse, User } from '../interfaces';
+import { AuthStatus } from '../enums/auth-status.enum';
 import { FormGroup } from '@angular/forms';
 import { environments } from '../../../environments/environment';
 
@@ -68,7 +68,7 @@ export class AuthService {
             );
     }
 
-    public showErrorMessage(form: FormGroup, field: string): boolean | null {
+    public hasError(form: FormGroup, field: string): boolean | null {
         return form.controls[field].errors && form.controls[field].touched;
     }
 

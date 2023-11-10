@@ -1,19 +1,28 @@
+import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { AuthService } from '../../services/auth.service';
+import { ErrorMessageDirective } from '../../../shared/directives/error-message.directive';
 import { emailPattern } from '../../../shared/validators/validators';
 
 @Component({
+    standalone: true,
     selector: 'auth-login-page',
     templateUrl: './login-page.component.html',
-    styles: [],
+    imports: [
+        NgIf,
+        ErrorMessageDirective,
+        FormsModule,
+        ReactiveFormsModule,
+    ],
 })
 export class LoginPageComponent {
 
     private fb = inject(FormBuilder);
     private router = inject(Router);
-    public authService = inject(AuthService);
+    private authService = inject(AuthService);
     public backendError: string | null = null;
 
     public loginForm = this.fb.group({
@@ -25,7 +34,7 @@ export class LoginPageComponent {
         ],
     });
 
-    login() {
+    public login(): void {
         this.loginForm.markAllAsTouched();
         if (!this.loginForm.valid) return;
         const email: string = this.loginForm.value.email!.toString().trim();
@@ -37,5 +46,13 @@ export class LoginPageComponent {
                 this.backendError = message;
             },
         });
+    }
+
+    public hasError(field: string): boolean | null {
+        return this.authService.hasError(this.loginForm, field);
+    }
+
+    public getError(field: string): ValidationErrors | null | undefined {
+        return this.loginForm.get(field)?.errors;
     }
 }

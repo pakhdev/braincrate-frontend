@@ -4,7 +4,7 @@ import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { AuthStatus } from '../enums/auth-status.enum';
 
-export const isPublicGuard: CanActivateFn = () => {
+export const isPublicGuard: CanActivateFn = (): boolean => {
     const authService = inject(AuthService);
     return authService.authStatus() !== AuthStatus.authenticated;
 };

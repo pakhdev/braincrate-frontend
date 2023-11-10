@@ -1,21 +1,30 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
 import { emailPattern, isFieldOneEqualFieldTwo } from '../../../shared/validators/validators';
 import { EmailValidator } from '../../../shared/validators/email-validator.service';
+import { ErrorMessageDirective } from '../../../shared/directives/error-message.directive';
+import { NgIf } from '@angular/common';
 
 @Component({
+    standalone: true,
     selector: 'auth-register-page',
     templateUrl: './register-page.component.html',
+    imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        ErrorMessageDirective,
+        NgIf,
+    ],
 })
 export class RegisterPageComponent {
 
     private fb = inject(FormBuilder);
     private router = inject(Router);
     private emailValidator = inject(EmailValidator);
-    public authService = inject(AuthService);
+    private authService = inject(AuthService);
     public backendError: string | null = null;
 
     public registerForm = this.fb.group({
@@ -35,7 +44,7 @@ export class RegisterPageComponent {
         ],
     });
 
-    register() {
+    public register(): void {
         this.registerForm.markAllAsTouched();
         if (!this.registerForm.valid) return;
         const email: string = this.registerForm.value.email!.toString().trim();
@@ -48,4 +57,13 @@ export class RegisterPageComponent {
             },
         });
     }
+
+    public hasError(field: string): boolean | null {
+        return this.authService.hasError(this.registerForm, field);
+    }
+
+    public getError(field: string): ValidationErrors | null | undefined {
+        return this.registerForm.get(field)?.errors;
+    }
+
 }
