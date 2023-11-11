@@ -2,7 +2,7 @@
     #tagInputElement
     type="text"
     class="note-edition__tag-input"
-    (keyup)="manageKeyPress($event)"
+    (keydown)="manageKeyPress($event)"
     [(ngModel)]="inputText"
     placeholder="añadir etiqueta">
 <div class="tag-suggestions" *ngIf="suggestedTags.length">

@@ -19,23 +19,7 @@
         </div>
     </div>
     <div class="editor-toolbar">
-        <div class="editor-toolbar__icons">
-            <span class="icon-set-bold"></span>
-            <span class="icon-set-italic"></span>
-            <span class="icon-set-underline"></span>
-            <span class="icon-set-code"></span>
-            <span class="icon-set-list-numbered"></span>
-            <span class="icon-set-list-dots"></span>
-            <span class="icon-set-paragraph-left"></span>
-            <span class="icon-set-paragraph-center"></span>
-            <span class="icon-set-paragraph-right"></span>
-            <span class="icon-insert-table"></span>
-            <span class="icon-set-hidden"></span>
-            <span class="icon-insert-link"></span>
-            <span class="icon-insert-image"></span>
-            <span class="icon-set-text-color"></span>
-            <span class="icon-set-text-background-color"></span>
-        </div>
+        <div class="editor-toolbar__icons" #iconsContainer></div>
         <div class="editor-toolbar__buttons">
             <div class="editor-toolbar__review-select-container">
                 <review-plan-selector
@@ -51,7 +35,5 @@
             </div>
         </div>
     </div>
-    <div contenteditable="true" class="note__editor-textarea">
-        {{ content }}
-    </div>
+    <visual-content-editor [content]="content" [iconsContainer]="iconsContainer"/>
 </div>

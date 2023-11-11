@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForOf } from '@angular/common';
 
 import { Note } from '../../../interfaces/note.interface';
@@ -7,6 +7,7 @@ import { Difficulty } from '../../../enums/difficulty.enum';
 import { TagInputWithSuggestionsComponent } from '../tag-input-with-suggestions/tag-input-with-suggestions.component';
 import { SelectedTagComponent } from '../selected-tag/selected-tag.component';
 import { ReviewPlanSelectorComponent } from '../review-plan-selector/review-plan-selector.component';
+import { VisualContentEditorComponent } from '../visual-content-editor/visual-content-editor.component';
 
 @Component({
     standalone: true,
@@ -17,11 +18,13 @@ import { ReviewPlanSelectorComponent } from '../review-plan-selector/review-plan
         TagInputWithSuggestionsComponent,
         SelectedTagComponent,
         ReviewPlanSelectorComponent,
+        VisualContentEditorComponent,
     ],
 })
 export class EditNoteComponent implements OnInit {
 
     @Input() public note?: Note;
+    @ViewChild('iconsContainer') public readonly iconsContainer!: ElementRef;
 
     private readonly tagsService = inject(TagsService);
 
