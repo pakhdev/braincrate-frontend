@@ -1,5 +1,6 @@
 import { Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForOf } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { Note } from '../../../interfaces/note.interface';
 import { TagsService } from '../../../services/tags.service';
@@ -19,6 +20,7 @@ import { VisualContentEditorComponent } from '../visual-content-editor/visual-co
         SelectedTagComponent,
         ReviewPlanSelectorComponent,
         VisualContentEditorComponent,
+        FormsModule,
     ],
 })
 export class EditNoteComponent implements OnInit {
