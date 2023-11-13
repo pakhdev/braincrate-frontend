@@ -8,7 +8,7 @@ import { Difficulty } from '../../../enums/difficulty.enum';
 import { TagInputWithSuggestionsComponent } from '../tag-input-with-suggestions/tag-input-with-suggestions.component';
 import { SelectedTagComponent } from '../selected-tag/selected-tag.component';
 import { ReviewPlanSelectorComponent } from '../review-plan-selector/review-plan-selector.component';
-import { VisualContentEditorComponent } from '../visual-content-editor/visual-content-editor.component';
+import { ContenteditableEditor } from '../../../../shared/directives/contenteditable-editor.directive';
 
 @Component({
     standalone: true,
@@ -19,8 +19,8 @@ import { VisualContentEditorComponent } from '../visual-content-editor/visual-co
         TagInputWithSuggestionsComponent,
         SelectedTagComponent,
         ReviewPlanSelectorComponent,
-        VisualContentEditorComponent,
         FormsModule,
+        ContenteditableEditor,
     ],
 })
 export class EditNoteComponent implements OnInit {
