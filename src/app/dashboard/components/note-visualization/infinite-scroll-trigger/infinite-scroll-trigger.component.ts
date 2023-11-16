@@ -1,5 +1,5 @@
-import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { fromEvent } from 'rxjs';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { fromEvent, Subscription } from 'rxjs';
 import { NgIf } from '@angular/common';
 
 import { NotesService } from '../../../services/notes.service';
@@ -13,13 +13,15 @@ import { DashboardStateService } from '../../../services/dashboard-state.service
         NgIf,
     ],
 })
-export class InfiniteScrollTriggerComponent implements OnInit {
+export class InfiniteScrollTriggerComponent implements OnInit, OnDestroy {
 
     @ViewChild('infiniteScrollTrigger')
     private readonly infiniteScrollTrigger!: ElementRef;
     private readonly notesService = inject(NotesService);
     private readonly dashboardStateService = inject(DashboardStateService);
     private readonly thresholdToTrigger = 150;
+    private readonly scroll$ = fromEvent(window, 'scroll');
+    private scrollSubscription: Subscription | undefined;
 
     public showLoadingTrigger(): boolean {
         return !this.notesService.isLoading()
@@ -28,8 +30,11 @@ export class InfiniteScrollTriggerComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const scroll$ = fromEvent(window, 'scroll');
-        scroll$.subscribe(() => this.loadNextPage());
+        this.scrollSubscription = this.scroll$.subscribe(() => this.loadNextPage());
+    }
+
+    ngOnDestroy() {
+        this.scrollSubscription?.unsubscribe();
     }
 
     private loadNextPage(): void {

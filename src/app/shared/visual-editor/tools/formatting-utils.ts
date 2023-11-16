@@ -79,6 +79,18 @@ export class FormattingUtils {
         this.depreditor.moveCaretToEndOfSelection();
     }
 
+    public insertHtml(html: string): void {
+        const selection = window.getSelection();
+
+        if (selection) {
+            const range = selection.getRangeAt(0);
+            const fragment = range.createContextualFragment(html);
+            range.deleteContents();
+            range.insertNode(fragment);
+        }
+        this.depreditor.moveCaretToEndOfSelection();
+    }
+
     public insertTable(rows: number, cols: number): void {
         if (rows && cols) {
             const table = document.createElement('table');

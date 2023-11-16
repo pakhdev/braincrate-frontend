@@ -1,7 +1,7 @@
 export class ImagesProcessor {
 
-    private maxInitialImageWidth: number = 800;
-    private maxInitialImageHeight: number = 600;
+    private maxInitialImageWidth: number = 700;
+    private maxInitialImageHeight: number = 350;
     private minResolutionDifference: number = 300;
     private maxLargeImageWidth: number = 1600;
     private maxLargeImageHeight: number = 1200;

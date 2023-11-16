@@ -8,6 +8,7 @@ import { DashboardStateService } from './dashboard-state.service';
 import { Note } from '../interfaces/note.interface';
 import { NoteUpdateResponse } from '../interfaces/note-update-response.interface';
 import { TagsService } from './tags.service';
+import { NoteManipulationBody } from '../interfaces/note-manipulation-body.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -139,9 +140,16 @@ export class NotesService {
         );
     }
 
-    private updateNoteQuery(id: number, route: string, body?: any): Observable<NoteUpdateResponse> {
-        // Set isLoading to true for this note
-        const url = `${ this.baseUrl }/notes/${ route }/${ id }`;
+    public createNoteQuery(body: NoteManipulationBody): Observable<NoteUpdateResponse> {
+        const url = `${ this.baseUrl }/notes`;
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders()
+            .set('Authorization', `Bearer ${ token }`);
+        return this.http.post<NoteUpdateResponse>(url, body, { headers });
+    }
+
+    public updateNoteQuery(id: number, route: string | null, body?: NoteManipulationBody): Observable<NoteUpdateResponse> {
+        const url = [this.baseUrl, 'notes', route, id].join('/').replace(/([^:]\/)\/+/g, '$1');
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders()
             .set('Authorization', `Bearer ${ token }`);
@@ -154,6 +162,10 @@ export class NotesService {
         const headers = new HttpHeaders()
             .set('Authorization', `Bearer ${ token }`);
         return this.http.delete<NoteUpdateResponse>(url, { headers });
+    }
+
+    public prependNoteToList(note: Note): void {
+        this.notesList.update(notes => [note, ...notes]);
     }
 
     public updateNoteList(id: number, properties: Partial<Note>) {

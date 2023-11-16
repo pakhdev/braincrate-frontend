@@ -301,6 +301,7 @@ body {
     margin: 20px auto 35px auto;
     line-height: 30px;
     font-weight: 300;
+    user-select: none;
 }
 
 .left-menu__item-icon {
@@ -494,6 +495,11 @@ body {
     padding: 30px 30px 15px 30px;
     margin-bottom: 30px;
     box-shadow: 0 3px 4px rgba(79, 90, 110, 0.1);
+}
+
+.note ::selection {
+    background-color: #51a3c1;
+    color: #000000;
 }
 
 .note a {
@@ -1083,6 +1089,7 @@ body {
     margin: 20px auto 35px auto;
     line-height: 30px;
     font-weight: 300;
+    user-select: none;
 }
 
 .auth__menu-item-icon {

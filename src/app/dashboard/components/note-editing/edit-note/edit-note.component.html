@@ -1,6 +1,6 @@
 <div class="note-edition">
     <input
-        [value]="title"
+        [(ngModel)]="title"
         type="text"
         class="note-edition__title"
         placeholder="Escriba aquí el titulo de la nota">
@@ -30,7 +30,9 @@
                     (onRemoveAfterReviewsChange)="changeRemoveAfterReviews($event)"
                 />
             </div>
-            <div class="button button-success note__editor-save">
+            <div
+                (click)="saveNote()"
+                class="button button-success note__editor-save">
                 <span class="icon-save"></span>
                 Guardar
             </div>

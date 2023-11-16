@@ -13,12 +13,14 @@ export class EditorInitializer {
     private domChangeObserver!: MutationObserver;
     private pasteEventListener!: EventListener;
     private enterEventListener!: EventListener;
+    private deleteEventListener!: EventListener;
     private savedSelection: Range | null = null;
 
     constructor(
         public readonly editableDiv: HTMLDivElement,
         toolbarContainer: HTMLElement,
     ) {
+        this.normalizeCode();
         this.initListeners(this.editableDiv);
         this.formattingHandler = new FormattingUtils(this);
         this.imagesHandler = new ImagesProcessor();
@@ -27,15 +29,27 @@ export class EditorInitializer {
     }
 
     private initListeners(editableDiv: HTMLElement): void {
+
+        this.deleteEventListener = (e: Event) => {
+            if ((e as KeyboardEvent).key === 'Delete') {
+                if (this.preventDelete()) {
+                    e.preventDefault();
+                }
+            }
+        };
+
         this.pasteEventListener = (e: Event) => {
             e.preventDefault();
             let text = (e as ClipboardEvent).clipboardData!.getData('text');
             text = text.replace(/&/g, '&amp;');
             text = text.replace(/</g, '&lt;');
             text = text.replace(/>/g, '&gt;');
-            text = text.replace(/ /g, '&nbsp;');
+            text = text.replace('\t', '  ');
+            text = this.isSelectionInsideCode()
+                ? this.setIndentationInCode(text)
+                : this.setIndentationInText(text);
             text = text.replace(/\n/g, '<br>');
-            document.execCommand('insertHTML', false, text);
+            this.formattingHandler.insertHtml(text);
         };
 
         this.enterEventListener = (e: Event) => {
@@ -45,12 +59,13 @@ export class EditorInitializer {
                 !document.queryCommandState('insertunorderedlist')
             ) {
                 e.preventDefault();
-                this.lineBreak();
+                this.insertLineBreak();
             }
         };
 
         editableDiv.addEventListener('paste', this.pasteEventListener);
         editableDiv.addEventListener('keydown', this.enterEventListener);
+        editableDiv.addEventListener('keydown', this.deleteEventListener);
         editableDiv.addEventListener('blur', () => this.saveSelection());
 
         editableDiv.addEventListener('mouseup', () => this.toolbar.handleButtonsState());
@@ -79,6 +94,7 @@ export class EditorInitializer {
         if (!this.editableDiv) return;
         this.editableDiv.removeEventListener('paste', this.pasteEventListener);
         this.editableDiv.removeEventListener('keydown', this.enterEventListener);
+        this.editableDiv.removeEventListener('keydown', this.deleteEventListener);
         this.editableDiv.removeEventListener('blur', this.saveSelection);
         this.stopObservingDOM();
     }
@@ -120,7 +136,13 @@ export class EditorInitializer {
         }
     }
 
-    private lineBreak() {
+    private normalizeCode(): void {
+        this.editableDiv.innerHTML = this.editableDiv.innerHTML
+            .replace(/\n/g, '')
+            .replace(/\s+/g, ' ');
+    }
+
+    private insertLineBreak() {
         const selection = window.getSelection();
         if (!selection || selection.focusNode === null) return;
         if (selection.rangeCount > 0) {
@@ -131,6 +153,94 @@ export class EditorInitializer {
             range.collapse(true);
         }
     }
+
+    private setIndentationInCode(text: string): string {
+        let minIndentation = 0;
+        const noIndentation = text
+            .split('\n')
+            .some(line => !line.startsWith(' ') && line.trim().length > 0);
+        if (!noIndentation) {
+            let matches = text.match(/^( +)/gm);
+            minIndentation = Math.min(...matches!.map(match => match.length));
+        }
+        return text.split('\n')
+            .map(line => line.replace(/^( +)/gm, (_, p1) => '&nbsp;'.repeat(p1.length - minIndentation)))
+            .join('\n');
+    };
+
+    private setIndentationInText(text: string): string {
+        return text.split('\n')
+            .map(line => line.replace(/^( +)/gm, ''))
+            .join('\n');
+    };
+
+    private isSelectionInsideCode(): boolean {
+        const selection = window.getSelection();
+        if (!selection || !selection.focusNode) return false;
+
+        let checkingParentNode = selection.focusNode;
+        while (checkingParentNode) {
+            if (checkingParentNode.nodeType === Node.ELEMENT_NODE) {
+                const element = checkingParentNode as Element;
+                if (element.classList.contains('code-text')) return true;
+            }
+            checkingParentNode = checkingParentNode.parentNode as Node;
+        }
+        return false;
+    }
+
+    private preventDelete() {
+        const selection = window.getSelection();
+        if (!selection || !selection.focusNode) return false;
+
+        const focusNode = selection.focusNode;
+        if (this.isNextSiblingCodeText(focusNode)) {
+            const textNode = selection.focusNode as Text;
+            const textLength = textNode.textContent?.trim().length || 0;
+            const offset = selection.focusOffset;
+            if (offset >= textLength) {
+                return true;
+            }
+        }
+
+        if (focusNode.nodeType === Node.TEXT_NODE) {
+            const textNode = focusNode as Text;
+            const textLength = textNode.textContent?.trim().length || 0;
+            const offset = selection.focusOffset;
+            if (offset >= textLength) {
+                const focusNodeParent = focusNode.parentNode as Element;
+                if (focusNodeParent.classList.contains('code-text')) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private isNextSiblingCodeText(focusNode: Node): boolean {
+        let siblingDistance = 2;
+        let nextSibling = focusNode.nextSibling;
+        while (nextSibling) {
+            if (siblingDistance === 0) return false;
+            if (nextSibling.nodeType === Node.ELEMENT_NODE) {
+                const element = nextSibling as Element;
+                if (element.classList.contains('code-text')) {
+                    return true;
+                } else {
+                    siblingDistance--;
+                }
+            } else if (nextSibling.nodeType === Node.TEXT_NODE) {
+                const textNode = nextSibling as Text;
+                if (textNode.textContent?.replace(/\s/g, '') !== '') {
+                    siblingDistance--;
+                }
+            }
+            nextSibling = nextSibling.nextSibling;
+        }
+        return false;
+    }
+
+    // Acceso a métodos de otras clases
 
     public get popup(): PopupHandler {
         return this.popupHandler!;
