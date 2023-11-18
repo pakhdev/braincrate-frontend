@@ -5,12 +5,14 @@ import { Note } from '../../../interfaces/note.interface';
 import { NotesService } from '../../../services/notes.service';
 import { NoteRemovalPromptComponent } from '../note-removal-prompt/note-removal-prompt.component';
 import { ReviewOptionsComponent } from '../review-options/review-options.component';
+import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
 
 @Component({
     imports: [
         NgIf,
         NoteRemovalPromptComponent,
         ReviewOptionsComponent,
+        ClickOutsideDirective,
     ],
     selector: 'note-toolbar',
     standalone: true,

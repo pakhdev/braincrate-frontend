@@ -10,8 +10,6 @@ import { NgIf } from '@angular/common';
     ],
 })
 export class NoteRemovalPromptComponent {
-    @Input({ required: true }) public visible!: boolean;
-
     @Output()
     public closeConfirmation: EventEmitter<void> = new EventEmitter<void>();
 

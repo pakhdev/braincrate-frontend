@@ -33,10 +33,12 @@
         (click)="toggleReviewOptions()"
         class="icon-menu-dots"></span>
     <review-options
+        *ngIf="isReviewOptionsVisible()"
         [note]="note"
-        [visible]="isReviewOptionsVisible()"/>
+        (clickOutside)="toggleReviewOptions()"/>
     <note-removal-prompt
+        *ngIf="isRemoveConfirmationVisible()"
         (removeNote)="remove()"
         (closeConfirmation)="toggleRemoveConfirmation()"
-        [visible]="isRemoveConfirmationVisible()"/>
+        (clickOutside)="toggleRemoveConfirmation()"/>
 </div>

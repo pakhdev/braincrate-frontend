@@ -15,7 +15,6 @@ import { Difficulty } from '../../../enums/difficulty.enum';
     ],
 })
 export class ReviewOptionsComponent {
-    @Input({ required: true }) public visible!: boolean;
     @Input({ required: true }) public note!: Note;
 
     private readonly notesService = inject(NotesService);

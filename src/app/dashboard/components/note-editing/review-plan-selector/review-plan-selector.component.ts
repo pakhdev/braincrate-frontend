@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ReviewPlan } from '../../../interfaces/review-plan.interface';
 import { Difficulty } from '../../../enums/difficulty.enum';
+import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
 
 @Component({
     standalone: true,
@@ -14,6 +15,7 @@ import { Difficulty } from '../../../enums/difficulty.enum';
         NgClass,
         NgForOf,
         FormsModule,
+        ClickOutsideDirective,
     ],
 })
 export class ReviewPlanSelectorComponent {
