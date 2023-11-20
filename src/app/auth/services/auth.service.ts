@@ -1,15 +1,15 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { computed, inject, Injectable, signal } from '@angular/core';
 
 import { AuthResponse, CheckTokenResponse, LoginResponse, User } from '../interfaces';
 import { AuthStatus } from '../enums/auth-status.enum';
 import { FormGroup } from '@angular/forms';
-import { environments } from '../../../environments/environment';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root',
+})
 export class AuthService {
-    private readonly baseUrl: string = environments.baseUrl;
     private readonly http = inject(HttpClient);
     private _currentUser = signal<User | null>(null);
     private _authStatus = signal<AuthStatus>(AuthStatus.checking);
@@ -22,9 +22,8 @@ export class AuthService {
     }
 
     public register(email: string, password: string): Observable<boolean> {
-        const url = `${ this.baseUrl }/auth/register`;
         const body = { email, password };
-        return this.http.post<LoginResponse>(url, body)
+        return this.http.post<LoginResponse>('/auth/register', body)
             .pipe(
                 map(({ id, email, token }) => this.setAuthentication({ id: +id, email }, token)),
                 catchError(err => throwError(() => err.error.message)),
@@ -32,9 +31,8 @@ export class AuthService {
     }
 
     public login(email: string, password: string): Observable<boolean> {
-        const url = `${ this.baseUrl }/auth/login`;
         const body = { email, password };
-        return this.http.post<LoginResponse>(url, body)
+        return this.http.post<LoginResponse>('/auth/login', body)
             .pipe(
                 map(({ id, email, token }) => this.setAuthentication({ id: +id, email }, token)),
                 catchError(err => throwError(() => err.error.message)),
@@ -48,21 +46,11 @@ export class AuthService {
     }
 
     public checkAuthStatus(): Observable<boolean> {
-        const url = `${ this.baseUrl }/auth/check-auth-status`;
-        const token = localStorage.getItem('token');
-        if (!token) {
-            this.logout();
-            return of(false);
-        }
-
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${ token }`);
-
-        return this.http.get<CheckTokenResponse>(url, { headers })
+        return this.http.get<CheckTokenResponse>('/auth/check-auth-status')
             .pipe(
                 map(({ id, email, token }) => this.setAuthentication({ id: +id, email }, token)),
                 catchError(() => {
-                    this._authStatus.set(AuthStatus.notAuthenticated);
+                    this.logout();
                     return of(false);
                 }),
             );
@@ -73,18 +61,8 @@ export class AuthService {
     }
 
     public updateEmail(email: string): Observable<boolean> {
-        const url = `${ this.baseUrl }/auth/update-email`;
-        const token = localStorage.getItem('token');
-        if (!token) {
-            this.logout();
-            return of(false);
-        }
-
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${ token }`);
-
         const body = { email };
-        return this.http.patch<AuthResponse>(url, body, { headers })
+        return this.http.patch<AuthResponse>('/auth/update-email', body)
             .pipe(
                 map((response) => {
                     const { id, email, token } = response.user;
@@ -95,17 +73,8 @@ export class AuthService {
     }
 
     public updatePassword(oldPassword: string, newPassword: string): Observable<boolean> {
-        const url = `${ this.baseUrl }/auth/update-password`;
-        const token = localStorage.getItem('token');
-        if (!token) {
-            this.logout();
-            return of(false);
-        }
-
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${ token }`);
         const body = { oldPassword, newPassword };
-        return this.http.patch<AuthResponse>(url, body, { headers })
+        return this.http.patch<AuthResponse>('/auth/update-password', body)
             .pipe(
                 map((response) => {
                     if (response.error) {
@@ -124,4 +93,5 @@ export class AuthService {
         localStorage.setItem('token', token);
         return true;
     }
+
 }

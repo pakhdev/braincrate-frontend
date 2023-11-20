@@ -1,9 +1,8 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { finalize, Observable } from 'rxjs';
 
-import { environments } from '../../../environments/environment';
 import { DashboardStateService } from './dashboard-state.service';
 import { Note } from '../interfaces/note.interface';
 import { NoteUpdateResponse } from '../interfaces/note-update-response.interface';
@@ -15,7 +14,6 @@ import { NoteManipulationBody } from '../interfaces/note-manipulation-body.inter
 })
 export class NotesService {
 
-    private readonly baseUrl: string = environments.baseUrl;
     private readonly http = inject(HttpClient);
     private readonly tagsService = inject(TagsService);
     private readonly dashboardStateService = inject(DashboardStateService);
@@ -118,12 +116,8 @@ export class NotesService {
         this.isLoading.set(true);
 
         const url = notesType === 'for-review'
-            ? `${ this.baseUrl }/notes/for-review`
-            : `${ this.baseUrl }/notes`;
-
-        const token = localStorage.getItem('token');
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${ token }`);
+            ? '/notes/for-review'
+            : '/notes';
 
         let params = new HttpParams();
         params = params.append('limit', this.notesPerPage.toString());
@@ -135,33 +129,23 @@ export class NotesService {
             params = params.append('tagIds[]', id.toString());
         });
 
-        return this.http.get<Note[]>(url, { headers, params }).pipe(
+        return this.http.get<Note[]>(url, { params }).pipe(
             finalize(() => this.isLoading.set(false)),
         );
     }
 
     public createNoteQuery(body: NoteManipulationBody): Observable<NoteUpdateResponse> {
-        const url = `${ this.baseUrl }/notes`;
-        const token = localStorage.getItem('token');
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${ token }`);
-        return this.http.post<NoteUpdateResponse>(url, body, { headers });
+        return this.http.post<NoteUpdateResponse>('/notes', body);
     }
 
     public updateNoteQuery(id: number, route: string | null, body?: NoteManipulationBody): Observable<NoteUpdateResponse> {
-        const url = [this.baseUrl, 'notes', route, id].join('/').replace(/([^:]\/)\/+/g, '$1');
-        const token = localStorage.getItem('token');
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${ token }`);
-        return this.http.patch<NoteUpdateResponse>(url, body, { headers });
+        const url = ['notes', route, id].join('/').replace('//', '/');
+        console.log(url);
+        return this.http.patch<NoteUpdateResponse>(`/${ url }`, body);
     }
 
     private removeNoteQuery(id: number): Observable<NoteUpdateResponse> {
-        const url = `${ this.baseUrl }/notes/${ id }`;
-        const token = localStorage.getItem('token');
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${ token }`);
-        return this.http.delete<NoteUpdateResponse>(url, { headers });
+        return this.http.delete<NoteUpdateResponse>(`/notes/${ id }`);
     }
 
     public prependNoteToList(note: Note): void {
@@ -191,11 +175,7 @@ export class NotesService {
     }
 
     private loadNotesForReviewCounter(): void {
-        const url = `${ this.baseUrl }/notes/count-for-review`;
-        const token = localStorage.getItem('token');
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${ token }`);
-        this.http.get<number>(url, { headers }).subscribe((counter) => {
+        this.http.get<number>('/notes/count-for-review').subscribe((counter) => {
             this.countNotesForReview.set(counter);
         });
     }

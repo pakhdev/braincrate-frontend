@@ -1,9 +1,8 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { catchError, finalize, Observable, pairwise, startWith, throwError } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { toObservable } from '@angular/core/rxjs-interop';
 
-import { environments } from '../../../environments/environment';
 import { DashboardStateService } from './dashboard-state.service';
 import { DashboardState } from '../interfaces/dashboard-state.interface';
 import { Tag } from '../interfaces/tag.interface';
@@ -13,7 +12,6 @@ import { Tag } from '../interfaces/tag.interface';
 })
 export class TagsService {
 
-    private readonly baseUrl: string = environments.baseUrl;
     private readonly http = inject(HttpClient);
     private readonly dashboardStateService = inject(DashboardStateService);
     private readonly dashboardState$ =
@@ -44,12 +42,8 @@ export class TagsService {
         this.isLoading.set(true);
 
         const url = notesType === 'for-review'
-            ? `${ this.baseUrl }/tags/subtags-for-review`
-            : `${ this.baseUrl }/tags`;
-
-        const token = localStorage.getItem('token');
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${ token }`);
+            ? '/tags/subtags-for-review'
+            : '/tags';
 
         let params = new HttpParams();
         if (searchWord)
@@ -58,7 +52,7 @@ export class TagsService {
             params = params.append('parentTagIds[]', id.toString());
         });
 
-        return this.http.get<Tag[]>(url, { headers, params })
+        return this.http.get<Tag[]>(url, { params })
             .pipe(
                 catchError(err => throwError(() => err.error.message)),
                 finalize(() => this.isLoading.set(false)),
