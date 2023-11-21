@@ -2,34 +2,38 @@ import { EditorInitializer } from './editor-Initializer';
 
 export class PopupHandler {
 
-    private popupContainer!: HTMLElement;
+    private popupContainer: HTMLElement | undefined;
     private isPopupOpened: boolean | string = false;
 
-    constructor(
-        private readonly depreditor: EditorInitializer,
-    ) {
-        this.createPopupContainer();
-    }
+    constructor(private readonly depreditor: EditorInitializer) {}
 
-    private createPopupContainer(): void {
+    private createPopup(popupName: string): HTMLDivElement | undefined {
+        if (this.isPopupOpened) {
+            if (this.isPopupOpened === popupName) this.hidePopup();
+            return;
+        }
+        this.isPopupOpened = popupName;
+
         this.popupContainer = document.createElement('div');
         this.popupContainer.className = 'depreditor-popup-container';
-        this.popupContainer.style.display = 'none';
+        this.popupContainer.onclick = () => {
+            this.hidePopup();
+        };
+        const popup = document.createElement('div');
+        popup.className = 'depreditor-popup';
+        popup.onclick = (e) => e.stopPropagation();
+        this.popupContainer.appendChild(popup);
 
         if (this.depreditor.editableDiv && this.depreditor.editableDiv.parentNode) {
             this.depreditor.editableDiv.parentNode.insertBefore(this.popupContainer, this.depreditor.editableDiv);
+            return popup;
         }
+        return;
     }
 
     public showTableForm(): void {
-        if (this.isPopupOpened) {
-            if (this.isPopupOpened === 'showTableForm') this.hidePopup();
-            return;
-        }
-        this.isPopupOpened = 'showTableForm';
-
-        const popup = document.createElement('div');
-        popup.className = 'depreditor-popup';
+        const popup = this.createPopup('showTableForm');
+        if (!popup || !this.popupContainer) return;
 
         const titleDiv = document.createElement('div');
         titleDiv.className = 'depreditor-popup__title';
@@ -69,14 +73,8 @@ export class PopupHandler {
     }
 
     public showImageForm(): void {
-        if (this.isPopupOpened) {
-            if (this.isPopupOpened === 'showImageForm') this.hidePopup();
-            return;
-        }
-        this.isPopupOpened = 'showImageForm';
-
-        const popup = document.createElement('div');
-        popup.className = 'depreditor-popup';
+        const popup = this.createPopup('showImageForm');
+        if (!popup || !this.popupContainer) return;
 
         const titleDiv = document.createElement('div');
         titleDiv.className = 'depreditor-popup__title';
@@ -124,11 +122,8 @@ export class PopupHandler {
     }
 
     public showLinkForm(): void {
-        if (this.isPopupOpened) {
-            if (this.isPopupOpened === 'showLinkForm') this.hidePopup();
-            return;
-        }
-        this.isPopupOpened = 'showLinkForm';
+        const popup = this.createPopup('showLinkForm');
+        if (!popup || !this.popupContainer) return;
 
         let linkTextInput: HTMLInputElement;
         let existingLink = '';
@@ -154,9 +149,6 @@ export class PopupHandler {
                 existingLink = commonAncestor.parentNode.getAttribute('href')!;
             }
         }
-
-        const popup = document.createElement('div');
-        popup.className = 'depreditor-popup';
 
         const titleDiv = document.createElement('div');
         titleDiv.className = 'depreditor-popup__title';
@@ -196,18 +188,12 @@ export class PopupHandler {
     }
 
     public showColorsForm(type: 'text' | 'background'): void {
-        if (this.isPopupOpened) {
-            if (this.isPopupOpened === 'showColorsForm') this.hidePopup();
-            return;
-        }
-        this.isPopupOpened = 'showColorsForm';
+        const popup = this.createPopup('showColorsForm');
+        if (!popup || !this.popupContainer) return;
 
         const titlePart = type === 'text'
             ? 'de texto'
             : 'de fondo';
-
-        const popup = document.createElement('div');
-        popup.className = 'depreditor-popup';
 
         const titleDiv = document.createElement('div');
         titleDiv.className = 'depreditor-popup__title';
@@ -241,9 +227,10 @@ export class PopupHandler {
     }
 
     public hidePopup = (): void => {
-        this.popupContainer.style.display = 'none';
-        this.popupContainer.innerText = '';
+        if (!this.popupContainer) return;
+        this.popupContainer.remove();
         this.isPopupOpened = false;
+        this.popupContainer = undefined;
     };
 
     private createFormButtons(actionName?: string, actionFunc?: () => void) {
@@ -252,14 +239,20 @@ export class PopupHandler {
 
         const cancelButton = document.createElement('button');
         cancelButton.className = 'button-danger button';
-        cancelButton.onclick = this.hidePopup;
+        cancelButton.onmousedown = (e) => {
+            e.stopPropagation();
+            this.hidePopup();
+        };
         cancelButton.textContent = 'Cancelar';
         buttonsContainerDiv.appendChild(cancelButton);
 
         if (actionName && actionFunc) {
             const insertActionButton = document.createElement('button');
             insertActionButton.className = 'button-success button';
-            insertActionButton.onclick = () => actionFunc();
+            insertActionButton.onclick = (e) => {
+                e.stopPropagation();
+                actionFunc();
+            };
             insertActionButton.textContent = actionName;
             buttonsContainerDiv.appendChild(insertActionButton);
         }

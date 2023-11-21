@@ -10,7 +10,8 @@ export function AuthorizationInterceptor(req: HttpRequest<unknown>, next: HttpHa
     const url = req.url.startsWith('http') ? req.url : `${ baseUrl }${ req.url }`;
 
     if (url.includes('/auth/login') || url.includes('/auth/register')) {
-        return next(req);
+        const authReq = req.clone({ url });
+        return next(authReq);
     }
 
     const token = localStorage.getItem('token');
