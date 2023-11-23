@@ -60,10 +60,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "BrainCrate:build:production"
+              "buildTarget": "BrainCrate:build:production"
             },
             "development": {
-              "browserTarget": "BrainCrate:build:development"
+              "buildTarget": "BrainCrate:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -71,7 +71,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "BrainCrate:build"
+            "buildTarget": "BrainCrate:build"
           }
         },
         "test": {
