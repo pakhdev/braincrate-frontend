@@ -1,5 +1,6 @@
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, ElementRef, inject, Input } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
+import { animate, AnimationBuilder, AnimationPlayer, style } from '@angular/animations';
 
 @Directive({
     standalone: true,
@@ -8,7 +9,9 @@ import { ValidationErrors } from '@angular/forms';
 export class ErrorMessageDirective {
 
     private readonly htmlElement?: ElementRef<HTMLElement>;
+    private readonly builder = inject(AnimationBuilder);
     private _errors?: ValidationErrors | null | undefined;
+    private player: AnimationPlayer;
 
     @Input() set errors(value: ValidationErrors | null | undefined) {
         this._errors = value;
@@ -17,6 +20,12 @@ export class ErrorMessageDirective {
 
     constructor(private element: ElementRef<HTMLElement>) {
         this.htmlElement = element;
+        const factory = this.builder.build([
+            style({ opacity: 0 }),
+            animate('300ms ease-in', style({ opacity: 1 })),
+        ]);
+        this.player = factory.create(this.htmlElement.nativeElement);
+        this.player.play();
     }
 
     setErrorMessage(): void {
