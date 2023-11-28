@@ -9,8 +9,8 @@
             class="panel__text-input">
         <div
             errorMessage
-            *ngIf="hasError('email')"
-            [errors]="getError('email')"
+            *ngIf="hasError('email') || backendError"
+            [errors]="getError('email') || backendError"
             class="auth__form-error"></div>
     </div>
     <button class="button button-success button-medium">

@@ -40,6 +40,8 @@
         Registrarse
     </button>
     <div
+        errorMessage
         *ngIf="backendError"
-        class="auth__form-error--server">{{ backendError }}</div>
+        [errors]="backendError"
+        class="auth__form-error--server"></div>
 </form>

@@ -26,7 +26,7 @@ export class AuthService {
         return this.http.post<LoginResponse>('/auth/register', body)
             .pipe(
                 map(({ id, email, token }) => this.setAuthentication({ id: +id, email }, token)),
-                catchError(err => throwError(() => err.error.message)),
+                catchError(err => throwError(() => err.error.errorCode)),
             );
     }
 
@@ -35,7 +35,7 @@ export class AuthService {
         return this.http.post<LoginResponse>('/auth/login', body)
             .pipe(
                 map(({ id, email, token }) => this.setAuthentication({ id: +id, email }, token)),
-                catchError(err => throwError(() => err.error.message)),
+                catchError(err => throwError(() => err.error.errorCode)),
             );
     }
 
@@ -46,6 +46,10 @@ export class AuthService {
     }
 
     public checkAuthStatus(): Observable<boolean> {
+        if (!localStorage.getItem('token')) {
+            this._authStatus.set(AuthStatus.notAuthenticated);
+            return of(false);
+        }
         return this.http.get<CheckTokenResponse>('/auth/check-auth-status')
             .pipe(
                 map(({ id, email, token }) => this.setAuthentication({ id: +id, email }, token)),
@@ -68,7 +72,7 @@ export class AuthService {
                     const { id, email, token } = response.user;
                     return this.setAuthentication({ id: +id, email }, token);
                 }),
-                catchError(err => throwError(() => err.error.message)),
+                catchError(err => throwError(() => err.error?.errorCode)),
             );
     }
 
@@ -84,6 +88,7 @@ export class AuthService {
                     const { id, email, token } = response.user;
                     return this.setAuthentication({ id: +id, email }, token);
                 }),
+                catchError(err => throwError(() => err.error?.errorCode)),
             );
     }
 

@@ -20,6 +20,7 @@ export class ChangePasswordComponent {
 
     public readonly authService = inject(AuthService);
     private readonly fb = inject(FormBuilder);
+    public backendError: string | null = null;
 
     public passwordUpdatingForm = this.fb.group({
         currentPassword: [
@@ -44,7 +45,14 @@ export class ChangePasswordComponent {
         this.passwordUpdatingForm.markAllAsTouched();
         const { currentPassword, newPassword } = this.passwordUpdatingForm.value;
         if (this.passwordUpdatingForm.invalid || !currentPassword || !newPassword) return;
-        this.authService.updatePassword(currentPassword, newPassword).subscribe();
+        this.authService.updatePassword(currentPassword, newPassword).subscribe({
+            next: () => {
+                this.backendError = null;
+            },
+            error: (error) => {
+                this.backendError = error;
+            },
+        });
     }
 
     public hasError(field: string): boolean | null {

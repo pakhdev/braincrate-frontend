@@ -20,6 +20,7 @@ export class ChangeEmailComponent {
 
     public readonly authService = inject(AuthService);
     private readonly fb = inject(FormBuilder);
+    public backendError: string | null = null;
 
     public emailUpdatingForm = this.fb.group({
         email: [
@@ -37,8 +38,11 @@ export class ChangeEmailComponent {
         const { email } = this.emailUpdatingForm.value;
         if (this.emailUpdatingForm.invalid || !email) return;
         this.authService.updateEmail(email).subscribe({
-            next: response => {
-                console.log(response);
+            next: () => {
+                this.backendError = null;
+            },
+            error: (error) => {
+                this.backendError = error;
             },
         });
     }

@@ -42,8 +42,9 @@ export class LoginPageComponent {
 
         this.authService.login(email, password).subscribe({
             next: () => this.router.navigateByUrl('/dashboard'),
-            error: (message) => {
-                this.backendError = message;
+            error: errorCode => {
+                console.log(errorCode);
+                this.backendError = errorCode;
             },
         });
     }
