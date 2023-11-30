@@ -13,6 +13,7 @@ import { ContenteditableEditor } from '../../../../shared/directives/contentedit
 import { NotesService } from '../../../services/notes.service';
 import { NoteManipulationBody } from '../../../interfaces/note-manipulation-body.interface';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
+import { environments } from '../../../../../environments/environment';
 
 @Component({
     standalone: true,
@@ -36,6 +37,7 @@ export class EditNoteComponent implements OnInit {
     private readonly tagsService = inject(TagsService);
     private readonly notesService = inject(NotesService);
     private readonly router = inject(Router);
+    private readonly imagesUrl = environments.imagesUrl;
 
     private isNewNote: boolean = false;
     private id: number = 0;
@@ -54,7 +56,7 @@ export class EditNoteComponent implements OnInit {
         this.id = this.note.id;
         this.title = this.note.title;
         this.tagNames = this.note.tags.map(tag => tag.name);
-        this.content = this.note.content;
+        this.content = this.modifyImageSrc(this.note.content, true);
         this.difficulty = this.note.difficulty;
         this.removeAfterReviews = this.note.removeAfterReviews;
     }
@@ -87,7 +89,7 @@ export class EditNoteComponent implements OnInit {
         const body: NoteManipulationBody = {
             title: this.title,
             tags: this.tagNames,
-            content: this.content,
+            content: this.modifyImageSrc(this.content, false),
             difficulty: this.difficulty,
             removeAfterReviews: this.removeAfterReviews,
         };
@@ -140,6 +142,22 @@ export class EditNoteComponent implements OnInit {
                 });
             if (response.tags)
                 this.tagsService.updateTags(response.tags);
+        });
+    }
+
+    private modifyImageSrc(content: string, isPrepend: boolean): string {
+        const regex = /<img\s+([^>]*)\s*\/?>/g;
+
+        return content.replace(regex, (match, attributes) => {
+            const srcRegex = isPrepend ? /src="([^"]+)"/ : new RegExp(`src="${ this.imagesUrl }/([^"]+)"`);
+            const srcMatch = attributes.match(srcRegex);
+
+            if (srcMatch) {
+                const newSrc = isPrepend ? `src="${ this.imagesUrl }/${ srcMatch[1] }"` : `src="${ srcMatch[1] }"`;
+                return `<img ${ attributes.replace(srcRegex, newSrc) }>`;
+            }
+
+            return match;
         });
     }
 }
