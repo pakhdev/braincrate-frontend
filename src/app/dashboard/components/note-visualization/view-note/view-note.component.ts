@@ -1,11 +1,12 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, Renderer2 } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 
 import { Note } from '../../../interfaces/note.interface';
 import { NoteToolbarComponent } from '../note-toolbar/note-toolbar.component';
 import { ReviewOptionsComponent } from '../review-options/review-options.component';
 import { environments } from '../../../../../environments/environment';
 import { ImageAttributes } from '../../../interfaces/image-attributes.interface';
+import { LargeImageModalComponent } from '../large-image-modal/large-image-modal.component';
 
 @Component({
     standalone: true,
@@ -15,6 +16,8 @@ import { ImageAttributes } from '../../../interfaces/image-attributes.interface'
         NgClass,
         NoteToolbarComponent,
         ReviewOptionsComponent,
+        LargeImageModalComponent,
+        NgIf,
     ],
 })
 export class ViewNoteComponent implements AfterViewInit {
@@ -23,6 +26,7 @@ export class ViewNoteComponent implements AfterViewInit {
     private readonly renderer = inject(Renderer2);
     private readonly elementRef = inject(ElementRef);
     private readonly imagesUrl = environments.imagesUrl;
+    public openLargeImageSrc: string | null = null;
 
     ngAfterViewInit() {
         this.configureImages();
@@ -37,7 +41,11 @@ export class ViewNoteComponent implements AfterViewInit {
     }
 
     public enlargeImage(largeUrl: string): void {
-        console.log('image clicked', largeUrl);
+        this.openLargeImageSrc = largeUrl;
+    }
+
+    public closeLargeImage(): void {
+        this.openLargeImageSrc = null;
     }
 
     private configureImages(): void {

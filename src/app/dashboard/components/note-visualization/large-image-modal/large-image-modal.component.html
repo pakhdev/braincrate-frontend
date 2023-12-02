@@ -1,0 +1,8 @@
+<div class="modal" (click)="closeModal()">
+    <div @modalAnimation class="modal__content">
+        <div (click)="closeModal()" class="modal__close-button">
+            <span class="icon-close"></span>
+        </div>
+        <img [src]="largeImageSrc" (click)="$event.stopPropagation()">
+    </div>
+</div>
