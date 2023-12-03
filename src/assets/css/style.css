@@ -671,6 +671,9 @@ body {
 .note__content {
     margin: 15px 0;
     font-size: 13px;
+    & img {
+        max-width: 100%;
+    }
 }
 
 .note__tags {
@@ -964,6 +967,9 @@ body {
     color: #30435A;
     min-height: 315px;
     padding: 20px 30px;
+    & img {
+        max-width: 100%;
+    }
 }
 
 /* #################################################### */
@@ -1244,6 +1250,9 @@ body {
     background-color: var(--ethereal-blue);
     padding: 0 15px;
     height: 41px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
 }
 
 .editor-toolbar__icons-container {

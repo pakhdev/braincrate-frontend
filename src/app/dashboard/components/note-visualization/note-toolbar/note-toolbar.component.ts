@@ -6,6 +6,7 @@ import { NotesService } from '../../../services/notes.service';
 import { NoteRemovalPromptComponent } from '../note-removal-prompt/note-removal-prompt.component';
 import { ReviewOptionsComponent } from '../review-options/review-options.component';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
     imports: [
@@ -13,6 +14,13 @@ import { ClickOutsideDirective } from '../../../../shared/directives/click-outsi
         NoteRemovalPromptComponent,
         ReviewOptionsComponent,
         ClickOutsideDirective,
+    ],
+    animations: [
+        trigger('popup', [
+            state('void', style({ opacity: 0, transform: 'scale(0.3)' })),
+            state('*', style({ opacity: 1, transform: 'scale(1)' })),
+            transition('void <=> *', animate('100ms ease-in-out')),
+        ]),
     ],
     selector: 'note-toolbar',
     standalone: true,

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ReviewPlan } from '../../../interfaces/review-plan.interface';
 import { Difficulty } from '../../../enums/difficulty.enum';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
     standalone: true,
@@ -16,6 +17,13 @@ import { ClickOutsideDirective } from '../../../../shared/directives/click-outsi
         NgForOf,
         FormsModule,
         ClickOutsideDirective,
+    ],
+    animations: [
+        trigger('popup', [
+            state('void', style({ opacity: 0, transform: 'scale(0.3)' })),
+            state('*', style({ opacity: 1, transform: 'scale(1)' })),
+            transition('void <=> *', animate('100ms ease-in-out')),
+        ]),
     ],
 })
 export class ReviewPlanSelectorComponent {

@@ -34,9 +34,11 @@
         class="icon-menu-dots"></span>
     <review-options
         *ngIf="isReviewOptionsVisible()"
+        @popup
         [note]="note"
         (clickOutside)="toggleReviewOptions()"/>
     <note-removal-prompt
+        @popup
         *ngIf="isRemoveConfirmationVisible()"
         (removeNote)="remove()"
         (closeConfirmation)="toggleRemoveConfirmation()"

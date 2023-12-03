@@ -1,7 +1,8 @@
 <div
     (click)="togglePopup()"
-    class="editor-toolbar__review-select-button">{{ selectedPlanName }}</div>
-<div (clickOutside)="togglePopup()" class="review-settings" *ngIf="isPopupVisible">
+    class="editor-toolbar__review-select-button">{{ selectedPlanName }}
+</div>
+<div @popup (clickOutside)="togglePopup()" class="review-settings" *ngIf="isPopupVisible">
     <div class="review-settings__options-header">
         <div>Planes de repaso</div>
         <div class="review-settings__option-green">Intervalos (días)</div>
