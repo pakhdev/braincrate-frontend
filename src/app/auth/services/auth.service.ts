@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of, throwError } from 'rxjs';
+import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { computed, inject, Injectable, signal } from '@angular/core';
 
 import { AuthResponse, CheckTokenResponse, LoginResponse, User } from '../interfaces';
 import { AuthStatus } from '../enums/auth-status.enum';
 import { FormGroup } from '@angular/forms';
+import { DashboardStateService } from '../../dashboard/services/dashboard-state.service';
 
 @Injectable({
     providedIn: 'root',
@@ -13,6 +14,7 @@ export class AuthService {
     private readonly http = inject(HttpClient);
     private _currentUser = signal<User | null>(null);
     private _authStatus = signal<AuthStatus>(AuthStatus.checking);
+    private dashboardStateService = inject(DashboardStateService);
 
     public currentUser = computed(() => this._currentUser());
     public authStatus = computed(() => this._authStatus());
@@ -35,6 +37,12 @@ export class AuthService {
         return this.http.post<LoginResponse>('/auth/login', body)
             .pipe(
                 map(({ id, email, token }) => this.setAuthentication({ id: +id, email }, token)),
+                tap(() => this.dashboardStateService.setState({
+                    selectedTags: [0],
+                    searchWord: '',
+                    notesType: '',
+                    page: 0,
+                })),
                 catchError(err => throwError(() => err.error.errorCode)),
             );
     }
