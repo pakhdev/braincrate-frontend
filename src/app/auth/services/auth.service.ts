@@ -77,7 +77,7 @@ export class AuthService {
         return this.http.patch<AuthResponse>('/auth/update-email', body)
             .pipe(
                 map((response) => {
-                    const { id, email, token } = response.user;
+                    const { id, email, token } = response;
                     return this.setAuthentication({ id: +id, email }, token);
                 }),
                 catchError(err => throwError(() => err.error?.errorCode)),
@@ -89,11 +89,7 @@ export class AuthService {
         return this.http.patch<AuthResponse>('/auth/update-password', body)
             .pipe(
                 map((response) => {
-                    if (response.error) {
-                        console.log(response.error);
-                        return false;
-                    }
-                    const { id, email, token } = response.user;
+                    const { id, email, token } = response;
                     return this.setAuthentication({ id: +id, email }, token);
                 }),
                 catchError(err => throwError(() => err.error?.errorCode)),

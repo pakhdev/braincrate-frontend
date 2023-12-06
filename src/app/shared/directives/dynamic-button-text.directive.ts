@@ -50,7 +50,7 @@ export class DynamicButtonTextDirective implements OnInit {
         if (isError) {
             const redBackgroundAnimation = this.animationBuilder.build([
                 animate(
-                    `2000ms ease-in-out`,
+                    `2300ms ease-in-out`,
                     keyframes([
                         style({ backgroundColor: '', offset: 0 }),
                         style({ backgroundColor: 'var(--brownish-orange)', offset: 0.01 }),
@@ -64,7 +64,7 @@ export class DynamicButtonTextDirective implements OnInit {
         }
 
         const textElement = this.renderer.createElement('span');
-        const animation = this.animationBuilder.build([
+        const textAnimation = this.animationBuilder.build([
             animate(
                 `${ this.animationDuration }ms ease-in-out`,
                 keyframes([
@@ -74,8 +74,8 @@ export class DynamicButtonTextDirective implements OnInit {
             ),
         ]);
 
-        const player = animation.create(textElement);
-        player.play();
+        const textPlayer = textAnimation.create(textElement);
+        textPlayer.play();
 
         this.renderer.setProperty(textElement, 'innerText', text);
         this.renderer.setProperty(this.elementRef.nativeElement, 'innerHTML', '');

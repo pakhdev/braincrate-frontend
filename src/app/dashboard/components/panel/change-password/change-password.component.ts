@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
 
 import { isFieldOneEqualFieldTwo } from '../../../../shared/validators/validators';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { ErrorMessageDirective } from '../../../../shared/directives/error-message.directive';
+import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
 
 @Component({
     standalone: true,
@@ -14,13 +15,15 @@ import { ErrorMessageDirective } from '../../../../shared/directives/error-messa
         NgIf,
         ErrorMessageDirective,
         ReactiveFormsModule,
+        DynamicButtonTextDirective,
     ],
 })
 export class ChangePasswordComponent {
 
     public readonly authService = inject(AuthService);
     private readonly fb = inject(FormBuilder);
-    public backendError: string | null = null;
+    public backendError: WritableSignal<string | null> = signal(null);
+    public isLoading = signal(false);
 
     public passwordUpdatingForm = this.fb.group({
         currentPassword: [
@@ -45,12 +48,19 @@ export class ChangePasswordComponent {
         this.passwordUpdatingForm.markAllAsTouched();
         const { currentPassword, newPassword } = this.passwordUpdatingForm.value;
         if (this.passwordUpdatingForm.invalid || !currentPassword || !newPassword) return;
+
+        this.isLoading.set(true);
+        this.backendError.set(null);
+
         this.authService.updatePassword(currentPassword, newPassword).subscribe({
             next: () => {
-                this.backendError = null;
+                this.backendError.set(null);
+                this.isLoading.set(false);
+                this.passwordUpdatingForm.reset();
             },
             error: (error) => {
-                this.backendError = error;
+                this.backendError.set(error);
+                this.isLoading.set(false);
             },
         });
     }
