@@ -11,13 +11,21 @@
     <div
         *ngIf="showCancelReviewsButton()"
         (click)="cancelReviews()"
-        class="button-danger button">Cancelar repasos
-    </div>
+        dynamicButtonText
+        initialMessage="Cancelar repasos"
+        loadingMessage="Cancelando..."
+        successMessage="Cancelados"
+        [isLoading]="isCancelingReviews()"
+        class="button-danger button"></div>
     <div
         *ngIf="showResetReviewsButton()"
         (click)="resetReviews()"
-        class="button-warning button">Restablecer repasos
-    </div>
+        dynamicButtonText
+        initialMessage="Restablecer repasos"
+        loadingMessage="Restableciendo..."
+        successMessage="Restablecidos"
+        [isLoading]="isResettingReviews()"
+        class="button-warning button"></div>
     <div class="note__review-dates">
         Creada: {{ note.createdAt | date: 'dd.MM.yyyy' }}<br>
         Modificada: {{ note.updatedAt | date: 'dd.MM.yyyy' }}<br>

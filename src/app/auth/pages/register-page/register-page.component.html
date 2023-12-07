@@ -33,15 +33,18 @@
             *ngIf="hasError('repeatPassword')"
             [errors]="getError('repeatPassword')"
             class="auth__form-error"></div>
-
     </div>
     <button
-        class="button-auth button button-medium">
-        Registrarse
-    </button>
+        dynamicButtonText
+        initialMessage="Registrarse"
+        loadingMessage="Registrando..."
+        successMessage="Registrado"
+        [errorState]="backendError()"
+        [isLoading]="isLoading()"
+        class="button button-success button-medium"></button>
     <div
         errorMessage
-        *ngIf="backendError"
-        [errors]="backendError"
+        *ngIf="backendError()"
+        [errors]="backendError()"
         class="auth__form-error--server"></div>
 </form>

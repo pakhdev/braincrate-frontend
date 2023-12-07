@@ -23,12 +23,16 @@
             class="auth__form-error"></div>
     </div>
     <button
-        class="button-auth button button-medium">
-        Entrar
-    </button>
+        dynamicButtonText
+        initialMessage="Entrar"
+        loadingMessage="Entrando..."
+        successMessage="Autenticado"
+        [errorState]="backendError()"
+        [isLoading]="isLoading()"
+        class="button button-success button-medium"></button>
     <div
         errorMessage
-        *ngIf="backendError"
-        [errors]="backendError"
+        *ngIf="backendError()"
+        [errors]="backendError()"
         class="auth__form-error--server"></div>
 </form>

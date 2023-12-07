@@ -1,11 +1,12 @@
 import { NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
 import { ErrorMessageDirective } from '../../../shared/directives/error-message.directive';
 import { emailPattern } from '../../../shared/validators/validators';
+import { DynamicButtonTextDirective } from '../../../shared/directives/dynamic-button-text.directive';
 
 @Component({
     standalone: true,
@@ -16,6 +17,7 @@ import { emailPattern } from '../../../shared/validators/validators';
         ErrorMessageDirective,
         FormsModule,
         ReactiveFormsModule,
+        DynamicButtonTextDirective,
     ],
 })
 export class LoginPageComponent {
@@ -23,7 +25,8 @@ export class LoginPageComponent {
     private fb = inject(FormBuilder);
     private router = inject(Router);
     private authService = inject(AuthService);
-    public backendError: string | null = null;
+    public backendError: WritableSignal<string | null> = signal(null);
+    public isLoading = signal(false);
 
     public loginForm = this.fb.group({
         email: ['',
@@ -39,12 +42,13 @@ export class LoginPageComponent {
         if (!this.loginForm.valid) return;
         const email: string = this.loginForm.value.email!.toString().trim();
         const password: string = this.loginForm.value.password!;
+        this.isLoading.set(true);
 
         this.authService.login(email, password).subscribe({
             next: () => this.router.navigateByUrl('/dashboard'),
             error: errorCode => {
-                console.log(errorCode);
-                this.backendError = errorCode;
+                this.backendError.set(errorCode);
+                this.isLoading.set(false);
             },
         });
     }

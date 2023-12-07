@@ -11,11 +11,7 @@ export class DynamicButtonTextDirective implements OnInit {
     @Input({ required: true }) loadingMessage!: string;
     @Input({ required: true }) successMessage!: string;
     @Input({ required: false }) errorMessage: string = 'Error';
-
     @Input({ required: false }) errorState?: string | null;
-    // @Input({ required: false }) set errorState(value: string | null) {
-    //     console.log('SETERR', value);
-    // };
 
     @Input({ required: true }) set isLoading(value: boolean) {
         this.toggleLoading(value);
@@ -28,7 +24,7 @@ export class DynamicButtonTextDirective implements OnInit {
     private _isLoading = false;
 
     ngOnInit() {
-        this.renderer.setProperty(this.elementRef.nativeElement, 'innerText', this.initialMessage);
+        this.renderer.setProperty(this.elementRef.nativeElement, 'innerHTML', `<span>${ this.initialMessage }</span>`);
     }
 
     toggleLoading(isLoading: boolean): void {
@@ -77,7 +73,7 @@ export class DynamicButtonTextDirective implements OnInit {
         const textPlayer = textAnimation.create(textElement);
         textPlayer.play();
 
-        this.renderer.setProperty(textElement, 'innerText', text);
+        this.renderer.setProperty(textElement, 'innerHTML', text);
         this.renderer.setProperty(this.elementRef.nativeElement, 'innerHTML', '');
         this.renderer.appendChild(this.elementRef.nativeElement, textElement);
     }

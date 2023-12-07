@@ -3,22 +3,32 @@
     <div
         *ngIf="isNoteRemoved()"
         (click)="restore()"
-        class="button note__restore-button">Restaurar ésta nota
-    </div>
+        dynamicButtonText
+        initialMessage="Restaurar ésta nota"
+        loadingMessage="Restaurando..."
+        successMessage="Restaurada"
+        [isLoading]="isRestoring()"
+        class="button note__restore-button"></div>
 
     <div
         *ngIf="showMarkAsReviewedButton()"
         (click)="markAsReviewed()"
-        class="button button-success note__reviewed-button">
-        Marcar como repasado
-    </div>
+        dynamicButtonText
+        initialMessage="Marcar como repasado"
+        loadingMessage="Marcando..."
+        successMessage="Marcada"
+        [isLoading]="isMarkingReviewed()"
+        class="button button-success note__reviewed-button"></div>
 
     <div
         *ngIf="showDeleteInsteadReview()"
         (click)="remove()"
-        class="button button-danger note__reviewed-button">
-        Repasado, eliminar nota
-    </div>
+        dynamicButtonText
+        initialMessage="Repasado, eliminar nota"
+        loadingMessage="Eliminando..."
+        successMessage="Eliminada"
+        [isLoading]="isDeleting()"
+        class="button button-danger note__reviewed-button"></div>
 
     <span
         *ngIf="!isNoteRemoved()"

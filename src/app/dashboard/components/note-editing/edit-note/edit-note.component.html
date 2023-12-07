@@ -32,9 +32,12 @@
             </div>
             <div
                 (click)="saveNote()"
+                dynamicButtonText
+                initialMessage="<span class='icon-save'></span>Guardar"
+                loadingMessage="Guardando..."
+                successMessage="Guardado"
+                [isLoading]="isLoading()"
                 class="button button-success note__editor-save">
-                <span class="icon-save"></span>
-                Guardar
             </div>
         </div>
     </div>

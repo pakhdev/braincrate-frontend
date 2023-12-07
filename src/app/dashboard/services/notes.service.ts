@@ -1,7 +1,7 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { finalize, Observable } from 'rxjs';
+import { finalize, Observable, tap } from 'rxjs';
 
 import { DashboardStateService } from './dashboard-state.service';
 import { Note } from '../interfaces/note.interface';
@@ -30,85 +30,100 @@ export class NotesService {
         this.subscribeToDashboardState();
     }
 
-    public remove(id: number): void {
-        this.removeNoteQuery(id).subscribe((response) => {
-            if (response.errors || !response.note) {
-                console.error(response.errors);
-                return;
-            }
-            this.calcNotesForReviewCounter(id, 'decrement');
-            this.updateNoteList(id, {
-                removedAt: response.note.removedAt,
-            });
-            this.notesOffsetCorrection.update(offsetCorrection => offsetCorrection - 1);
-            if (response.tags)
-                this.tagsService.updateTags(response.tags);
-        });
-    }
-
-    public restore(id: number): void {
-        this.updateNoteQuery(id, 'restore').subscribe((response) => {
-            if (response.errors) {
-                console.error(response.errors);
-                return;
-            }
-            this.calcNotesForReviewCounter(id, 'increment');
-            this.updateNoteList(id, {
-                removedAt: null,
-            });
-            if (response.tags)
-                this.tagsService.updateTags(response.tags);
-        });
-        this.notesOffsetCorrection.update(offsetCorrection => offsetCorrection + 1);
-    }
-
-    public markAsReviewed(id: number): void {
-        this.updateNoteQuery(id, 'mark-as-reviewed').subscribe((response) => {
-            if (response.errors || !response.note) {
-                console.error(response.errors);
-                return;
-            }
-            this.calcNotesForReviewCounter(id, 'decrement');
-            if (this.dashboardStateService.dashboardState().notesType === 'for-review') {
-                this.tagsService.removeTagsFromList(response.tags);
-                this.removeNoteFromList(id);
-            } else {
+    public remove(id: number): Observable<NoteUpdateResponse> {
+        return this.removeNoteQuery(id).pipe(
+            tap((response) => {
+                if (response.errors || !response.note) {
+                    console.error(response.errors);
+                    return;
+                }
+                this.calcNotesForReviewCounter(id, 'decrement');
                 this.updateNoteList(id, {
-                    reviewsLeft: response.note.reviewsLeft,
-                    nextReviewAt: response.note.nextReviewAt,
-                    reviewedAt: response.note.reviewedAt,
+                    removedAt: response.note.removedAt,
                 });
-            }
-        });
+                this.notesOffsetCorrection.update(offsetCorrection => offsetCorrection - 1);
+                if (response.tags) {
+                    this.tagsService.updateTags(response.tags);
+                }
+            }),
+        );
     }
 
-    public cancelReviews(id: number): void {
-        this.updateNoteQuery(id, 'cancel-reviews').subscribe((response) => {
-            if (response.errors || !response.note) {
-                console.error(response.errors);
-                return;
-            }
-            this.calcNotesForReviewCounter(id, 'decrement');
-            if (this.dashboardStateService.dashboardState().notesType === 'for-review') {
-                this.tagsService.removeTagsFromList(response.tags);
-                this.removeNoteFromList(id);
-            } else {
+    public restore(id: number): Observable<NoteUpdateResponse> {
+        return this.updateNoteQuery(id, 'restore').pipe(
+            tap((response) => {
+                if (response.errors) {
+                    console.error(response.errors);
+                    return;
+                }
+                this.calcNotesForReviewCounter(id, 'increment');
                 this.updateNoteList(id, {
-                    reviewsLeft: response.note.reviewsLeft,
-                    nextReviewAt: response.note.nextReviewAt,
+                    removedAt: null,
                 });
-            }
-        });
+                if (response.tags) {
+                    this.tagsService.updateTags(response.tags);
+                }
+            }),
+            tap(() => {
+                this.notesOffsetCorrection.update(offsetCorrection => offsetCorrection + 1);
+            }),
+        );
     }
 
-    public resetReviews(id: number): void {
-        this.updateNoteQuery(id, 'reset-reviews').subscribe((response) => {
-            if (response.errors || !response.note) {
-                console.error(response.errors);
-                return;
-            }
-            this.updateNoteList(id, { reviewsLeft: response.note.reviewsLeft });
-        });
+    public markAsReviewed(id: number): Observable<NoteUpdateResponse> {
+        return this.updateNoteQuery(id, 'mark-as-reviewed').pipe(
+            tap((response) => {
+                if (response.errors || !response.note) {
+                    console.error(response.errors);
+                    return;
+                }
+                this.calcNotesForReviewCounter(id, 'decrement');
+                if (this.dashboardStateService.dashboardState().notesType === 'for-review') {
+                    this.tagsService.removeTagsFromList(response.tags);
+                    this.removeNoteFromList(id);
+                } else {
+                    console.log('set', response.note.nextReviewAt);
+                    this.updateNoteList(id, {
+                        reviewsLeft: response.note.reviewsLeft,
+                        nextReviewAt: response.note.nextReviewAt,
+                        reviewedAt: response.note.reviewedAt,
+                    });
+                }
+            }),
+        );
+    }
+
+    public cancelReviews(id: number): Observable<NoteUpdateResponse> {
+        return this.updateNoteQuery(id, 'cancel-reviews').pipe(
+            tap((response) => {
+                if (response.errors || !response.note) {
+                    console.error(response.errors);
+                    return;
+                }
+                this.calcNotesForReviewCounter(id, 'decrement');
+                if (this.dashboardStateService.dashboardState().notesType === 'for-review') {
+                    this.tagsService.removeTagsFromList(response.tags);
+                    this.removeNoteFromList(id);
+                } else {
+                    this.updateNoteList(id, {
+                        reviewsLeft: response.note.reviewsLeft,
+                        nextReviewAt: response.note.nextReviewAt,
+                    });
+                }
+            }),
+        );
+    }
+
+    public resetReviews(id: number): Observable<NoteUpdateResponse> {
+        return this.updateNoteQuery(id, 'reset-reviews').pipe(
+            tap((response) => {
+                if (response.errors || !response.note) {
+                    console.error(response.errors);
+                    return;
+                }
+                this.updateNoteList(id, { reviewsLeft: response.note.reviewsLeft });
+            }),
+        );
     }
 
     private getNotes(tagIds: number[], searchWord: string, notesType: string, offset?: number): Observable<Note[]> {

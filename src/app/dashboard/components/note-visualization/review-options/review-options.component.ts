@@ -1,9 +1,10 @@
-import { Component, computed, inject, Input } from '@angular/core';
+import { Component, computed, inject, Input, signal } from '@angular/core';
 import { DatePipe, NgIf } from '@angular/common';
 
 import { NotesService } from '../../../services/notes.service';
 import { Note } from '../../../interfaces/note.interface';
 import { Difficulty } from '../../../enums/difficulty.enum';
+import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
 
 @Component({
     standalone: true,
@@ -12,10 +13,14 @@ import { Difficulty } from '../../../enums/difficulty.enum';
     imports: [
         NgIf,
         DatePipe,
+        DynamicButtonTextDirective,
     ],
 })
 export class ReviewOptionsComponent {
     @Input({ required: true }) public note!: Note;
+
+    public isResettingReviews = signal(false);
+    public isCancelingReviews = signal(false);
 
     private readonly notesService = inject(NotesService);
 
@@ -52,11 +57,21 @@ export class ReviewOptionsComponent {
     }
 
     public resetReviews(): void {
-        this.notesService.resetReviews(this.note.id);
+        if (this.isResettingReviews()) return;
+        this.isResettingReviews.set(true);
+        this.notesService.resetReviews(this.note.id).subscribe({
+            complete: () => this.isResettingReviews.set(false),
+            error: () => this.isResettingReviews.set(false),
+        });
     }
 
     public cancelReviews() {
-        this.notesService.cancelReviews(this.note.id);
+        if (this.isCancelingReviews()) return;
+        this.isCancelingReviews.set(true);
+        this.notesService.cancelReviews(this.note.id).subscribe({
+            complete: () => this.isCancelingReviews.set(false),
+            error: () => this.isCancelingReviews.set(false),
+        });
     }
 
     private areProgrammedReviews(): boolean {

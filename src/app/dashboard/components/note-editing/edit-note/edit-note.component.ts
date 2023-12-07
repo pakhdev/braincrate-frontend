@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnInit, signal, ViewChild } from '@angular/core';
 import { NgForOf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { NotesService } from '../../../services/notes.service';
 import { NoteManipulationBody } from '../../../interfaces/note-manipulation-body.interface';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
 import { environments } from '../../../../../environments/environment';
+import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
 
 @Component({
     standalone: true,
@@ -26,6 +27,7 @@ import { environments } from '../../../../../environments/environment';
         ReviewPlanSelectorComponent,
         FormsModule,
         ContenteditableEditor,
+        DynamicButtonTextDirective,
     ],
 })
 export class EditNoteComponent implements OnInit {
@@ -41,6 +43,8 @@ export class EditNoteComponent implements OnInit {
 
     private isNewNote: boolean = false;
     private id: number = 0;
+
+    public isLoading = signal(false);
     public title: string = '';
     public tagNames: string[] = [];
     public content: string = '';
@@ -84,6 +88,7 @@ export class EditNoteComponent implements OnInit {
             || this.tagNames.length < 1
             || this.tagNames.length > 13
             || this.content.length < 5
+            || this.isLoading()
         ) return;
 
         const body: NoteManipulationBody = {
@@ -94,6 +99,7 @@ export class EditNoteComponent implements OnInit {
             removeAfterReviews: this.removeAfterReviews,
         };
 
+        this.isLoading.set(true);
         if (this.isNewNote) {
             this.createNote(body);
         } else {
@@ -127,6 +133,7 @@ export class EditNoteComponent implements OnInit {
 
     private updateNote(body: NoteManipulationBody): void {
         this.notesService.updateNoteQuery(this.id, null, body).subscribe((response) => {
+            this.isLoading.set(false);
             if (response.errors) {
                 console.error(response.errors);
                 return;

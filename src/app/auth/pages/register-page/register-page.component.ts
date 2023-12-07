@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -7,6 +7,7 @@ import { emailPattern, isFieldOneEqualFieldTwo } from '../../../shared/validator
 import { EmailValidator } from '../../../shared/validators/email-validator.service';
 import { ErrorMessageDirective } from '../../../shared/directives/error-message.directive';
 import { NgIf } from '@angular/common';
+import { DynamicButtonTextDirective } from '../../../shared/directives/dynamic-button-text.directive';
 
 @Component({
     standalone: true,
@@ -17,6 +18,7 @@ import { NgIf } from '@angular/common';
         FormsModule,
         ErrorMessageDirective,
         NgIf,
+        DynamicButtonTextDirective,
     ],
 })
 export class RegisterPageComponent {
@@ -25,7 +27,8 @@ export class RegisterPageComponent {
     private router = inject(Router);
     private emailValidator = inject(EmailValidator);
     private authService = inject(AuthService);
-    public backendError: string | null = null;
+    public backendError: WritableSignal<string | null> = signal(null);
+    public isLoading = signal(false);
 
     public registerForm = this.fb.group({
         email: ['',
@@ -50,10 +53,12 @@ export class RegisterPageComponent {
         const email: string = this.registerForm.value.email!.toString().trim();
         const password: string = this.registerForm.value.password!;
 
+        this.isLoading.set(true);
         this.authService.register(email, password).subscribe({
             next: () => this.router.navigateByUrl('/dashboard'),
-            error: (message) => {
-                this.backendError = message;
+            error: errorCode => {
+                this.backendError.set(errorCode);
+                this.isLoading.set(false);
             },
         });
     }

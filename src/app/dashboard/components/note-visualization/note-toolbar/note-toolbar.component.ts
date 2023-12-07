@@ -7,6 +7,7 @@ import { NoteRemovalPromptComponent } from '../note-removal-prompt/note-removal-
 import { ReviewOptionsComponent } from '../review-options/review-options.component';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
 
 @Component({
     imports: [
@@ -14,6 +15,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
         NoteRemovalPromptComponent,
         ReviewOptionsComponent,
         ClickOutsideDirective,
+        DynamicButtonTextDirective,
     ],
     animations: [
         trigger('popup', [
@@ -32,6 +34,10 @@ export class NoteToolbarComponent {
     private readonly notesService = inject(NotesService);
     public isRemoveConfirmationVisible = signal(false);
     public isReviewOptionsVisible = signal(false);
+
+    public isRestoring = signal(false);
+    public isMarkingReviewed = signal(false);
+    public isDeleting = signal(false);
 
     public get tags(): string {
         return this.note.tags.map(tag => tag.name).join(', ');
@@ -67,19 +73,31 @@ export class NoteToolbarComponent {
             && this.note.removeAfterReviews;
     }
 
-    remove(): void {
-        this.notesService.remove(this.note.id);
+    public remove(): void {
+        this.isDeleting.set(true);
+        this.notesService.remove(this.note.id).subscribe({
+            complete: () => this.isDeleting.set(false),
+            error: () => this.isDeleting.set(false),
+        });
     }
 
-    markAsReviewed(): void {
-        this.notesService.markAsReviewed(this.note.id);
+    public markAsReviewed(): void {
+        this.isMarkingReviewed.set(true);
+        this.notesService.markAsReviewed(this.note.id).subscribe({
+            complete: () => this.isMarkingReviewed.set(false),
+            error: () => this.isMarkingReviewed.set(false),
+        });
     }
 
-    restore(): void {
-        this.notesService.restore(this.note.id);
+    public restore(): void {
+        this.isRestoring.set(true);
+        this.notesService.restore(this.note.id).subscribe({
+            complete: () => this.isRestoring.set(false),
+            error: () => this.isRestoring.set(false),
+        });
     }
 
-    edit(): void {
+    public edit(): void {
         this.notesService.updateNoteList(this.note.id, { editMode: true });
     }
 }

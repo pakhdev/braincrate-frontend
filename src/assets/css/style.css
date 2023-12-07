@@ -76,15 +76,13 @@ html, body {
     display: flex;
     justify-content: space-between;
     margin-bottom: 30px;
-}
-
-.primary-buttons div {
-    margin-right: 10px;
-    flex: 1;
-}
-
-.primary-buttons div:last-child {
-    margin-right: 0;
+    & div {
+        margin-right: 10px;
+        flex: 1;
+    }
+    & div:last-child {
+        margin-right: 0;
+    }
 }
 
 .button {
@@ -99,20 +97,22 @@ html, body {
     height: 27px;
     border: none;
     user-select: none;
+    & span {
+        font-size: 10px;
+    }
+    & [class^="icon-"], [class*=" icon-"] {
+        font-size: 13px;
+        margin-right: 7px;
+    }
+    &:hover {
+        filter: brightness(105%);
+        cursor: pointer;
+    }
 }
 
 .button-medium {
     width: 100%;
     height: 31px;
-}
-
-.button span {
-    margin-right: 7px;
-}
-
-.button:hover {
-    filter: brightness(105%);
-    cursor: pointer;
 }
 
 .button-danger {
@@ -146,10 +146,9 @@ html, body {
 .button-burger {
     background-color: #465B76;
     flex: 0 !important;
-}
-
-.button-burger span {
-    margin-right: 0;
+    & span {
+        margin-right: 0;
+    }
 }
 
 .highlighted-text {
@@ -306,16 +305,27 @@ body {
 .left-menu__item {
     position: relative;
     width: 30px;
-}
-
-.left-menu__item a {
-    color: white;
-    text-decoration: none;
-}
-
-.left-menu__item:hover {
-    filter: brightness(105%);
-    cursor: pointer;
+    & a {
+        color: white;
+        text-decoration: none;
+    }
+    &:hover {
+        filter: brightness(105%);
+        cursor: pointer;
+    }
+    &:nth-child(1) {
+        background-color: var(--pastel-orange);
+        border-radius: 10px 0 0 0;
+    }
+    &:nth-child(2) {
+        background: #F49469;
+    }
+    &:nth-child(3) {
+        background-color: #E68060;
+    }
+    &:nth-child(4) {
+        background-color: #e47350;
+    }
 }
 
 .left-menu__item-title {
@@ -334,23 +344,6 @@ body {
     width: 30px;
     bottom: 15px;
     left: 8px;
-}
-
-.left-menu__item:nth-child(1) {
-    background-color: var(--pastel-orange);
-    border-radius: 10px 0 0 0;
-}
-
-.left-menu__item:nth-child(2) {
-    background: #F49469;
-}
-
-.left-menu__item:nth-child(3) {
-    background-color: #E68060;
-}
-
-.left-menu__item:nth-child(4) {
-    background-color: #e47350;
 }
 
 .mobile-panel-fixer-container {
@@ -414,17 +407,15 @@ body {
     position: relative;
     margin: 5px auto 30px auto;
     width: 100%;
-}
-
-.panel__input-with-icon input {
-    padding-left: 35px;
-}
-
-.panel__input-with-icon span {
-    position: absolute;
-    top: 11px;
-    left: 10px;
-    color: var(--subtle-blue);
+    & input {
+        padding-left: 35px;
+    }
+    & span {
+        position: absolute;
+        top: 11px;
+        left: 10px;
+        color: var(--subtle-blue);
+    }
 }
 
 .panel__text-input {
@@ -437,18 +428,15 @@ body {
     padding-left: 18px;
     height: 35px;
     margin-bottom: 15px;
-}
-
-.panel__text-input:hover {
-    background-color: #465169;
-}
-
-.panel__text-input:focus {
-    background-color: #465169;
-}
-
-.panel__text-input::placeholder {
-    color: var(--subtle-blue);
+    &:hover {
+        background-color: #465169;
+    }
+    &:focus {
+        background-color: #465169;
+    }
+    &::placeholder {
+        color: var(--subtle-blue);
+    }
 }
 
 .panel__tags-container {
@@ -466,21 +454,19 @@ body {
     margin: 3px;
     font-size: 11px;
     user-select: none;
-}
-
-.panel__tag:hover {
-    background-color: #465169;
-    cursor: pointer;
+    &:hover {
+        background-color: #465169;
+        cursor: pointer;
+    }
 }
 
 .panel__tag--selected {
     background-color: var(--subtle-blue);
     color: var(--dark-blue);
-}
-
-.panel__tag--selected:hover {
-    background-color: var(--subtle-blue);
-    filter: brightness(105%);
+    &:hover {
+        background-color: var(--subtle-blue);
+        filter: brightness(105%);
+    }
 }
 
 /* ########################## */
@@ -520,19 +506,16 @@ body {
     padding: 30px 30px 15px 30px;
     margin-bottom: 30px;
     box-shadow: 0 3px 4px rgba(79, 90, 110, 0.1);
-}
-
-.note ::selection {
-    background-color: #51a3c1;
-    color: #000000;
-}
-
-.note a {
-    color: var(--bright-blue);
-}
-
-.note a:hover {
-    text-decoration: none;
+    & ::selection {
+        background-color: #51a3c1;
+        color: #000000;
+    }
+    & a {
+        color: var(--bright-blue);
+    }
+    & a:hover {
+        text-decoration: none;
+    }
 }
 
 .note-removed,
@@ -546,12 +529,11 @@ body {
 
 .note__title {
     flex: 1;
-}
-
-.note__title a {
-    text-transform: uppercase;
-    color: var(--bright-blue);
-    font-weight: bold;
+    & a {
+        text-transform: uppercase;
+        color: var(--bright-blue);
+        font-weight: bold;
+    }
 }
 
 .note__title-removed a {
@@ -565,16 +547,14 @@ body {
     justify-content: flex-end;
     min-width: 90px;
     margin-top: -5px;
-}
-
-.note__toolbar span {
-    font-size: 14px;
-    margin-right: 10px;
-    cursor: pointer;
-}
-
-.note__toolbar span:hover {
-    filter: brightness(85%);
+    & [class^="icon-"], [class*=" icon-"] {
+        font-size: 14px;
+        margin-right: 10px;
+    }
+    & [class^="icon-"]:hover, [class*=" icon-"]:hover {
+        filter: brightness(85%);
+        cursor: pointer;
+    }
 }
 
 .note__reviewed-button {
@@ -597,6 +577,12 @@ body {
     width: 160px;
     text-align: center;
     user-select: none;
+    & div {
+        margin-bottom: 5px;
+    }
+    & div:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .note__delete-popup::before,
@@ -608,14 +594,6 @@ body {
     border-left: 9px solid transparent;
     border-right: 9px solid transparent;
     border-bottom: 17px solid white;
-}
-
-.note__delete-popup div {
-    margin-bottom: 5px;
-}
-
-.note__delete-popup div:last-child {
-    margin-bottom: 0;
 }
 
 .note__review-popup {
@@ -631,19 +609,16 @@ body {
     width: 180px;
     filter: drop-shadow(0px 3px 4px rgba(79, 90, 110, 0.1));
     user-select: none;
-}
-
-.note__review-popup::before {
-    top: -17px;
-    right: 19px;
-}
-
-.note__review-popup div {
-    margin-bottom: 5px;
-}
-
-.note__review-popup div:last-child {
-    margin-bottom: 0;
+    &::before {
+        top: -17px;
+        right: 19px;
+    }
+    & div {
+        margin-bottom: 5px;
+    }
+    & div:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .note__review-header {
@@ -652,11 +627,14 @@ body {
 
 .note__review-icon {
     padding: 3px;
-}
-
-.note__review-icon span {
-    font-size: 25px;
-    color: var(--pastel-orange);
+    & [class^="icon-"], [class*=" icon-"] {
+        font-size: 25px;
+        color: var(--pastel-orange);
+    }
+    & [class^="icon-"]:hover, [class*=" icon-"]:hover {
+        cursor: default;
+        filter: brightness(100%);
+    }
 }
 
 .note__review-info b {
@@ -690,19 +668,9 @@ body {
     padding: 13px;
     justify-content: center;
     display: none;
-}
-
-.note__footer span {
-    font-size: 15px;
-}
-
-.note__toolbar-icon {
-    margin: 0 5px;
-}
-
-.note__toolbar-icon:hover {
-    filter: brightness(85%);
-    cursor: pointer;
+    & span {
+        font-size: 15px;
+    }
 }
 
 /* ##################### */
@@ -714,7 +682,7 @@ body {
 
 .tag-suggestions {
     position: absolute;
-    z-index: 2;
+    z-index: 10;
     top: 30px;
     filter: drop-shadow(0px 3px 4px rgba(79, 90, 110, 0.1));
     background-color: #F8F9FA;
@@ -726,10 +694,9 @@ body {
 .tag-suggestions__item {
     text-transform: uppercase;
     padding: 7px 10px;
-}
-
-.tag-suggestions__item:hover {
-    cursor: pointer;
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 .tag-suggestions__item--selected {
@@ -745,11 +712,10 @@ body {
     padding: 10px 15px;
     color: var(--dark-turquoise);
     font-size: 13px;
-}
-
-.note-edition__title::placeholder {
-    color: var(--dark-turquoise);
-    font-size: 13px;
+    &::placeholder {
+        color: var(--dark-turquoise);
+        font-size: 13px;
+    }
 }
 
 .note-edition__tags {
@@ -757,18 +723,16 @@ body {
     border: 1px solid #EADFFC;
     border-radius: 5px;
     min-height: 36px;
-
     padding: 0 10px;
     margin: 10px 0;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-}
-
-.note-edition__tags span {
-    font-size: 13px;
-    color: var(--subtle-blue);
-    margin-right: 5px;
+    & span {
+        font-size: 13px;
+        color: var(--subtle-blue);
+        margin-right: 5px;
+    }
 }
 
 .note-edition__tags-icon {
@@ -797,15 +761,13 @@ body {
     font-size: 10px;
     align-self: stretch;
     line-height: 25px;
-}
-
-.note-edition__tag-remove:hover {
-    cursor: pointer;
-}
-
-.note-edition__tag-remove span {
-    font-size: 8px;
-    color: var(--subtle-blue);
+    &:hover {
+        cursor: pointer;
+    }
+    & span {
+        font-size: 8px;
+        color: var(--subtle-blue);
+    }
 }
 
 .note-edition__tag-text {
@@ -821,10 +783,9 @@ body {
     padding: 5px 0;
     color: #383f50;
     width: 100%;
-}
-
-.note-edition__tag-input::placeholder {
-    color: #4F5A6E;
+    &::placeholder {
+        color: #4F5A6E;
+    }
 }
 
 /* ##################### */
@@ -845,12 +806,16 @@ body {
     align-items: center;
     padding-right: 10px;
     flex: 1;
+    & span {
+        font-size: 13px;
+        color: var(--dark-turquoise);
+        cursor: pointer;
+    }
 }
 
-.editor-toolbar__icons span {
+/* ???? */
+.editor-toolbar__icon {
     font-size: 13px;
-    color: var(--dark-turquoise);
-    cursor: pointer;
 }
 
 .editor-toolbar__buttons {
@@ -860,15 +825,14 @@ body {
 
 .editor-toolbar__review-select-container {
     position: relative;
-}
-
-.editor-toolbar__review-select-container span {
-    position: absolute;
-    top: 8px;
-    right: 18px;
-    font-size: 9px;
-    color: var(--bright-blue);
-    pointer-events: none;
+    & span {
+        position: absolute;
+        top: 8px;
+        right: 18px;
+        font-size: 9px;
+        color: var(--bright-blue);
+        pointer-events: none;
+    }
 }
 
 .editor-toolbar__review-select-button {
@@ -884,16 +848,15 @@ body {
     text-transform: uppercase;
     cursor: default;
     user-select: none;
-}
-
-.editor-toolbar__review-select-button::after {
-    font-family: 'icons' !important;
-    content: "\e913";
-    position: absolute;
-    top: 7px;
-    right: 10px;
-    color: var(--bright-blue);
-    z-index: 0;
+    &::after {
+        font-family: 'icons' !important;
+        content: "\e913";
+        position: absolute;
+        top: 7px;
+        right: 10px;
+        color: var(--bright-blue);
+        z-index: 0;
+    }
 }
 
 .review-settings {
@@ -924,16 +887,15 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 3px 10px;
+    &:hover {
+        background-color: #e7e0f3;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 }
 
 .review-settings__option-row--selected {
     background-color: var(--ethereal-blue);
-}
-
-.review-settings__option-row:hover {
-    background-color: #e7e0f3;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 .review-settings__option-title {
@@ -956,10 +918,12 @@ body {
 
 .note__editor-save {
     width: 128px;
-}
-
-.note__editor-save span {
-    font-size: 13px;
+    & [class^="icon-"], [class*=" icon-"] {
+        font-size: 13px;
+    }
+    & span {
+        font-size: 11px;
+    }
 }
 
 .note__editor-textarea {
