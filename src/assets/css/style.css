@@ -172,28 +172,22 @@ html, body {
     position: relative;
     vertical-align: middle;
     transition: background 0.25s;
-}
-
-.toggle-switch:before, .toggle-switch:after {
-    content: "";
-}
-
-.toggle-switch:before {
-    display: block;
-    background: linear-gradient(to bottom, #fff 0%, #eee 100%);
-    border-radius: 50%;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
-    width: 12px;
-    height: 12px;
-    position: absolute;
-    top: 4px;
-    left: 5px;
-    transition: left 0.25s;
-}
-
-.toggle:hover .toggle-switch:before {
-    background: linear-gradient(to bottom, #fff 0%, #fff 100%);
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+    &:before {
+        content: "";
+        display: block;
+        border-radius: 50%;
+        background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        top: 4px;
+        left: 5px;
+        transition: left 0.25s;
+    }
+    &:after {
+        content: "";
+    }
 }
 
 .toggle-checkbox:checked + .toggle-switch {
@@ -813,11 +807,6 @@ body {
     }
 }
 
-/* ???? */
-.editor-toolbar__icon {
-    font-size: 13px;
-}
-
 .editor-toolbar__buttons {
     flex: 0;
     display: flex;
@@ -962,11 +951,10 @@ body {
 
 .welcome__big-icon {
     padding: 15px 30px 15px 15px;
-}
-
-.welcome__big-icon span {
-    font-size: 73px;
-    color: var(--bright-blue);
+    & span {
+        font-size: 73px;
+        color: var(--bright-blue);
+    }
 }
 
 .tags-not-found {
@@ -987,10 +975,9 @@ body {
 .no-results__icon {
     text-align: center;
     margin-bottom: 20px;
-}
-
-.no-results__icon span {
-    font-size: 85px;
+    & span {
+        font-size: 85px;
+    }
 }
 
 .no-results__title {
@@ -1058,18 +1045,20 @@ body {
     position: relative;
     width: 30px;
     user-select: none;
-}
-
-.auth__left-menu-item:hover,
-.auth__right-menu-item:hover {
-    filter: brightness(105%);
-    cursor: pointer;
-}
-
-.auth__left-menu-item a,
-.auth__right-menu-item a {
-    color: white;
-    text-decoration: none;
+    &:hover {
+        filter: brightness(105%);
+        cursor: pointer;
+    }
+    & a {
+        color: white;
+        text-decoration: none;
+    }
+    &:nth-child(1) {
+        background-color: #FF7436;
+    }
+    &:nth-child(2) {
+        background-color: #F49469;
+    }
 }
 
 .auth__menu-item--active {
@@ -1100,16 +1089,6 @@ body {
 
 .auth__right-menu-item:nth-child(1) {
     border-radius: 0 10px 0 0;
-}
-
-.auth__left-menu-item:nth-child(1),
-.auth__right-menu-item:nth-child(1) {
-    background-color: #FF7436;
-}
-
-.auth__left-menu-item:nth-child(2),
-.auth__right-menu-item:nth-child(2) {
-    background: #F49469;
 }
 
 .auth__content-container {
@@ -1151,11 +1130,10 @@ body {
     margin: -5px -10px 10px;
     font-size: 13px;
     line-height: 120%;
-}
-
-.auth__about h1 {
-    font-size: 18px;
-    text-align: center;
+    & h1 {
+        font-size: 18px;
+        text-align: center;
+    }
 }
 
 .auth__logo-container {
@@ -1249,23 +1227,17 @@ body {
     min-height: 400px;
     padding: 20px;
     caret-color: black !important;
-}
-
-.editor-content img {
-    max-width: 100%;
-}
-
-.editor-content td {
-    min-height: 32px;
-    padding: 5px;
-}
-
-.editor-content table {
-    width: 100%;
-}
-
-.editor-content td {
-    border: 1px solid var(--bright-blue);
+    & img {
+        max-width: 100%;
+    }
+    & table {
+        width: 100%;
+    }
+    & td {
+        min-height: 32px;
+        padding: 5px;
+        border: 1px solid var(--bright-blue);
+    }
 }
 
 .depreditor-popup-container {
@@ -1291,18 +1263,17 @@ body {
     line-height: 15px;
     position: sticky;
     top: 10px;
-}
-
-.depreditor-popup input {
-    height: 36px;
-    border: 1px solid #EADFFC;
-    background-color: #EEF4F8;
-    border-radius: 5px;
-    width: 100%;
-    padding: 10px 15px;
-    color: var(--dark-turquoise);
-    font-size: 13px;
-    margin-bottom: 15px;
+    & input {
+        height: 36px;
+        border: 1px solid #EADFFC;
+        background-color: #EEF4F8;
+        border-radius: 5px;
+        width: 100%;
+        padding: 10px 15px;
+        color: var(--dark-turquoise);
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
 }
 
 .depreditor-popup__title {
@@ -1338,65 +1309,6 @@ body {
     border: 1px solid var(--bright-blue);
 }
 
-.toggle {
-    cursor: pointer;
-    display: inline-block;
-    text-align: center;
-}
-
-.toggle-switch {
-    display: inline-block;
-    background: #ccc;
-    border-radius: 12px;
-    width: 32px;
-    height: 21px;
-    position: relative;
-    vertical-align: middle;
-    transition: background 0.25s;
-}
-
-.toggle-switch:before, .toggle-switch:after {
-    content: "";
-}
-
-.toggle-switch:before {
-    display: block;
-    background: linear-gradient(to bottom, #fff 0%, #eee 100%);
-    border-radius: 50%;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
-    width: 12px;
-    height: 12px;
-    position: absolute;
-    top: 4px;
-    left: 5px;
-    transition: left 0.25s;
-}
-
-.toggle:hover .toggle-switch:before {
-    background: linear-gradient(to bottom, #fff 0%, #fff 100%);
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
-}
-
-.toggle-checkbox:checked + .toggle-switch {
-    background: #56c080;
-}
-
-.toggle-checkbox:checked + .toggle-switch:before {
-    left: 15px;
-}
-
-.toggle-checkbox {
-    position: absolute;
-    visibility: hidden;
-    width: auto !important;
-}
-
-.toggle-label {
-    margin-left: 5px;
-    position: relative;
-    top: 2px;
-}
-
 .depreditor-popup__buttons-container {
     display: flex;
     gap: 0 10px;
@@ -1412,11 +1324,10 @@ body {
     padding: 10px 15px;
     color: var(--dark-turquoise);
     font-size: 13px;
-}
-
-.depreditor-input::placeholder {
-    color: var(--dark-turquoise);
-    font-size: 13px;
+    &::placeholder {
+        color: var(--dark-turquoise);
+        font-size: 13px;
+    }
 }
 
 .hidden-text {
@@ -1426,18 +1337,17 @@ body {
     border: 1px dashed #ccc;
     background-color: white;
     color: #cccccc;
-}
-
-.hidden-text::after {
-    font-family: 'icons' !important;
-    content: "\e923";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 5px;
-    color: #30435A;
-    z-index: 0;
+    &::after {
+        font-family: 'icons' !important;
+        content: "\e923";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 5px;
+        color: #30435A;
+        z-index: 0;
+    }
 }
 
 .modal {
