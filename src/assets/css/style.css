@@ -115,6 +115,46 @@ html, body {
     height: 31px;
 }
 
+.button-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    & div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #DFB343;
+        width: 31px;
+        height: 31px;
+        border-radius: 5px 0 0 5px;
+    }
+    & button {
+        font-size: 10px;
+        text-transform: uppercase;
+        padding: 7px 10px;
+        border-radius: 0 5px 5px 0;
+        color: #FFFFFF;
+        height: 31px;
+        background-color: var(--golden-orange);
+        border: 0;
+        flex: 1;
+    }
+    & button:hover {
+        filter: brightness(105%);
+        cursor: pointer;
+    }
+}
+
+.button-google--green {
+    & div {
+        background-color: #66CF97;
+    }
+    & button {
+        background-color: var(--mint-green);
+    }
+}
+
 .button-danger {
     background-color: var(--muted-rose);
 }
@@ -1161,6 +1201,10 @@ body {
 
 .user-settings__email {
     margin-top: 10px
+}
+
+.user-settings__google {
+    margin-top: 30px
 }
 
 .user-settings__password {
