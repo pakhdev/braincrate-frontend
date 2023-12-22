@@ -1,18 +1,18 @@
+import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { computed, inject, Injectable, signal } from '@angular/core';
 
-import { AuthResponse, CheckTokenResponse, LoginResponse, User } from '../interfaces';
 import { AuthStatus } from '../enums/auth-status.enum';
-import { FormGroup } from '@angular/forms';
 import { DashboardStateService } from '../../dashboard/services/dashboard-state.service';
+import { UserCredentials } from '../interfaces';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthService {
     private readonly http = inject(HttpClient);
-    private _currentUser = signal<User | null>(null);
+    private _currentUser = signal<UserCredentials | null>(null);
     private _authStatus = signal<AuthStatus>(AuthStatus.checking);
     private dashboardStateService = inject(DashboardStateService);
 
@@ -25,18 +25,18 @@ export class AuthService {
 
     public register(email: string, password: string): Observable<boolean> {
         const body = { email, password };
-        return this.http.post<LoginResponse>('/auth/register', body)
+        return this.http.post('/auth/register', body)
             .pipe(
-                map(({ id, email, token }) => this.setAuthentication({ id: +id, email }, token)),
+                map(() => this.setAuthentication()),
                 catchError(err => throwError(() => err.error.errorCode)),
             );
     }
 
     public login(email: string, password: string): Observable<boolean> {
         const body = { email, password };
-        return this.http.post<LoginResponse>('/auth/login', body)
+        return this.http.post('/auth/login', body)
             .pipe(
-                map(({ id, email, token }) => this.setAuthentication({ id: +id, email }, token)),
+                map(() => this.setAuthentication()),
                 tap(() => this.dashboardStateService.setState({
                     selectedTags: [0],
                     searchWord: '',
@@ -48,19 +48,25 @@ export class AuthService {
     }
 
     public logout(): void {
-        localStorage.removeItem('token');
-        this._currentUser.set(null);
-        this._authStatus.set(AuthStatus.notAuthenticated);
+        this.http.delete('/auth/logout').subscribe(
+            () => {
+                this._currentUser.set(null);
+                this._authStatus.set(AuthStatus.notAuthenticated);
+            },
+        );
     }
 
     public checkAuthStatus(): Observable<boolean> {
-        if (!localStorage.getItem('token')) {
+        const userCredentials = this.readUserCookies();
+
+        if (!userCredentials || !userCredentials.id) {
             this._authStatus.set(AuthStatus.notAuthenticated);
             return of(false);
         }
-        return this.http.get<CheckTokenResponse>('/auth/check-auth-status')
+
+        return this.http.get('/auth/check-auth-status')
             .pipe(
-                map(({ id, email, token }) => this.setAuthentication({ id: +id, email }, token)),
+                map(() => this.setAuthentication()),
                 catchError(() => {
                     this.logout();
                     return of(false);
@@ -74,33 +80,50 @@ export class AuthService {
 
     public updateEmail(email: string): Observable<boolean> {
         const body = { email };
-        return this.http.patch<AuthResponse>('/auth/update-email', body)
+        return this.http.patch('/auth/update-email', body)
             .pipe(
-                map((response) => {
-                    const { id, email, token } = response;
-                    return this.setAuthentication({ id: +id, email }, token);
-                }),
+                map(() => this.setAuthentication()),
                 catchError(err => throwError(() => err.error?.errorCode)),
             );
     }
 
     public updatePassword(oldPassword: string, newPassword: string): Observable<boolean> {
         const body = { oldPassword, newPassword };
-        return this.http.patch<AuthResponse>('/auth/update-password', body)
+        return this.http.patch('/auth/update-password', body)
             .pipe(
-                map((response) => {
-                    const { id, email, token } = response;
-                    return this.setAuthentication({ id: +id, email }, token);
-                }),
+                map(() => this.setAuthentication()),
                 catchError(err => throwError(() => err.error?.errorCode)),
             );
     }
 
-    private setAuthentication(user: User, token: string): boolean {
+    private setAuthentication(): boolean {
+        const user = this.readUserCookies();
         this._currentUser.set(user);
         this._authStatus.set(AuthStatus.authenticated);
-        localStorage.setItem('token', token);
         return true;
+    }
+
+    private readUserCookies(): UserCredentials {
+        const cookies = document.cookie.split(';');
+        const userCredentials: UserCredentials = {};
+        for (const cookie of cookies) {
+            const [key, value] = cookie.split('=').map((c) => c.trim());
+            switch (key) {
+                case 'id':
+                    userCredentials.id = value;
+                    break;
+                case 'email':
+                    userCredentials.email = decodeURIComponent(value);
+                    break;
+                case 'hasPass':
+                    userCredentials.hasPass = value === 'true';
+                    break;
+                case 'hasGoogleAccount':
+                    userCredentials.hasGoogleAccount = value === 'true';
+                    break;
+            }
+        }
+        return userCredentials;
     }
 
 }
