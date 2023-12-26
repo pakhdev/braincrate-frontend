@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { ErrorMessageDirective } from '../../../shared/directives/error-message.directive';
 import { emailPattern } from '../../../shared/validators/validators';
 import { DynamicButtonTextDirective } from '../../../shared/directives/dynamic-button-text.directive';
+import { environments } from '../../../../environments/environment';
 
 @Component({
     standalone: true,
@@ -59,5 +60,10 @@ export class LoginPageComponent {
 
     public getError(field: string): ValidationErrors | null | undefined {
         return this.loginForm.get(field)?.errors;
+    }
+
+    public loginWithGoogle(event: Event): void {
+        event.preventDefault();
+        window.location.href = environments.baseUrl + '/auth/google-login';
     }
 }

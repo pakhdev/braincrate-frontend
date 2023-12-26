@@ -5,6 +5,7 @@
         <input
             formControlName="email"
             type="text"
+            [value]="authService.currentUser()?.email"
             placeholder="Correo electrónico"
             class="panel__text-input">
         <div

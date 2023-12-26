@@ -7,7 +7,9 @@
         <span class="path5"></span>
         <span class="path6"></span>
     </div>
-    <button>
+    <button (click)="linkGoogle()">
         Enlazar con Google
     </button>
 </div>
+<div class="success-text mt5" *ngIf="successMessage()">{{ successMessage() }}</div>
+<div class="error-text mt5" *ngIf="errorMessage()">{{ errorMessage() }}</div>

@@ -25,7 +25,9 @@ export class AppComponent {
                 return;
             case AuthStatus.authenticated:
                 if (['/auth/register', '/auth/login', '/auth/about']
-                    .includes(window.location.pathname)) this.router.navigateByUrl('/dashboard');
+                    .includes(window.location.pathname) || window.location.pathname === '/') {
+                    this.router.navigateByUrl('/dashboard');
+                }
                 return;
             case AuthStatus.notAuthenticated:
                 this.router.navigateByUrl('/auth/register');

@@ -96,7 +96,7 @@ export class AuthService {
             );
     }
 
-    private setAuthentication(): boolean {
+    public setAuthentication(): boolean {
         const user = this.readUserCookies();
         this._currentUser.set(user);
         this._authStatus.set(AuthStatus.authenticated);

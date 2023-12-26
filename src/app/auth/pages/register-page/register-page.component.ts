@@ -8,6 +8,7 @@ import { EmailValidator } from '../../../shared/validators/email-validator.servi
 import { ErrorMessageDirective } from '../../../shared/directives/error-message.directive';
 import { NgIf } from '@angular/common';
 import { DynamicButtonTextDirective } from '../../../shared/directives/dynamic-button-text.directive';
+import { environments } from '../../../../environments/environment';
 
 @Component({
     standalone: true,
@@ -69,6 +70,11 @@ export class RegisterPageComponent {
 
     public getError(field: string): ValidationErrors | null | undefined {
         return this.registerForm.get(field)?.errors;
+    }
+
+    public registerWithGoogle(event: Event): void {
+        event.preventDefault();
+        window.location.href = environments.baseUrl + '/auth/google-login';
     }
 
 }

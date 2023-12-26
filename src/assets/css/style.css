@@ -250,6 +250,16 @@ html, body {
     top: 2px;
 }
 
+.success-text {
+    color: var(--mint-green);
+    font-size: 12px;
+}
+
+.error-text {
+    color: var(--brownish-orange);
+    font-size: 12px;
+}
+
 .code-text {
     background-color: var(--ethereal-blue);
     border-radius: 7px;
@@ -259,6 +269,10 @@ html, body {
 
 .expander {
     flex: 1;
+}
+
+.mt5 {
+    margin-top: 5px;
 }
 
 /* ######################################################### */
