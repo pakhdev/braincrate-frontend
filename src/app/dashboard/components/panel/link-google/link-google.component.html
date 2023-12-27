@@ -8,8 +8,8 @@
         <span class="path6"></span>
     </div>
     <button (click)="linkGoogle()">
-        Enlazar con Google
+        {{ isGoogleLinked() ? 'Enlazar otra cuenta' : 'Enlazar con Google' }}
     </button>
 </div>
-<div class="success-text mt5" *ngIf="successMessage()">{{ successMessage() }}</div>
-<div class="error-text mt5" *ngIf="errorMessage()">{{ errorMessage() }}</div>
+<div class="success-text mt5" @message-appear *ngIf="successMessage()">{{ successMessage() }}</div>
+<div class="error-text mt5" @message-appear *ngIf="errorMessage()">{{ errorMessage() }}</div>

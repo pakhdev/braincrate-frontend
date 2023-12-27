@@ -155,7 +155,6 @@ export class NotesService {
 
     public updateNoteQuery(id: number, route: string | null, body?: NoteManipulationBody): Observable<NoteUpdateResponse> {
         const url = ['notes', route, id].join('/').replace('//', '/');
-        console.log(url);
         return this.http.patch<NoteUpdateResponse>(`/${ url }`, body);
     }
 

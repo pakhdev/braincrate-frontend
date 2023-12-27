@@ -10,7 +10,7 @@ import {
     NgZone,
 } from '@angular/core';
 import { fromEvent } from 'rxjs';
-import { DOCUMENT, NgIf } from '@angular/common';
+import { DOCUMENT, NgClass, NgIf } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 
@@ -38,6 +38,7 @@ import { HeaderNavigationComponent } from '../../components/panel/header-navigat
         AccountManagementComponent,
         SearchAndPickTagsComponent,
         HeaderNavigationComponent,
+        NgClass,
     ],
 })
 export class DashboardLayoutComponent implements OnInit, AfterViewChecked, AfterViewInit {

@@ -1,8 +1,10 @@
-import { Component, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { animate, style, transition, trigger } from '@angular/animations';
+
 import { environments } from '../../../../../environments/environment';
 import { GoogleLinkResponse } from '../../../interfaces/google-link-response.interface';
 import { GoogleLinkMessage } from '../../../enums/google-link-message.enum';
-import { NgIf } from '@angular/common';
 import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({
@@ -12,13 +14,20 @@ import { AuthService } from '../../../../auth/services/auth.service';
     imports: [
         NgIf,
     ],
+    animations: [
+        trigger('message-appear', [
+            transition(':enter', [
+                style({ opacity: 0 }),
+                animate('300ms ease-in', style({ opacity: 1 })),
+            ]),
+        ]),
+    ],
 })
 export class LinkGoogleComponent implements OnInit, OnDestroy {
 
     public successMessage: WritableSignal<string | null> = signal(null);
     public errorMessage: WritableSignal<string | null> = signal(null);
-
-    constructor(private readonly authService: AuthService) {}
+    private readonly authService = inject(AuthService);
 
     public ngOnInit(): void {
         window.addEventListener('message', this.handleMessage.bind(this));
@@ -31,6 +40,10 @@ export class LinkGoogleComponent implements OnInit, OnDestroy {
     public linkGoogle(): void {
         const authEndpoint = environments.baseUrl + '/auth/link-google-account';
         window.open(authEndpoint, 'Google Auth', 'width=500,height=600');
+    }
+
+    public isGoogleLinked(): boolean {
+        return this.authService.currentUser()?.hasGoogleAccount === true;
     }
 
     private setSuccessMessage(message: string): void {

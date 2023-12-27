@@ -87,7 +87,7 @@ export class AuthService {
             );
     }
 
-    public updatePassword(oldPassword: string, newPassword: string): Observable<boolean> {
+    public updatePassword(oldPassword: string | undefined | null, newPassword: string): Observable<boolean> {
         const body = { oldPassword, newPassword };
         return this.http.patch('/auth/update-password', body)
             .pipe(

@@ -8,8 +8,8 @@
         <link-google/>
     </div>
     <div class="user-settings__password">
-        <div class="panel__section-name">Cambiar la contraseña</div>
-        <change-password/>
+        <div class="panel__section-name">{{ passwordSectionName }}</div>
+        <change-password [showCurrentPasswordInput]="showCurrentPasswordInput"/>
     </div>
 </div>
 <div class="expander"></div>

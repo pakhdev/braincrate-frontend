@@ -536,6 +536,21 @@ body {
     display: none;
 }
 
+.loading-background-animation {
+    animation: barber-pole 0.5s linear infinite;
+    background-size: 30px 30px;
+    background-image: linear-gradient(45deg, rgba(179, 179, 179, 0.05) 25%, transparent 25%, transparent 50%, rgba(179, 179, 179, 0.05) 50%, rgba(179, 179, 179, 0.05) 75%, transparent 75%, transparent);
+}
+
+@keyframes barber-pole {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 60px 30px;
+    }
+}
+
 .note, .notes-container {
     max-width: 790px;
     width: calc(100vw - 483px);
@@ -699,6 +714,25 @@ body {
     font-size: 13px;
     & img {
         max-width: 100%;
+        margin: 5px 0;
+    }
+    & table {
+        width: 100%;
+    }
+    & td {
+        min-height: 32px;
+        padding: 5px;
+        border: 1px solid var(--bright-blue);
+    }
+    & .hidden-text {
+        color: white;
+    }
+    & .hidden-text:hover {
+        color: black;
+        cursor: default;
+    }
+    & .hidden-text:hover::after {
+        content: '';
     }
 }
 
@@ -966,16 +1000,6 @@ body {
     }
     & span {
         font-size: 11px;
-    }
-}
-
-.note__editor-textarea {
-    font-size: 13px;
-    color: #30435A;
-    min-height: 315px;
-    padding: 20px 30px;
-    & img {
-        max-width: 100%;
     }
 }
 

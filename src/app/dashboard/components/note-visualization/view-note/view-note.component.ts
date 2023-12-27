@@ -7,6 +7,7 @@ import { ReviewOptionsComponent } from '../review-options/review-options.compone
 import { environments } from '../../../../../environments/environment';
 import { ImageAttributes } from '../../../interfaces/image-attributes.interface';
 import { LargeImageModalComponent } from '../large-image-modal/large-image-modal.component';
+import { SafeHtmlPipe } from '../../../../shared/pipes/trust-html.pipe';
 
 @Component({
     standalone: true,
@@ -18,6 +19,7 @@ import { LargeImageModalComponent } from '../large-image-modal/large-image-modal
         ReviewOptionsComponent,
         LargeImageModalComponent,
         NgIf,
+        SafeHtmlPipe,
     ],
 })
 export class ViewNoteComponent implements AfterViewInit {

@@ -1,4 +1,4 @@
-import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { Component, inject, Input, signal, effect, WritableSignal, booleanAttribute } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
 
@@ -20,8 +20,9 @@ import { DynamicButtonTextDirective } from '../../../../shared/directives/dynami
 })
 export class ChangePasswordComponent {
 
-    public readonly authService = inject(AuthService);
+    @Input({ transform: booleanAttribute }) public showCurrentPasswordInput = false;
     private readonly fb = inject(FormBuilder);
+    public readonly authService = inject(AuthService);
     public backendError: WritableSignal<string | null> = signal(null);
     public isLoading = signal(false);
 
@@ -44,10 +45,19 @@ export class ChangePasswordComponent {
         ],
     });
 
+    validateCurrentPass = effect(() => {
+        const currentPasswordControl = this.passwordUpdatingForm.get('currentPassword');
+        if (currentPasswordControl === null) return;
+        this.showCurrentPasswordInput
+            ? currentPasswordControl.setValidators([Validators.required, Validators.minLength(6)])
+            : currentPasswordControl.clearValidators();
+        currentPasswordControl.updateValueAndValidity();
+    });
+
     public updatePassword() {
         this.passwordUpdatingForm.markAllAsTouched();
         const { currentPassword, newPassword } = this.passwordUpdatingForm.value;
-        if (this.passwordUpdatingForm.invalid || !currentPassword || !newPassword) return;
+        if (this.passwordUpdatingForm.invalid || (!currentPassword && this.showCurrentPasswordInput) || !newPassword) return;
 
         this.isLoading.set(true);
         this.backendError.set(null);
