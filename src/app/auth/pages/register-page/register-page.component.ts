@@ -6,7 +6,6 @@ import { AuthService } from '../../services/auth.service';
 import { emailPattern, isFieldOneEqualFieldTwo } from '../../../shared/validators/validators';
 import { EmailValidator } from '../../../shared/validators/email-validator.service';
 import { ErrorMessageDirective } from '../../../shared/directives/error-message.directive';
-import { NgIf } from '@angular/common';
 import { DynamicButtonTextDirective } from '../../../shared/directives/dynamic-button-text.directive';
 import { environments } from '../../../../environments/environment';
 
@@ -18,16 +17,15 @@ import { environments } from '../../../../environments/environment';
         ReactiveFormsModule,
         FormsModule,
         ErrorMessageDirective,
-        NgIf,
         DynamicButtonTextDirective,
     ],
 })
 export class RegisterPageComponent {
 
-    private fb = inject(FormBuilder);
-    private router = inject(Router);
-    private emailValidator = inject(EmailValidator);
-    private authService = inject(AuthService);
+    private readonly fb = inject(FormBuilder);
+    private readonly router = inject(Router);
+    private readonly emailValidator = inject(EmailValidator);
+    private readonly authService = inject(AuthService);
     public backendError: WritableSignal<string | null> = signal(null);
     public isLoading = signal(false);
 
@@ -74,7 +72,7 @@ export class RegisterPageComponent {
 
     public registerWithGoogle(event: Event): void {
         event.preventDefault();
-        window.location.href = environments.baseUrl + '/auth/google-login';
+        window.location.href = environments.backendUrl + '/auth/google-login';
     }
 
 }

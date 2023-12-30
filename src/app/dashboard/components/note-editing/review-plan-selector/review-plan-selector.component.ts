@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NgClass, NgForOf, NgIf } from '@angular/common';
+import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { ReviewPlan } from '../../../interfaces/review-plan.interface';
@@ -12,9 +12,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
     selector: 'review-plan-selector',
     templateUrl: './review-plan-selector.component.html',
     imports: [
-        NgIf,
         NgClass,
-        NgForOf,
         FormsModule,
         ClickOutsideDirective,
     ],
@@ -33,21 +31,21 @@ export class ReviewPlanSelectorComponent {
     @Output() public onDifficultyChange: EventEmitter<Difficulty> = new EventEmitter<Difficulty>();
     @Output() public onRemoveAfterReviewsChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    public reviewPlans: ReviewPlan[] = [
+    public readonly reviewPlans: ReviewPlan[] = [
         { name: 'Repaso básico', difficulty: Difficulty.Easy, intervals: [1, 4, 7, 21] },
         { name: 'Repaso estándar', difficulty: Difficulty.Medium, intervals: [1, 3, 7, 21, 60] },
         { name: 'Repaso intensivo', difficulty: Difficulty.Hard, intervals: [1, 3, 7, 21, 60, 90, 182] },
         { name: 'No repasar', difficulty: Difficulty.None, intervals: [] },
     ];
 
-    public isPopupVisible: boolean = false;
+    public isPopupVisible: WritableSignal<boolean> = signal(false);
 
     get selectedPlanName(): string {
         return this.reviewPlans.find(plan => plan.difficulty === this.selectedDifficulty)?.name || '';
     }
 
     public togglePopup(): void {
-        this.isPopupVisible = !this.isPopupVisible;
+        this.isPopupVisible.set(!this.isPopupVisible());
     }
 
     public isDifficultySelected(difficulty: Difficulty): boolean {

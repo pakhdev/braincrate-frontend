@@ -7,58 +7,57 @@ import {
     ViewChild,
     inject,
     Inject,
-    NgZone,
+    NgZone, WritableSignal, signal,
 } from '@angular/core';
-import { fromEvent } from 'rxjs';
-import { DOCUMENT, NgClass, NgIf } from '@angular/common';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { DOCUMENT, NgClass } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { fromEvent } from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop';
 
+import { AccountManagementComponent } from '../../components/panel/account-management/account-management.component';
 import { DashboardStateService } from '../../services/dashboard-state.service';
-import { NotesService } from '../../services/notes.service';
+import { HeaderNavigationComponent } from '../../components/panel/header-navigation/header-navigation.component';
+import { LeftMenuComponent } from '../../components/panel/left-menu/left-menu.component';
 import {
     NotesLoadingIndicatorComponent,
 } from '../../components/note-visualization/notes-loading-indicator/notes-loading-indicator.component';
 import { NotesManagementComponent } from '../../components/panel/notes-management/notes-management.component';
-import { LeftMenuComponent } from '../../components/panel/left-menu/left-menu.component';
-import { AccountManagementComponent } from '../../components/panel/account-management/account-management.component';
+import { NotesService } from '../../services/notes.service';
 import { SearchAndPickTagsComponent } from '../../components/panel/search-and-pick-tags/search-and-pick-tags.component';
-import { HeaderNavigationComponent } from '../../components/panel/header-navigation/header-navigation.component';
 
 @Component({
     standalone: true,
     selector: 'app-dashboard-layout',
     templateUrl: './dashboard-layout.component.html',
     imports: [
-        RouterOutlet,
-        NgIf,
+        AccountManagementComponent,
+        HeaderNavigationComponent,
+        LeftMenuComponent,
+        NgClass,
         NotesLoadingIndicatorComponent,
         NotesManagementComponent,
-        LeftMenuComponent,
-        AccountManagementComponent,
+        RouterOutlet,
         SearchAndPickTagsComponent,
-        HeaderNavigationComponent,
-        NgClass,
     ],
 })
 export class DashboardLayoutComponent implements OnInit, AfterViewChecked, AfterViewInit {
 
-    @ViewChild('panelTopMargin') private readonly panelTopMarginDiv!: ElementRef;
-    @ViewChild('stickyPanelContainer') private readonly stickyPanelContainerDiv!: ElementRef;
-    @ViewChild('panelCopyright') private readonly panelCopyrightDiv!: ElementRef;
-    @ViewChild('notesContainer') private readonly notesContainerDiv!: ElementRef;
     @ViewChild('contentMobileHeader') private readonly contentMobileHeaderDiv!: ElementRef;
     @ViewChild('mobilePanelFixer') private readonly mobilePanelFixerDiv!: ElementRef;
+    @ViewChild('notesContainer') private readonly notesContainerDiv!: ElementRef;
+    @ViewChild('panelCopyright') private readonly panelCopyrightDiv!: ElementRef;
+    @ViewChild('panelTopMargin') private readonly panelTopMarginDiv!: ElementRef;
+    @ViewChild('stickyPanelContainer') private readonly stickyPanelContainerDiv!: ElementRef;
+    private readonly dashboardStateService = inject(DashboardStateService);
+    private readonly dashboardState$ = toObservable(this.dashboardStateService.dashboardState);
     private readonly documentBody!: HTMLElement;
     private readonly ngZone = inject(NgZone);
     private readonly notesService = inject(NotesService);
-    private readonly dashboardStateService = inject(DashboardStateService);
-    private readonly dashboardState$ = toObservable(this.dashboardStateService.dashboardState);
 
     private lastScrollPos = 0;
     private panelMinHeightCorrection: null | number = null;
     private panelState: 'bottom' | 'up' | 'margin' | boolean = false;
-    public openedSection: 'notes' | 'account' = 'notes';
+    public openedSection: WritableSignal<string> = signal('notes');
 
     constructor(@Inject(DOCUMENT) private document: Document) {
         this.documentBody = document.body;
@@ -174,7 +173,7 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
     }
 
     public activateManagementViewHandler(view: 'notes' | 'account'): void {
-        this.openedSection = view;
+        this.openedSection.set(view);
     }
 
 }

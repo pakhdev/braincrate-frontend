@@ -1,5 +1,5 @@
 import { Component, computed, inject, Input, signal } from '@angular/core';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 
 import { NotesService } from '../../../services/notes.service';
 import { Note } from '../../../interfaces/note.interface';
@@ -11,7 +11,6 @@ import { DynamicButtonTextDirective } from '../../../../shared/directives/dynami
     selector: 'review-options',
     templateUrl: './review-options.component.html',
     imports: [
-        NgIf,
         DatePipe,
         DynamicButtonTextDirective,
     ],

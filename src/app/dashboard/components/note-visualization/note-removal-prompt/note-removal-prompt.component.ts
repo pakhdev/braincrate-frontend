@@ -1,13 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NgIf } from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
     standalone: true,
     selector: 'note-removal-prompt',
     templateUrl: './note-removal-prompt.component.html',
-    imports: [
-        NgIf,
-    ],
 })
 export class NoteRemovalPromptComponent {
     @Output()

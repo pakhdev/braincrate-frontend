@@ -1,27 +1,25 @@
 import { Component, ElementRef, inject, Input, OnInit, signal, ViewChild } from '@angular/core';
-import { NgForOf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Note } from '../../../interfaces/note.interface';
-import { TagsService } from '../../../services/tags.service';
-import { Difficulty } from '../../../enums/difficulty.enum';
-import { TagInputWithSuggestionsComponent } from '../tag-input-with-suggestions/tag-input-with-suggestions.component';
-import { SelectedTagComponent } from '../selected-tag/selected-tag.component';
-import { ReviewPlanSelectorComponent } from '../review-plan-selector/review-plan-selector.component';
 import { ContenteditableEditor } from '../../../../shared/directives/contenteditable-editor.directive';
-import { NotesService } from '../../../services/notes.service';
-import { NoteManipulationBody } from '../../../interfaces/note-manipulation-body.interface';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
-import { environments } from '../../../../../environments/environment';
+import { Difficulty } from '../../../enums/difficulty.enum';
 import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
+import { Note } from '../../../interfaces/note.interface';
+import { NoteManipulationBody } from '../../../interfaces/note-manipulation-body.interface';
+import { NotesService } from '../../../services/notes.service';
+import { ReviewPlanSelectorComponent } from '../review-plan-selector/review-plan-selector.component';
+import { SelectedTagComponent } from '../selected-tag/selected-tag.component';
+import { TagInputWithSuggestionsComponent } from '../tag-input-with-suggestions/tag-input-with-suggestions.component';
+import { TagsService } from '../../../services/tags.service';
+import { environments } from '../../../../../environments/environment';
 
 @Component({
     standalone: true,
     selector: 'edit-note',
     templateUrl: './edit-note.component.html',
     imports: [
-        NgForOf,
         TagInputWithSuggestionsComponent,
         SelectedTagComponent,
         ReviewPlanSelectorComponent,
@@ -36,10 +34,10 @@ export class EditNoteComponent implements OnInit {
     @ViewChild('iconsContainer') public readonly iconsContainer!: ElementRef;
 
     private readonly dashboardStateService = inject(DashboardStateService);
-    private readonly tagsService = inject(TagsService);
+    private readonly imagesUrl = environments.imagesUrl;
     private readonly notesService = inject(NotesService);
     private readonly router = inject(Router);
-    private readonly imagesUrl = environments.imagesUrl;
+    private readonly tagsService = inject(TagsService);
 
     private isNewNote: boolean = false;
     private id: number = 0;

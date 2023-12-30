@@ -1,18 +1,16 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { NgIf } from '@angular/common';
 
-import { emailPattern } from '../../../../shared/validators/validators';
 import { AuthService } from '../../../../auth/services/auth.service';
-import { ErrorMessageDirective } from '../../../../shared/directives/error-message.directive';
 import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
+import { ErrorMessageDirective } from '../../../../shared/directives/error-message.directive';
+import { emailPattern } from '../../../../shared/validators/validators';
 
 @Component({
     standalone: true,
     selector: 'change-email',
     templateUrl: './change-email.component.html',
     imports: [
-        NgIf,
         ErrorMessageDirective,
         ReactiveFormsModule,
         DynamicButtonTextDirective,
@@ -22,10 +20,10 @@ export class ChangeEmailComponent {
 
     public readonly authService = inject(AuthService);
     private readonly fb = inject(FormBuilder);
-    public backendError: WritableSignal<string | null> = signal(null);
-    public isLoading = signal(false);
+    public readonly backendError: WritableSignal<string | null> = signal(null);
+    public readonly isLoading = signal(false);
 
-    public emailUpdatingForm = this.fb.group({
+    public readonly emailUpdatingForm = this.fb.group({
         email: [
             this.authService.currentUser()?.email,
             [

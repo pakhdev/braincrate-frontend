@@ -7,11 +7,12 @@
 
     <div class="note-edition__tags">
         <span class="icon-tag note-edition__tags-icon"></span>
-        <selected-tag
-            *ngFor="let tagName of tagNames"
-            [tagName]="tagName"
-            (onRemoveTag)="removeTag($event)"
-        />
+        @for (tagName of tagNames;track $index) {
+            <selected-tag
+                [tagName]="tagName"
+                (onRemoveTag)="removeTag($event)"
+            />
+        }
         <div class="note-edition__tag-input-container">
             <tag-input-with-suggestions
                 [selectedTags]="tagNames"

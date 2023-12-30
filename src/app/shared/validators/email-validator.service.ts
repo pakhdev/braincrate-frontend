@@ -3,12 +3,12 @@ import { AbstractControl, ValidationErrors, AsyncValidator } from '@angular/form
 import { delay, Observable, of, switchMap, tap } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+
 import { environments } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class EmailValidator implements AsyncValidator {
 
-    private readonly baseUrl = environments.baseUrl;
     private readonly http = inject(HttpClient);
     private isChecking = false;
 
@@ -21,7 +21,9 @@ export class EmailValidator implements AsyncValidator {
             switchMap((email) => {
 
                 const params = { email };
-                return this.http.get<{ isRegistered: boolean }>(`${ this.baseUrl }/auth/check-email`, { params }).pipe(
+                return this.http.get<{
+                    isRegistered: boolean
+                }>(`${ environments.backendUrl }/auth/check-email`, { params }).pipe(
                     map((response) => {
                         if (response.isRegistered) {
                             return { emailTaken: true };

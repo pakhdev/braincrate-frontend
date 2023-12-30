@@ -13,4 +13,6 @@
         <note-toolbar [note]="note"/>
     </div>
 </div>
-<large-image-modal (close)="closeLargeImage()" [src]="openLargeImageSrc" *ngIf="openLargeImageSrc"/>
+@if (openLargeImageSrc()) {
+    <large-image-modal (close)="closeLargeImage()" [src]="openLargeImageSrc()!"/>
+}

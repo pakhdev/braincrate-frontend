@@ -1,17 +1,15 @@
 import { Component, inject, Input, signal } from '@angular/core';
-import { NgIf } from '@angular/common';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 import { Note } from '../../../interfaces/note.interface';
 import { NotesService } from '../../../services/notes.service';
 import { NoteRemovalPromptComponent } from '../note-removal-prompt/note-removal-prompt.component';
 import { ReviewOptionsComponent } from '../review-options/review-options.component';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
 
 @Component({
     imports: [
-        NgIf,
         NoteRemovalPromptComponent,
         ReviewOptionsComponent,
         ClickOutsideDirective,

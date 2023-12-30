@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { NgClass, NgForOf, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { Tag } from '../../../interfaces/tag.interface';
@@ -11,8 +11,6 @@ import { TagsService } from '../../../services/tags.service';
     templateUrl: './tag-input-with-suggestions.component.html',
     imports: [
         NgClass,
-        NgForOf,
-        NgIf,
         FormsModule,
     ],
 })

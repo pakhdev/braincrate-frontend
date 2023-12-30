@@ -1,12 +1,11 @@
-import { NgIf } from '@angular/common';
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth.service';
+import { DynamicButtonTextDirective } from '../../../shared/directives/dynamic-button-text.directive';
 import { ErrorMessageDirective } from '../../../shared/directives/error-message.directive';
 import { emailPattern } from '../../../shared/validators/validators';
-import { DynamicButtonTextDirective } from '../../../shared/directives/dynamic-button-text.directive';
 import { environments } from '../../../../environments/environment';
 
 @Component({
@@ -14,7 +13,6 @@ import { environments } from '../../../../environments/environment';
     selector: 'auth-login-page',
     templateUrl: './login-page.component.html',
     imports: [
-        NgIf,
         ErrorMessageDirective,
         FormsModule,
         ReactiveFormsModule,
@@ -23,9 +21,9 @@ import { environments } from '../../../../environments/environment';
 })
 export class LoginPageComponent {
 
-    private fb = inject(FormBuilder);
-    private router = inject(Router);
-    private authService = inject(AuthService);
+    private readonly fb = inject(FormBuilder);
+    private readonly router = inject(Router);
+    private readonly authService = inject(AuthService);
     public backendError: WritableSignal<string | null> = signal(null);
     public isLoading = signal(false);
 
@@ -64,6 +62,6 @@ export class LoginPageComponent {
 
     public loginWithGoogle(event: Event): void {
         event.preventDefault();
-        window.location.href = environments.baseUrl + '/auth/google-login';
+        window.location.href = environments.backendUrl + '/auth/google-login';
     }
 }

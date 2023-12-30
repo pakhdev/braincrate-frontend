@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { NgClass, NgForOf, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 import { NotesService } from '../../services/notes.service';
 import { DashboardStateService } from '../../services/dashboard-state.service';
@@ -19,8 +19,6 @@ import { Note } from '../../interfaces/note.interface';
     selector: 'dashboard-all-notes-page',
     templateUrl: './all-notes-page.component.html',
     imports: [
-        NgForOf,
-        NgIf,
         NgClass,
         InfiniteScrollTriggerComponent,
         NoResultsMessageComponent,

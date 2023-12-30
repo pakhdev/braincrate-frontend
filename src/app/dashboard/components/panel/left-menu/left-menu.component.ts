@@ -9,7 +9,7 @@ import { AuthService } from '../../../../auth/services/auth.service';
 })
 export class LeftMenuComponent {
     @Output() public activateManagementView: EventEmitter<'notes' | 'account'> = new EventEmitter();
-    private authService = inject(AuthService);
+    private readonly authService = inject(AuthService);
 
     public activateManagementViewHandler(view: 'notes' | 'account'): void {
         this.activateManagementView.emit(view);

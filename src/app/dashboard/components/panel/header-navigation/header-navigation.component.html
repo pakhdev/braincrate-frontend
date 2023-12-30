@@ -2,32 +2,41 @@
     <img src="assets/images/logo-{{ logoMode }}.svg" alt="BrainCrate logo"/>
 </div>
 
-<div *ngIf="showButtons" class="primary-buttons">
-    <div *ngIf="mobile" class="button-dark button button-burger" (click)="openMobilePanelHandler()">
-        <span class="icon-menu"></span>
+@if (showButtons) {
+    <div class="primary-buttons">
+        @if (mobile) {
+            <div class="button-dark button button-burger" (click)="openMobilePanelHandler()">
+                <span class="icon-menu"></span>
+            </div>
+        }
+
+        @if (isNoteCreationActive) {
+            <div
+                class="button-close-form button" (click)="cancelNoteCreation()">
+                <span class="icon-create"></span>
+                Cancelar
+            </div>
+        } @else {
+            <div
+                class="button-open-form button" routerLink="/dashboard/new-note">
+                <span class="icon-create"></span>
+                Crear nota
+            </div>
+        }
+
+        @if (isReviewSectionActive) {
+            <div
+                class="button-review-notes button" routerLink="/dashboard/all">
+                <span class="icon-review"></span>
+                Mostrar todas
+            </div>
+        } @else {
+            <div
+                class="button-review-notes button" routerLink="/dashboard/for-review">
+                <span class="icon-review"></span>
+                Repasar{{ notesForReviewCount }}
+            </div>
+        }
+
     </div>
-    <div
-        *ngIf="!isNoteCreationActive"
-        class="button-open-form button" routerLink="/dashboard/new-note">
-        <span class="icon-create"></span>
-        Crear nota
-    </div>
-    <div
-        *ngIf="isNoteCreationActive"
-        class="button-close-form button" (click)="cancelNoteCreation()">
-        <span class="icon-create"></span>
-        Cancelar
-    </div>
-    <div
-        *ngIf="isReviewSectionActive"
-        class="button-review-notes button" routerLink="/dashboard/all">
-        <span class="icon-review"></span>
-        Mostrar todas
-    </div>
-    <div
-        *ngIf="!isReviewSectionActive"
-        class="button-review-notes button" routerLink="/dashboard/for-review">
-        <span class="icon-review"></span>
-        Repasar{{ notesForReviewCount }}
-    </div>
-</div>
+}

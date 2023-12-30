@@ -1,56 +1,62 @@
 <div class="note__toolbar">
+    @if (isNoteRemoved()) {
+        <div
+            (click)="restore()"
+            dynamicButtonText
+            initialMessage="Restaurar ésta nota"
+            loadingMessage="Restaurando..."
+            successMessage="Restaurada"
+            [isLoading]="isRestoring()"
+            class="button note__restore-button"></div>
+    }
 
-    <div
-        *ngIf="isNoteRemoved()"
-        (click)="restore()"
-        dynamicButtonText
-        initialMessage="Restaurar ésta nota"
-        loadingMessage="Restaurando..."
-        successMessage="Restaurada"
-        [isLoading]="isRestoring()"
-        class="button note__restore-button"></div>
+    @if (showMarkAsReviewedButton()) {
+        <div
+            (click)="markAsReviewed()"
+            dynamicButtonText
+            initialMessage="Marcar como repasado"
+            loadingMessage="Marcando..."
+            successMessage="Marcada"
+            [isLoading]="isMarkingReviewed()"
+            class="button button-success note__reviewed-button"></div>
+    }
 
-    <div
-        *ngIf="showMarkAsReviewedButton()"
-        (click)="markAsReviewed()"
-        dynamicButtonText
-        initialMessage="Marcar como repasado"
-        loadingMessage="Marcando..."
-        successMessage="Marcada"
-        [isLoading]="isMarkingReviewed()"
-        class="button button-success note__reviewed-button"></div>
+    @if (showDeleteInsteadReview()) {
+        <div
+            (click)="remove()"
+            dynamicButtonText
+            initialMessage="Repasado, eliminar nota"
+            loadingMessage="Eliminando..."
+            successMessage="Eliminada"
+            [isLoading]="isDeleting()"
+            class="button button-danger note__reviewed-button"></div>
+    }
 
-    <div
-        *ngIf="showDeleteInsteadReview()"
-        (click)="remove()"
-        dynamicButtonText
-        initialMessage="Repasado, eliminar nota"
-        loadingMessage="Eliminando..."
-        successMessage="Eliminada"
-        [isLoading]="isDeleting()"
-        class="button button-danger note__reviewed-button"></div>
+    @if (!isNoteRemoved()) {
+        <span
+            (click)="edit()"
+            class="icon-edit"></span>
+        <span
+            (click)="toggleRemoveConfirmation()"
+            class="icon-delete"></span>
+        <span
+            (click)="toggleReviewOptions()"
+            class="icon-menu-dots"></span>
+    }
 
-    <span
-        *ngIf="!isNoteRemoved()"
-        (click)="edit()"
-        class="icon-edit"></span>
-    <span
-        *ngIf="!isNoteRemoved()"
-        (click)="toggleRemoveConfirmation()"
-        class="icon-delete"></span>
-    <span
-        *ngIf="!isNoteRemoved()"
-        (click)="toggleReviewOptions()"
-        class="icon-menu-dots"></span>
-    <review-options
-        *ngIf="isReviewOptionsVisible()"
-        @popup
-        [note]="note"
-        (clickOutside)="toggleReviewOptions()"/>
-    <note-removal-prompt
-        @popup
-        *ngIf="isRemoveConfirmationVisible()"
-        (removeNote)="remove()"
-        (closeConfirmation)="toggleRemoveConfirmation()"
-        (clickOutside)="toggleRemoveConfirmation()"/>
+
+    @if (isReviewOptionsVisible()) {
+        <review-options
+            @popup
+            [note]="note"
+            (clickOutside)="toggleReviewOptions()"/>
+    }
+
+    @if (isRemoveConfirmationVisible()) {
+        <note-removal-prompt
+            @popup
+            (removeNote)="remove()"
+            (closeConfirmation)="toggleRemoveConfirmation()"
+            (clickOutside)="toggleRemoveConfirmation()"/>
+    }
 </div>

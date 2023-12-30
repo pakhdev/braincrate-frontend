@@ -11,5 +11,9 @@
         {{ isGoogleLinked() ? 'Enlazar otra cuenta' : 'Enlazar con Google' }}
     </button>
 </div>
-<div class="success-text mt5" @message-appear *ngIf="successMessage()">{{ successMessage() }}</div>
-<div class="error-text mt5" @message-appear *ngIf="errorMessage()">{{ errorMessage() }}</div>
+@if (successMessage()) {
+    <div class="success-text mt5" @message-appear>{{ successMessage() }}</div>
+}
+@if (errorMessage()) {
+    <div class="error-text mt5" @message-appear>{{ errorMessage() }}</div>
+}

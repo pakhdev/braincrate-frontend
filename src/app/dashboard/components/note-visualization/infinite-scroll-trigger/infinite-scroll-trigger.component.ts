@@ -1,6 +1,5 @@
 import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
-import { NgIf } from '@angular/common';
 
 import { NotesService } from '../../../services/notes.service';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
@@ -9,9 +8,6 @@ import { DashboardStateService } from '../../../services/dashboard-state.service
     standalone: true,
     selector: 'infinite-scroll-trigger',
     templateUrl: './infinite-scroll-trigger.component.html',
-    imports: [
-        NgIf,
-    ],
 })
 export class InfiniteScrollTriggerComponent implements OnInit, OnDestroy {
 

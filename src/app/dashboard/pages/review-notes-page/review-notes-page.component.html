@@ -1,7 +1,14 @@
-<reviews-completed-message *ngIf="showReviewsCompleted()"/>
-<div class="note" *ngFor="let note of notes"
-     [ngClass]="{ 'note-removed': note.removedAt !== null }">
-    <view-note [note]="note" *ngIf="!note.editMode"/>
-    <edit-note [note]="note" *ngIf="note.editMode"/>
-</div>
+@if (showReviewsCompleted()) {
+    <reviews-completed-message/>
+}
+
+@for (note of notes;track note.id) {
+    <div class="note" [ngClass]="{ 'note-removed': note.removedAt !== null }">
+        @if (note.editMode) {
+            <edit-note [note]="note"/>
+        } @else () {
+            <view-note [note]="note"/>
+        }
+    </div>
+}
 <infinite-scroll-trigger/>

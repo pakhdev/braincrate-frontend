@@ -8,11 +8,11 @@
             [value]="authService.currentUser()?.email"
             placeholder="Correo electrónico"
             class="panel__text-input">
-        <div
-            errorMessage
-            *ngIf="hasError('email') || backendError()"
-            [errors]="getError('email') || backendError()"
-            class="auth__form-error"></div>
+        @if (hasError('email') || backendError()) {
+            <div errorMessage
+                 [errors]="getError('email') || backendError()"
+                 class="auth__form-error"></div>
+        }
     </div>
     <button
         dynamicButtonText

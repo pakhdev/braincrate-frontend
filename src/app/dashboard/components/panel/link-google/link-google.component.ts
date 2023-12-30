@@ -1,5 +1,4 @@
 import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
-import { NgIf } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 import { environments } from '../../../../../environments/environment';
@@ -11,9 +10,6 @@ import { AuthService } from '../../../../auth/services/auth.service';
     standalone: true,
     selector: 'link-google',
     templateUrl: './link-google.component.html',
-    imports: [
-        NgIf,
-    ],
     animations: [
         trigger('message-appear', [
             transition(':enter', [
@@ -25,8 +21,8 @@ import { AuthService } from '../../../../auth/services/auth.service';
 })
 export class LinkGoogleComponent implements OnInit, OnDestroy {
 
-    public successMessage: WritableSignal<string | null> = signal(null);
-    public errorMessage: WritableSignal<string | null> = signal(null);
+    public readonly successMessage: WritableSignal<string | null> = signal(null);
+    public readonly errorMessage: WritableSignal<string | null> = signal(null);
     private readonly authService = inject(AuthService);
 
     public ngOnInit(): void {
@@ -38,7 +34,7 @@ export class LinkGoogleComponent implements OnInit, OnDestroy {
     }
 
     public linkGoogle(): void {
-        const authEndpoint = environments.baseUrl + '/auth/link-google-account';
+        const authEndpoint = environments.backendUrl + '/auth/link-google-account';
         window.open(authEndpoint, 'Google Auth', 'width=500,height=600');
     }
 
@@ -57,7 +53,7 @@ export class LinkGoogleComponent implements OnInit, OnDestroy {
     }
 
     private handleMessage(event: MessageEvent): void {
-        if (new URL(environments.baseUrl).origin === event.origin) {
+        if (new URL(environments.backendUrl).origin === event.origin) {
             const googleLinkResponse: GoogleLinkResponse = event.data;
             const sourceWindow = event.source as Window | null;
             if (sourceWindow) sourceWindow.close();

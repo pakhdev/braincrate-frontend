@@ -1,6 +1,5 @@
 import { Component, inject, Input, signal, effect, WritableSignal, booleanAttribute } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { NgIf } from '@angular/common';
 
 import { isFieldOneEqualFieldTwo } from '../../../../shared/validators/validators';
 import { AuthService } from '../../../../auth/services/auth.service';
@@ -12,7 +11,6 @@ import { DynamicButtonTextDirective } from '../../../../shared/directives/dynami
     selector: 'change-password',
     templateUrl: './change-password.component.html',
     imports: [
-        NgIf,
         ErrorMessageDirective,
         ReactiveFormsModule,
         DynamicButtonTextDirective,
@@ -23,10 +21,10 @@ export class ChangePasswordComponent {
     @Input({ transform: booleanAttribute }) public showCurrentPasswordInput = false;
     private readonly fb = inject(FormBuilder);
     public readonly authService = inject(AuthService);
-    public backendError: WritableSignal<string | null> = signal(null);
-    public isLoading = signal(false);
+    public readonly backendError: WritableSignal<string | null> = signal(null);
+    public readonly isLoading = signal(false);
 
-    public passwordUpdatingForm = this.fb.group({
+    public readonly passwordUpdatingForm = this.fb.group({
         currentPassword: [
             '',
             [Validators.required, Validators.minLength(6)],
@@ -45,7 +43,7 @@ export class ChangePasswordComponent {
         ],
     });
 
-    validateCurrentPass = effect(() => {
+    private validateCurrentPass = effect(() => {
         const currentPasswordControl = this.passwordUpdatingForm.get('currentPassword');
         if (currentPasswordControl === null) return;
         this.showCurrentPasswordInput

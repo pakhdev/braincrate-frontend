@@ -2,32 +2,36 @@
     (click)="togglePopup()"
     class="editor-toolbar__review-select-button">{{ selectedPlanName }}
 </div>
-<div @popup (clickOutside)="togglePopup()" class="review-settings" *ngIf="isPopupVisible">
-    <div class="review-settings__options-header">
-        <div>Planes de repaso</div>
-        <div class="review-settings__option-green">Intervalos (días)</div>
-    </div>
-    <div class="review-settings__option-row"
-         [ngClass]="{ 'review-settings__option-row--selected': isDifficultySelected(reviewPlan.difficulty)}"
-         (click)="setDifficulty(reviewPlan.difficulty)"
-         *ngFor="let reviewPlan of reviewPlans">
-        <div class="review-settings__option-title">{{ reviewPlan.name }}</div>
-        <div
-            class="review-settings__option-value">
-            {{ reviewPlan.intervals.length ? reviewPlan.intervals.join(', ') : 'Nunca' }}
+@if (isPopupVisible()) {
+    <div @popup (clickOutside)="togglePopup()" class="review-settings">
+        <div class="review-settings__options-header">
+            <div>Planes de repaso</div>
+            <div class="review-settings__option-green">Intervalos (días)</div>
+        </div>
+        @for (reviewPlan of reviewPlans;track $index) {
+            <div class="review-settings__option-row"
+                 [ngClass]="{ 'review-settings__option-row--selected': isDifficultySelected(reviewPlan.difficulty)}"
+                 (click)="setDifficulty(reviewPlan.difficulty)">
+                <div class="review-settings__option-title">{{ reviewPlan.name }}</div>
+                <div
+                    class="review-settings__option-value">
+                    {{ reviewPlan.intervals.length ? reviewPlan.intervals.join(', ') : 'Nunca' }}
+                </div>
+            </div>
+        }
+
+        <div class="review-settings__automatic-removing">
+            <label class="toggle">
+                <input
+                    type="checkbox"
+                    [ngModel]="removeAfterReviews"
+                    (ngModelChange)="changeRemoveAfterReviews($event)"
+                    class="toggle-checkbox">
+                <div class="toggle-switch"></div>
+            </label>
+            <div class="review-settings__toggle-text">
+                Borrar ésta nota tras completar todos los repasos
+            </div>
         </div>
     </div>
-    <div class="review-settings__automatic-removing">
-        <label class="toggle">
-            <input
-                type="checkbox"
-                [ngModel]="removeAfterReviews"
-                (ngModelChange)="changeRemoveAfterReviews($event)"
-                class="toggle-checkbox">
-            <div class="toggle-switch"></div>
-        </label>
-        <div class="review-settings__toggle-text">
-            Borrar ésta nota tras completar todos los repasos
-        </div>
-    </div>
-</div>
+}

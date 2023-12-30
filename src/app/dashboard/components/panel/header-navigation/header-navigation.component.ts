@@ -1,6 +1,5 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
 
 import { NotesService } from '../../../services/notes.service';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
@@ -10,7 +9,6 @@ import { DashboardStateService } from '../../../services/dashboard-state.service
     selector: 'header-navigation',
     templateUrl: './header-navigation.component.html',
     imports: [
-        NgIf,
         RouterLink,
     ],
 })
@@ -34,14 +32,14 @@ export class HeaderNavigationComponent {
         return this.router.url === '/dashboard/new-note';
     }
 
-    cancelNoteCreation(): void {
-        const currentSection = this.dashboardStateService.dashboardState().notesType;
-        this.router.navigate(['dashboard', currentSection], { queryParams: { preserveState: 'true' } });
-    }
-
     get notesForReviewCount(): string | null {
         const notesForReviewCount = this.notesService.countNotesForReview();
         return notesForReviewCount > 0 ? `(${ notesForReviewCount })` : null;
+    }
+
+    public cancelNoteCreation(): void {
+        const currentSection = this.dashboardStateService.dashboardState().notesType;
+        this.router.navigate(['dashboard', currentSection], { queryParams: { preserveState: 'true' } });
     }
 
     public openMobilePanelHandler(): void {

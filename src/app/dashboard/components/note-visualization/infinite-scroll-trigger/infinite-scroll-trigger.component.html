@@ -1,4 +1,3 @@
-<div
-    *ngIf="showLoadingTrigger()"
-    #infiniteScrollTrigger
-></div>
+@if (showLoadingTrigger()) {
+    <div #infiniteScrollTrigger></div>
+}

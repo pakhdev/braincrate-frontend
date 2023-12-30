@@ -70,6 +70,9 @@ export class ErrorMessageDirective {
         } else if (errors.includes('passwordMatchesOld')) {
             this.htmlElement.nativeElement.innerText = `La contraseña coincide con la antigua`;
             return;
+        } else if (errors.includes('setPasswordBeforeEmailUpdate')) {
+            this.htmlElement.nativeElement.innerText = `Debes establecer una contraseña antes de cambiar el correo electrónico, porque tu cuenta se creó con Google`;
+            return;
         }
     }
 

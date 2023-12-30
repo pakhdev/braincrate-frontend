@@ -5,22 +5,17 @@
             placeholder="Correo electrónico"
             formControlName="email"
             class="panel__text-input">
-        <div
-            errorMessage
-            *ngIf="hasError('email')"
-            [errors]="getError('email')"
-            class="auth__form-error"></div>
-
+        @if (hasError('email')) {
+            <div errorMessage class="auth__form-error" [errors]="getError('email')"></div>
+        }
         <input
             type="password"
             placeholder="Contraseña"
             formControlName="password"
             class="panel__text-input">
-        <div
-            errorMessage
-            *ngIf="hasError('password')"
-            [errors]="getError('password')"
-            class="auth__form-error"></div>
+        @if (hasError('password')) {
+            <div errorMessage class="auth__form-error" [errors]="getError('password')"></div>
+        }
     </div>
     <button
         dynamicButtonText
@@ -43,9 +38,7 @@
             Entrar con Google
         </button>
     </div>
-    <div
-        errorMessage
-        *ngIf="backendError()"
-        [errors]="backendError()"
-        class="auth__form-error--server"></div>
+    @if (backendError()) {
+        <div errorMessage class="auth__form-error--server" [errors]="backendError()"></div>
+    }
 </form>

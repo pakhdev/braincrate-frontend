@@ -13,15 +13,17 @@
 
                     <div #stickyPanelContainer id="panel__sticky-container" class="panel-bottom-sticky">
                         <header-navigation
-                            [showButtons]="openedSection === 'notes'"
+                            [showButtons]="openedSection() === 'notes'"
                             [mobile]="false" logoMode="light"/>
 
-                        <notes-management
-                            *ngIf="openedSection === 'notes'"
-                            style="flex: 1"/>
-                        <account-management
-                            *ngIf="openedSection === 'account'"
-                            style="flex: 1"/>
+                        @switch (openedSection()) {
+                            @case ('notes') {
+                                <notes-management style="flex: 1"/>
+                            }
+                            @case ('account') {
+                                <account-management style="flex: 1"/>
+                            }
+                        }
 
                         <div #panelCopyright class="panel__copyright">
                             <img src="assets/images/pakhmutov-light.svg" alt="Pakhmutov logo"/>
@@ -38,7 +40,9 @@
                     (openMobilePanel)="openMobilePanel()"/>
             </div>
             <div #notesContainer class="notes-container">
-                <notes-loading-indicator *ngIf="showLoadingNotes()"/>
+                @if (showLoadingNotes()) {
+                    <notes-loading-indicator/>
+                }
                 <router-outlet/>
             </div>
             <div class="content-copyright-container">

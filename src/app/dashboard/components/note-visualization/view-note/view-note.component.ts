@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, Renderer2 } from '@angular/core';
-import { NgClass, NgIf } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, inject, Input, Renderer2, signal, WritableSignal } from '@angular/core';
+import { NgClass } from '@angular/common';
 
 import { Note } from '../../../interfaces/note.interface';
 import { NoteToolbarComponent } from '../note-toolbar/note-toolbar.component';
@@ -18,7 +18,6 @@ import { SafeHtmlPipe } from '../../../../shared/pipes/trust-html.pipe';
         NoteToolbarComponent,
         ReviewOptionsComponent,
         LargeImageModalComponent,
-        NgIf,
         SafeHtmlPipe,
     ],
 })
@@ -28,7 +27,7 @@ export class ViewNoteComponent implements AfterViewInit {
     private readonly renderer = inject(Renderer2);
     private readonly elementRef = inject(ElementRef);
     private readonly imagesUrl = environments.imagesUrl;
-    public openLargeImageSrc: string | null = null;
+    public openLargeImageSrc: WritableSignal<string | null> = signal(null);
 
     ngAfterViewInit() {
         this.configureImages();
@@ -43,11 +42,11 @@ export class ViewNoteComponent implements AfterViewInit {
     }
 
     public enlargeImage(largeUrl: string): void {
-        this.openLargeImageSrc = largeUrl;
+        this.openLargeImageSrc.set(largeUrl);
     }
 
     public closeLargeImage(): void {
-        this.openLargeImageSrc = null;
+        this.openLargeImageSrc.set(null);
     }
 
     private configureImages(): void {

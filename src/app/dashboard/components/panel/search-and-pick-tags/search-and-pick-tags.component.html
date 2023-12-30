@@ -8,16 +8,25 @@
     <span class="icon-tag"></span>
 </div>
 <div class="panel__tags-container">
-    <div
-        *ngFor="let tag of selectedTags"
-        (click)="unselectTag(tag.id)"
-        class="panel__tag panel__tag--selected">{{ tag.name }}</div>
-    <div
-        *ngFor="let tag of notSelectedTags"
-        (click)="selectTag(tag.id)"
-        [ngStyle]="{ opacity: areTagsLoading ? 0.5 : 1 }"
-        class="panel__tag">{{ tag.name }}</div>
+    @for (tag of selectedTags;track tag.id) {
+        <div
+            (click)="unselectTag(tag.id)"
+            class="panel__tag panel__tag--selected">{{ tag.name }}
+        </div>
+    }
 
-    <welcome-tag *ngIf="showWelcomeTag()"/>
-    <no-results-tag *ngIf="showNoResultsTag()"/>
+    @for (tag of notSelectedTags;track tag.id) {
+        <div
+            (click)="selectTag(tag.id)"
+            [ngStyle]="{ opacity: areTagsLoading ? 0.5 : 1 }"
+            class="panel__tag">{{ tag.name }}
+        </div>
+    }
+
+    @if (showWelcomeTag()) {
+        <welcome-tag/>
+    }
+    @if (showNoResultsTag()) {
+        <no-results-tag/>
+    }
 </div>
