@@ -1,5 +1,4 @@
 import { Component, ElementRef, inject, ViewChild } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { pairwise } from 'rxjs';
 import { NgForOf, NgIf, NgStyle } from '@angular/common';
 
@@ -27,8 +26,9 @@ export class SearchAndPickTagsComponent {
     @ViewChild('searchTagsInput') private readonly searchTagsInput!: ElementRef;
     private readonly tagsService = inject(TagsService);
     private readonly dashboardStateService = inject(DashboardStateService);
+    private readonly dashboardState = this.dashboardStateService.dashboardState;
     private readonly dashboardState$ =
-        toObservable(this.dashboardStateService.dashboardState).pipe(pairwise());
+        this.dashboardStateService.dashboardState$.pipe(pairwise());
     private readonly visibleTagLimit = 30;
     private searchTagsTerm: string = '';
 
@@ -88,14 +88,14 @@ export class SearchAndPickTagsComponent {
         return this.tagsService.tags().length === 0
             && !this.searchTagsTerm
             && !this.tagsService.isLoading()
-            && !this.dashboardStateService.dashboardState().searchWord
-            && this.dashboardStateService.dashboardState().notesType === 'all';
+            && !this.dashboardState.searchWord
+            && this.dashboardState.notesType === 'all';
     }
 
     public showNoResultsTag(): boolean {
         return !(this.tagsService.isLoading()
             || this.notSelectedTags.length > 0
-            || (!this.searchTagsTerm && !this.dashboardStateService.dashboardState().searchWord));
+            || (!this.searchTagsTerm && !this.dashboardState.searchWord));
 
     }
 

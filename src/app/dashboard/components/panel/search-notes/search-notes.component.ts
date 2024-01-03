@@ -1,5 +1,4 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 
 import { DashboardStateService } from '../../../services/dashboard-state.service';
 
@@ -12,10 +11,11 @@ export class SearchNotesComponent implements OnInit {
 
     @ViewChild('searchInput') private readonly searchInput: ElementRef | undefined;
     private readonly dashboardStateService = inject(DashboardStateService);
-    private readonly dashboardState$ = toObservable(this.dashboardStateService.dashboardState);
+    private readonly dashboardState = this.dashboardStateService.dashboardState;
+    private readonly dashboardState$ = this.dashboardStateService.dashboardState$;
 
     public searchNotes(): void {
-        const stateSearchWord = this.dashboardStateService.dashboardState().searchWord;
+        const stateSearchWord = this.dashboardState.searchWord;
         if (this.searchInput?.nativeElement.value === stateSearchWord) return;
 
         this.dashboardStateService.setState({

@@ -20,6 +20,7 @@ export class HeaderNavigationComponent {
     private readonly router = inject(Router);
     private readonly notesService = inject(NotesService);
     private readonly dashboardStateService = inject(DashboardStateService);
+    private readonly dashboardState = this.dashboardStateService.dashboardState;
 
     @Output()
     public openMobilePanel: EventEmitter<void> = new EventEmitter();
@@ -38,7 +39,7 @@ export class HeaderNavigationComponent {
     }
 
     public cancelNoteCreation(): void {
-        const currentSection = this.dashboardStateService.dashboardState().notesType;
+        const currentSection = this.dashboardState.notesType;
         this.router.navigate(['dashboard', currentSection], { queryParams: { preserveState: 'true' } });
     }
 

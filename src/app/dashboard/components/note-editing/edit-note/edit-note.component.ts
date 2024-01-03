@@ -34,6 +34,7 @@ export class EditNoteComponent implements OnInit {
     @ViewChild('iconsContainer') public readonly iconsContainer!: ElementRef;
 
     private readonly dashboardStateService = inject(DashboardStateService);
+    private readonly dashboardState = this.dashboardStateService.dashboardState;
     private readonly imagesUrl = environments.imagesUrl;
     private readonly notesService = inject(NotesService);
     private readonly router = inject(Router);
@@ -108,7 +109,7 @@ export class EditNoteComponent implements OnInit {
     private createNote(body: NoteManipulationBody): void {
         this.notesService.createNoteQuery(body).subscribe((response) => {
 
-            const currentSection = this.dashboardStateService.dashboardState().notesType;
+            const currentSection = this.dashboardState.notesType;
 
             if (response.errors) {
                 console.error(response.errors);

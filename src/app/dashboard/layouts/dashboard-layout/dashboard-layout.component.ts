@@ -12,7 +12,6 @@ import {
 import { DOCUMENT, NgClass } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { fromEvent } from 'rxjs';
-import { toObservable } from '@angular/core/rxjs-interop';
 
 import { AccountManagementComponent } from '../../components/panel/account-management/account-management.component';
 import { DashboardStateService } from '../../services/dashboard-state.service';
@@ -49,7 +48,7 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
     @ViewChild('panelTopMargin') private readonly panelTopMarginDiv!: ElementRef;
     @ViewChild('stickyPanelContainer') private readonly stickyPanelContainerDiv!: ElementRef;
     private readonly dashboardStateService = inject(DashboardStateService);
-    private readonly dashboardState$ = toObservable(this.dashboardStateService.dashboardState);
+    private readonly dashboardState$ = this.dashboardStateService.dashboardState$;
     private readonly documentBody!: HTMLElement;
     private readonly ngZone = inject(NgZone);
     private readonly notesService = inject(NotesService);

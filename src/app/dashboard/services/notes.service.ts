@@ -1,6 +1,5 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { finalize, Observable, tap } from 'rxjs';
 
 import { DashboardStateService } from './dashboard-state.service';
@@ -17,7 +16,7 @@ export class NotesService {
     private readonly http = inject(HttpClient);
     private readonly tagsService = inject(TagsService);
     private readonly dashboardStateService = inject(DashboardStateService);
-    private readonly dashboardState$ = toObservable(this.dashboardStateService.dashboardState);
+    private readonly dashboardState$ = this.dashboardStateService.dashboardState$;
     private readonly notesPerPage = 15;
 
     public notesList: WritableSignal<Note[]> = signal([]);
@@ -78,7 +77,7 @@ export class NotesService {
                     return;
                 }
                 this.calcNotesForReviewCounter(id, 'decrement');
-                if (this.dashboardStateService.dashboardState().notesType === 'for-review') {
+                if (this.dashboardStateService.dashboardState$.value.notesType === 'for-review') {
                     this.tagsService.removeTagsFromList(response.tags);
                     this.removeNoteFromList(id);
                 } else {
@@ -101,7 +100,7 @@ export class NotesService {
                     return;
                 }
                 this.calcNotesForReviewCounter(id, 'decrement');
-                if (this.dashboardStateService.dashboardState().notesType === 'for-review') {
+                if (this.dashboardStateService.dashboardState$.value.notesType === 'for-review') {
                     this.tagsService.removeTagsFromList(response.tags);
                     this.removeNoteFromList(id);
                 } else {
@@ -184,7 +183,7 @@ export class NotesService {
     }
 
     private calcOffset(): number {
-        const page = this.dashboardStateService.dashboardState().page;
+        const page = this.dashboardStateService.dashboardState$.value.page;
         return page * this.notesPerPage - this.notesPerPage;
     }
 

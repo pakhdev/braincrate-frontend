@@ -1,7 +1,6 @@
 import { inject, Injectable, signal, WritableSignal } from '@angular/core';
 import { catchError, finalize, Observable, pairwise, startWith, throwError } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { toObservable } from '@angular/core/rxjs-interop';
 
 import { DashboardStateService } from './dashboard-state.service';
 import { DashboardState } from '../interfaces/dashboard-state.interface';
@@ -15,8 +14,8 @@ export class TagsService {
     private readonly http = inject(HttpClient);
     private readonly dashboardStateService = inject(DashboardStateService);
     private readonly dashboardState$ =
-        toObservable(this.dashboardStateService.dashboardState).pipe(
-            startWith(this.dashboardStateService.dashboardState()), pairwise(),
+        this.dashboardStateService.dashboardState$.pipe(
+            startWith(this.dashboardStateService.dashboardState$.value), pairwise(),
         );
 
     public tags: WritableSignal<Tag[]> = signal([]);
