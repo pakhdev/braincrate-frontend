@@ -58,15 +58,6 @@ export class TagsService {
             );
     }
 
-    private isTagsLoadRequired(previous: DashboardState, current: DashboardState): boolean {
-        if (previous.notesType !== current.notesType) return true;
-        if (previous.searchWord !== current.searchWord) return true;
-
-        const previousTagIds = previous.selectedTags.slice().sort();
-        const currentTagIds = current.selectedTags.slice().sort();
-        return JSON.stringify(previousTagIds) !== JSON.stringify(currentTagIds);
-    }
-
     public updateTags(tagsToUpdate: Tag[]): void {
         this.tags.update((existingTags) => {
             tagsToUpdate.forEach((tag) => {
@@ -85,6 +76,15 @@ export class TagsService {
             const tagIdsToRemove = tags.map(tag => tag.id);
             return existingTags.filter(tag => !tagIdsToRemove.includes(tag.id));
         });
+    }
+
+    private isTagsLoadRequired(previous: DashboardState, current: DashboardState): boolean {
+        if (previous.notesType !== current.notesType) return true;
+        if (previous.searchWord !== current.searchWord) return true;
+
+        const previousTagIds = previous.selectedTags.slice().sort();
+        const currentTagIds = current.selectedTags.slice().sort();
+        return JSON.stringify(previousTagIds) !== JSON.stringify(currentTagIds);
     }
 
     private subscribeToDashboardState(): void {

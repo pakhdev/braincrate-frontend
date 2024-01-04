@@ -30,22 +30,23 @@ export class NotesService {
     }
 
     public remove(id: number): Observable<NoteUpdateResponse> {
-        return this.removeNoteQuery(id).pipe(
-            tap((response) => {
-                if (response.errors || !response.note) {
-                    console.error(response.errors);
-                    return;
-                }
-                this.calcNotesForReviewCounter(id, 'decrement');
-                this.updateNoteList(id, {
-                    removedAt: response.note.removedAt,
-                });
-                this.notesOffsetCorrection.update(offsetCorrection => offsetCorrection - 1);
-                if (response.tags) {
-                    this.tagsService.updateTags(response.tags);
-                }
-            }),
-        );
+        return this.http.delete<NoteUpdateResponse>(`/notes/${ id }`)
+            .pipe(
+                tap((response) => {
+                    if (response.errors || !response.note) {
+                        console.error(response.errors);
+                        return;
+                    }
+                    this.calcNotesForReviewCounter(id, 'decrement');
+                    this.updateNoteList(id, {
+                        removedAt: response.note.removedAt,
+                    });
+                    this.notesOffsetCorrection.update(offsetCorrection => offsetCorrection - 1);
+                    if (response.tags) {
+                        this.tagsService.updateTags(response.tags);
+                    }
+                }),
+            );
     }
 
     public restore(id: number): Observable<NoteUpdateResponse> {
@@ -157,15 +158,11 @@ export class NotesService {
         return this.http.patch<NoteUpdateResponse>(`/${ url }`, body);
     }
 
-    private removeNoteQuery(id: number): Observable<NoteUpdateResponse> {
-        return this.http.delete<NoteUpdateResponse>(`/notes/${ id }`);
-    }
-
     public prependNoteToList(note: Note): void {
         this.notesList.update(notes => [note, ...notes]);
     }
 
-    public updateNoteList(id: number, properties: Partial<Note>) {
+    public updateNoteList(id: number, properties: Partial<Note>): void {
         this.notesList.update(notes => {
             const note = notes.find(note => note.id === id);
             if (!note) return notes;

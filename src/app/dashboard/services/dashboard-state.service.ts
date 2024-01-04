@@ -22,10 +22,6 @@ export class DashboardStateService {
         this.subscribeToState();
     }
 
-    public get dashboardState(): DashboardState {
-        return this.dashboardState$.value;
-    }
-
     public setState(state: Partial<DashboardState>): void {
         if (state.notesType) {
             this.dashboardState$.next({
@@ -48,11 +44,15 @@ export class DashboardStateService {
         });
     }
 
-    get selectedTags(): number[] {
+    public get dashboardState(): DashboardState {
+        return this.dashboardState$.value;
+    }
+
+    public get selectedTags(): number[] {
         return this.dashboardState$.value.selectedTags;
     }
 
-    get selectedSection(): string {
+    public get selectedSection(): string {
         return this.dashboardState$.value.notesType;
     }
 

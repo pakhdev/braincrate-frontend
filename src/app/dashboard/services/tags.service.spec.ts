@@ -3,22 +3,21 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { DashboardState } from '../interfaces/dashboard-state.interface';
 import { DashboardStateService } from './dashboard-state.service';
-import { signal } from '@angular/core';
-import { of } from 'rxjs';
+import { of, pairwise } from 'rxjs';
 
 describe('TagsService', () => {
 
     let service: TagsService;
     const fakeHttp = jasmine.createSpyObj('httpClient', ['get']);
-    const fakeDashboardStateService = {
-        dashboardState: signal({ selectedTags: [1, 2], searchWord: '', notesType: 'all', page: 1 }),
-        selectedTags: [1, 2],
-    };
     const baseDashboardState: DashboardState = {
         selectedTags: [],
         searchWord: '',
-        notesType: 'all',
-        page: 1,
+        notesType: '',
+        page: 0,
+    };
+    const fakeDashboardStateService = {
+        dashboardState$: of([{ ...baseDashboardState }]).pipe(pairwise()),
+        selectedTags: [1, 2],
     };
 
     beforeEach(() => {
@@ -56,38 +55,19 @@ describe('TagsService', () => {
         ]);
     });
 
-    it('getTags llama a http.get con los parámetros correctos', () => {
+    it('getTags llama a http.get con los parámetros correctos y asigna isLoading', () => {
+        const spySet = spyOn(service.isLoading, 'set').and.callThrough();
         fakeHttp.get.and.returnValue(of([]));
         service.getTags([1, 2], 'search word', 'all').subscribe();
         const params = new HttpParams()
             .append('searchTerm', 'search word')
             .append('parentTagIds[]', '1')
             .append('parentTagIds[]', '2');
+
         expect(fakeHttp.get).toHaveBeenCalledWith('/tags', { params });
-    });
-
-    it('isTagsLoadRequired devuelve true si notesType ha cambiado', () => {
-        const previous: DashboardState = { ...baseDashboardState, notesType: 'all' };
-        const current: DashboardState = { ...baseDashboardState, notesType: 'for-review' };
-        expect(service['isTagsLoadRequired'](previous, current)).toBeTrue();
-    });
-
-    it('isTagsLoadRequired devuelve false si no ha cambiado selectedTags, notesType o searchWord', () => {
-        const previous: DashboardState = { ...baseDashboardState };
-        const current: DashboardState = { ...baseDashboardState };
-        expect(service['isTagsLoadRequired'](previous, current)).toBeFalse();
-    });
-
-    it('isTagsLoadRequired devuelve true si searchWord ha cambiado', () => {
-        const previous: DashboardState = { ...baseDashboardState, searchWord: '' };
-        const current: DashboardState = { ...baseDashboardState, searchWord: 'new search word' };
-        expect(service['isTagsLoadRequired'](previous, current)).toBeTrue();
-    });
-
-    it('isTagsLoadRequired devuelve true si selectedTags ha cambiado', () => {
-        const previous: DashboardState = { ...baseDashboardState, selectedTags: [] };
-        const current: DashboardState = { ...baseDashboardState, selectedTags: [1] };
-        expect(service['isTagsLoadRequired'](previous, current)).toBeTrue();
+        expect(spySet).toHaveBeenCalledTimes(2);
+        expect(spySet).toHaveBeenCalledWith(true);
+        expect(spySet).toHaveBeenCalledWith(false);
     });
 
     it('updateTags actualiza los tags existentes con los nuevos', () => {
@@ -118,6 +98,30 @@ describe('TagsService', () => {
         ]);
         service.removeTagsFromList([{ id: 1, name: 'tag1', notesCount: 5 }]);
         expect(service.tags()).toEqual([{ id: 2, name: 'tag2', notesCount: 7 }]);
+    });
+
+    it('isTagsLoadRequired devuelve true si notesType ha cambiado', () => {
+        const previous: DashboardState = { ...baseDashboardState, notesType: 'all' };
+        const current: DashboardState = { ...baseDashboardState, notesType: 'for-review' };
+        expect(service['isTagsLoadRequired'](previous, current)).toBeTrue();
+    });
+
+    it('isTagsLoadRequired devuelve false si no ha cambiado selectedTags, notesType o searchWord', () => {
+        const previous: DashboardState = { ...baseDashboardState };
+        const current: DashboardState = { ...baseDashboardState };
+        expect(service['isTagsLoadRequired'](previous, current)).toBeFalse();
+    });
+
+    it('isTagsLoadRequired devuelve true si searchWord ha cambiado', () => {
+        const previous: DashboardState = { ...baseDashboardState, searchWord: '' };
+        const current: DashboardState = { ...baseDashboardState, searchWord: 'new search word' };
+        expect(service['isTagsLoadRequired'](previous, current)).toBeTrue();
+    });
+
+    it('isTagsLoadRequired devuelve true si selectedTags ha cambiado', () => {
+        const previous: DashboardState = { ...baseDashboardState, selectedTags: [] };
+        const current: DashboardState = { ...baseDashboardState, selectedTags: [1] };
+        expect(service['isTagsLoadRequired'](previous, current)).toBeTrue();
     });
 
 });
