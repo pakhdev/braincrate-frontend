@@ -1,4 +1,4 @@
-import { Component, inject, Input, signal, effect, WritableSignal, booleanAttribute } from '@angular/core';
+import { Component, inject, Input, signal, effect, WritableSignal, booleanAttribute, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 
 import { isFieldOneEqualFieldTwo } from '../../../../shared/validators/validators';
@@ -16,7 +16,7 @@ import { DynamicButtonTextDirective } from '../../../../shared/directives/dynami
         DynamicButtonTextDirective,
     ],
 })
-export class ChangePasswordComponent {
+export class ChangePasswordComponent implements OnInit {
 
     @Input({ transform: booleanAttribute }) public showCurrentPasswordInput = false;
     private readonly fb = inject(FormBuilder);
@@ -43,14 +43,13 @@ export class ChangePasswordComponent {
         ],
     });
 
-    private validateCurrentPass = effect(() => {
-        const currentPasswordControl = this.passwordUpdatingForm.get('currentPassword');
-        if (currentPasswordControl === null) return;
-        this.showCurrentPasswordInput
-            ? currentPasswordControl.setValidators([Validators.required, Validators.minLength(6)])
-            : currentPasswordControl.clearValidators();
-        currentPasswordControl.updateValueAndValidity();
-    });
+    public ngOnInit(): void {
+        if (!this.showCurrentPasswordInput) {
+            const currentPasswordControl = this.passwordUpdatingForm.get('currentPassword')!;
+            currentPasswordControl.clearValidators();
+            currentPasswordControl.updateValueAndValidity();
+        }
+    }
 
     public updatePassword() {
         this.passwordUpdatingForm.markAllAsTouched();

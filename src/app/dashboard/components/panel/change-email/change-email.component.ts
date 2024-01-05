@@ -21,6 +21,7 @@ export class ChangeEmailComponent {
     public readonly authService = inject(AuthService);
     private readonly fb = inject(FormBuilder);
     public readonly backendError: WritableSignal<string | null> = signal(null);
+
     public readonly isLoading = signal(false);
 
     public readonly emailUpdatingForm = this.fb.group({
