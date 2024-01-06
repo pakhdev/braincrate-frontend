@@ -1,18 +1,34 @@
-import { ChangePasswordComponent } from './change-password.component';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Component, ViewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockDirective } from 'ng-mocks';
-import { ErrorMessageDirective } from '../../../../shared/directives/error-message.directive';
-import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
-import { AuthService } from '../../../../auth/services/auth.service';
+import { of } from 'rxjs';
 
-xdescribe('ChangePasswordComponent', () => {
-    let component: ChangePasswordComponent;
-    let fixture: ComponentFixture<ChangePasswordComponent>;
+import { AuthService } from '../../../../auth/services/auth.service';
+import { ChangePasswordComponent } from './change-password.component';
+import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
+import { ErrorMessageDirective } from '../../../../shared/directives/error-message.directive';
+
+describe('ChangePasswordComponent', () => {
+
+    @Component({
+        standalone: true,
+        imports: [ChangePasswordComponent],
+        template: `
+            <change-password
+                    [showCurrentPasswordInput]="showCurrentPasswordInput"/> |||| {{ showCurrentPasswordInput }}`,
+    })
+    class TestHostComponent {
+        public showCurrentPasswordInput = false;
+        @ViewChild(ChangePasswordComponent) public readonly component!: ChangePasswordComponent;
+    }
+
+    let hostComponent: TestHostComponent;
+    let hostFixture: ComponentFixture<TestHostComponent>;
     const fakeAuthService = jasmine.createSpyObj('AuthService', ['updatePassword', 'hasError']);
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ChangePasswordComponent],
+            imports: [TestHostComponent, ChangePasswordComponent],
             providers: [
                 { provide: AuthService, useValue: fakeAuthService },
             ],
@@ -21,20 +37,86 @@ xdescribe('ChangePasswordComponent', () => {
                 MockDirective(DynamicButtonTextDirective),
             ],
         }).compileComponents();
-
-        fixture = TestBed.createComponent(ChangePasswordComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+        hostFixture = TestBed.createComponent(TestHostComponent);
+        hostComponent = hostFixture.componentInstance;
+        hostFixture.detectChanges();
     });
 
-    it('validar la contraseña actual si showCurrentPasswordInput está en true', done => {
-        component.showCurrentPasswordInput = false;
-        fixture = TestBed.createComponent(ChangePasswordComponent);
-        component = fixture.componentInstance;
-
-        fixture.detectChanges();
-        const control = component.passwordUpdatingForm.get('currentPassword')!;
+    it('validar la contraseña actual si showCurrentPasswordInput está en true', () => {
+        hostComponent.showCurrentPasswordInput = true;
+        hostFixture.detectChanges();
+        const control = hostComponent.component.passwordUpdatingForm.get('currentPassword')!;
         control.setValue('');
         expect(control.valid).toBeFalsy();
+        control.setValue('123456');
+        expect(control.valid).toBeTruthy();
+    });
+
+    it('no validar la contraseña actual si showCurrentPasswordInput está en false', () => {
+        hostComponent.showCurrentPasswordInput = false;
+        hostFixture.detectChanges();
+        const control = hostComponent.component.passwordUpdatingForm.get('currentPassword')!;
+        control.setValue('');
+        expect(control.valid).toBeTruthy();
+    });
+
+    it('mostrar el input de contraseña actual si showCurrentPasswordInput está en true', () => {
+        hostComponent.showCurrentPasswordInput = true;
+        hostFixture.detectChanges();
+
+        const currentPasswordInput = hostFixture.nativeElement.querySelector(
+            'input[formControlName="currentPassword"]',
+        );
+        expect(currentPasswordInput).toBeTruthy();
+    });
+
+    it('ocultar el input de contraseña actual si showCurrentPasswordInput está en false', () => {
+        hostComponent.showCurrentPasswordInput = false;
+        hostFixture.detectChanges();
+
+        const currentPasswordInput = hostFixture.nativeElement.querySelector(
+            'input[formControlName="currentPassword"]',
+        );
+        expect(currentPasswordInput).toBeFalsy();
+    });
+
+    it('se valida correctamente la contraseña nueva', () => {
+        const newPasswordControl = hostComponent.component.passwordUpdatingForm.get('newPassword')!;
+        newPasswordControl.setValue('');
+        expect(newPasswordControl.valid).toBeFalsy();
+        newPasswordControl.setValue('123456');
+        expect(newPasswordControl.valid).toBeTruthy();
+
+        const repeatNewPasswordControl = hostComponent.component.passwordUpdatingForm.get('repeatNewPassword')!;
+        repeatNewPasswordControl.setValue('');
+        expect(repeatNewPasswordControl.valid).toBeFalsy();
+        repeatNewPasswordControl.setValue('123456');
+        expect(repeatNewPasswordControl.valid).toBeTruthy();
+
+        newPasswordControl.setValue('123456');
+        repeatNewPasswordControl.setValue('123457');
+        expect(hostComponent.component.passwordUpdatingForm.valid).toBeFalsy();
+
+        repeatNewPasswordControl.setValue('123456');
+        expect(hostComponent.component.passwordUpdatingForm.valid).toBeTruthy();
+    });
+
+    it('updatePassword actualiza correctamente el estado y llama el método del authService', () => {
+        hostComponent.showCurrentPasswordInput = false;
+        hostFixture.detectChanges();
+        const spySet = spyOn(hostComponent.component.isLoading, 'set').and.callThrough();
+        fakeAuthService.updatePassword.and.returnValue(of(true));
+        hostComponent.component.backendError.set('error');
+
+        hostComponent.component.passwordUpdatingForm.patchValue({ newPassword: '123456', repeatNewPassword: '123456' });
+        hostComponent.component.passwordUpdatingForm.markAllAsTouched();
+
+        hostComponent.component.updatePassword();
+        hostFixture.detectChanges();
+
+        expect(spySet).toHaveBeenCalledTimes(2);
+        expect(spySet).toHaveBeenCalledWith(true);
+        expect(spySet).toHaveBeenCalledWith(false);
+        expect(hostComponent.component.backendError()).toBe(null);
     });
 });

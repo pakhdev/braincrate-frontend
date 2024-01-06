@@ -1,4 +1,4 @@
-import { Component, inject, Input, signal, effect, WritableSignal, booleanAttribute, OnInit } from '@angular/core';
+import { Component, inject, Input, signal, WritableSignal, booleanAttribute } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 
 import { isFieldOneEqualFieldTwo } from '../../../../shared/validators/validators';
@@ -16,13 +16,27 @@ import { DynamicButtonTextDirective } from '../../../../shared/directives/dynami
         DynamicButtonTextDirective,
     ],
 })
-export class ChangePasswordComponent implements OnInit {
+export class ChangePasswordComponent {
 
-    @Input({ transform: booleanAttribute }) public showCurrentPasswordInput = false;
     private readonly fb = inject(FormBuilder);
     public readonly authService = inject(AuthService);
     public readonly backendError: WritableSignal<string | null> = signal(null);
     public readonly isLoading = signal(false);
+
+    private _showCurrentPasswordInput = false;
+    @Input({ transform: booleanAttribute })
+    public set showCurrentPasswordInput(value: boolean) {
+        this._showCurrentPasswordInput = value;
+        const currentPasswordControl = this.passwordUpdatingForm.get('currentPassword')!;
+        value
+            ? currentPasswordControl.setValidators([Validators.required, Validators.minLength(6)])
+            : currentPasswordControl.clearValidators();
+        currentPasswordControl.updateValueAndValidity();
+    }
+
+    public get showCurrentPasswordInput(): boolean {
+        return this._showCurrentPasswordInput;
+    }
 
     public readonly passwordUpdatingForm = this.fb.group({
         currentPassword: [
@@ -42,14 +56,6 @@ export class ChangePasswordComponent implements OnInit {
             isFieldOneEqualFieldTwo('newPassword', 'repeatNewPassword'),
         ],
     });
-
-    public ngOnInit(): void {
-        if (!this.showCurrentPasswordInput) {
-            const currentPasswordControl = this.passwordUpdatingForm.get('currentPassword')!;
-            currentPasswordControl.clearValidators();
-            currentPasswordControl.updateValueAndValidity();
-        }
-    }
 
     public updatePassword() {
         this.passwordUpdatingForm.markAllAsTouched();

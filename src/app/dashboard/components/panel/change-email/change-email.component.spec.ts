@@ -59,6 +59,5 @@ describe('ChangeEmailComponent', () => {
         expect(spySet).toHaveBeenCalledWith(true);
         expect(spySet).toHaveBeenCalledWith(false);
         expect(component.backendError()).toBe(null);
-
     });
 });
