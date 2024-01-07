@@ -5,7 +5,7 @@ import { HeaderNavigationComponent } from './header-navigation.component';
 import { NotesService } from '../../../services/notes.service';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
 
-fdescribe('HeaderNavigationComponent', () => {
+describe('HeaderNavigationComponent', () => {
 
     let component: HeaderNavigationComponent;
     let fixture: ComponentFixture<HeaderNavigationComponent>;
