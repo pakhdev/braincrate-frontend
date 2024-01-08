@@ -6,11 +6,11 @@ import { MockDirective } from 'ng-mocks';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { ErrorMessageDirective } from '../../../../shared/directives/error-message.directive';
 import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
+import { authServiceMock } from '../../../../../mocks/auth.service.mock';
 
 describe('ChangeEmailComponent', () => {
     let component: ChangeEmailComponent;
     let fixture: ComponentFixture<ChangeEmailComponent>;
-    const fakeAuthService = jasmine.createSpyObj('AuthService', ['currentUser', 'hasError', 'updateEmail']);
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -18,7 +18,7 @@ describe('ChangeEmailComponent', () => {
                 ChangeEmailComponent,
             ],
             providers: [
-                { provide: AuthService, useValue: fakeAuthService },
+                { provide: AuthService, useValue: authServiceMock },
             ],
             declarations: [
                 MockDirective(ErrorMessageDirective),
@@ -46,7 +46,7 @@ describe('ChangeEmailComponent', () => {
 
     it('updateEmail actualiza correctamente el estado y llama el método del authService', () => {
         const spySet = spyOn(component.isLoading, 'set').and.callThrough();
-        fakeAuthService.updateEmail.and.returnValue(of(true));
+        authServiceMock.updateEmail.and.returnValue(of(true));
         component.backendError.set('error');
 
         component.emailUpdatingForm.patchValue({ email: 'abc@abc.com' });

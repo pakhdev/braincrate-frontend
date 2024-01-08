@@ -4,24 +4,24 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderNavigationComponent } from './header-navigation.component';
 import { NotesService } from '../../../services/notes.service';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
+import { routerMock } from '../../../../../mocks/router.mock';
+import { dashboardStateServiceMock } from '../../../../../mocks/dashboard-state.service.mock';
 
 describe('HeaderNavigationComponent', () => {
 
     let component: HeaderNavigationComponent;
     let fixture: ComponentFixture<HeaderNavigationComponent>;
 
-    const fakeRouter = jasmine.createSpyObj('Router', ['navigate']);
     const fakeNotesService = jasmine.createSpyObj('NotesService', ['countNotesForReview']);
-    const fakeDashboardStateService = jasmine.createSpyObj('DashboardStateService', ['dashboardState']);
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [HeaderNavigationComponent],
             providers: [
-                { provide: Router, useValue: fakeRouter },
+                { provide: Router, useValue: routerMock },
                 { provide: ActivatedRoute, useValue: {} },
                 { provide: NotesService, useValue: fakeNotesService },
-                { provide: DashboardStateService, useValue: fakeDashboardStateService },
+                { provide: DashboardStateService, useValue: dashboardStateServiceMock },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(HeaderNavigationComponent);
@@ -58,7 +58,7 @@ describe('HeaderNavigationComponent', () => {
     });
 
     it('ocultar el botón de cancelar y mostrar el de crear si isNoteCreationActive es false', () => {
-        fakeRouter.url = '/dashboard/notes';
+        routerMock.url = '/dashboard/notes';
         fixture.detectChanges();
         const compiled = fixture.nativeElement as HTMLElement;
         expect(compiled.querySelector('.button-close-form')).toBeNull();
@@ -66,7 +66,7 @@ describe('HeaderNavigationComponent', () => {
     });
 
     it('mostrar el botón de cancelar y ocultar el de crear si isNoteCreationActive es true', () => {
-        fakeRouter.url = '/dashboard/new-note';
+        routerMock.url = '/dashboard/new-note';
         fixture.detectChanges();
         console.log(component.isNoteCreationActive);
         const compiled = fixture.nativeElement as HTMLElement;
@@ -76,7 +76,7 @@ describe('HeaderNavigationComponent', () => {
 
     it('mostrar el botón de mostrar todas las notas si isReviewSectionActive es true', () => {
         component.showButtons = true;
-        fakeDashboardStateService.selectedSection = 'for-review';
+        dashboardStateServiceMock.selectedSection = 'for-review';
         fixture.detectChanges();
 
         const buttonElement = fixture.debugElement.nativeElement.querySelector('.button-review-notes');
@@ -85,7 +85,7 @@ describe('HeaderNavigationComponent', () => {
 
     it('mostrar el botón de mostrar notas para repasar si isReviewSectionActive es false', () => {
         component.showButtons = true;
-        fakeDashboardStateService.selectedSection = 'all';
+        dashboardStateServiceMock.selectedSection = 'all';
         fixture.detectChanges();
 
         const buttonElement = fixture.debugElement.nativeElement.querySelector('.button-review-notes');
@@ -103,9 +103,9 @@ describe('HeaderNavigationComponent', () => {
     });
 
     it('cancelNoteCreation redirige a la sección actual', () => {
-        fakeDashboardStateService.dashboardState.notesType = 'all';
+        dashboardStateServiceMock.dashboardState.notesType = 'all';
         component.cancelNoteCreation();
-        expect(fakeRouter.navigate).toHaveBeenCalledWith(['dashboard', 'all'], { queryParams: { preserveState: 'true' } });
+        expect(routerMock.navigate).toHaveBeenCalledWith(['dashboard', 'all'], { queryParams: { preserveState: 'true' } });
     });
 
     it('openMobilePanelHandler emite un evento', () => {

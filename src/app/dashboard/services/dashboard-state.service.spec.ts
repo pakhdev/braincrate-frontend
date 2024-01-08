@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 
 import { DashboardStateService } from './dashboard-state.service';
+import { routerMock } from '../../../mocks/router.mock';
 
 describe('DashboardStateService', () => {
     let service: DashboardStateService;
@@ -9,6 +11,7 @@ describe('DashboardStateService', () => {
         TestBed.configureTestingModule({
             providers: [
                 DashboardStateService,
+                { provide: Router, useValue: routerMock },
             ],
         });
         service = TestBed.inject(DashboardStateService);
@@ -36,7 +39,6 @@ describe('DashboardStateService', () => {
             notesType: 'all',
             page: 1,
         });
-
     });
 
     it('nextPage tiene que incrementar la página', () => {

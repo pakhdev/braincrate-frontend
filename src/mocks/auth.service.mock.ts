@@ -1,0 +1,1 @@
+export const authServiceMock = jasmine.createSpyObj('AuthService', ['currentUser', 'setAuthentication', 'logout', 'updateEmail', 'updatePassword', 'linkGoogle', 'unlinkGoogle', 'hasError']);

@@ -96,7 +96,6 @@ export class SearchAndPickTagsComponent {
         return !(this.tagsService.isLoading()
             || this.notSelectedTags.length > 0
             || (!this.searchTagsTerm && !this.dashboardState.searchWord));
-
     }
 
     private isSearchTagsInputToBeCleared(previous: DashboardState, current: DashboardState): boolean {

@@ -1,0 +1,1 @@
+export const httpMock = jasmine.createSpyObj('httpClient', ['get', 'post', 'put', 'delete']);

@@ -6,14 +6,13 @@ import { AuthService } from '../../../../auth/services/auth.service';
 import { ChangeEmailComponent } from '../change-email/change-email.component';
 import { ChangePasswordComponent } from '../change-password/change-password.component';
 import { LinkGoogleComponent } from '../link-google/link-google.component';
+import { authServiceMock } from '../../../../../mocks/auth.service.mock';
 
 describe('AccountManagementComponent', () => {
     let component: AccountManagementComponent;
     let fixture: ComponentFixture<AccountManagementComponent>;
-    const fakeAuthService = jasmine.createSpyObj('AuthService', ['currentUser']);
 
     beforeEach(async () => {
-
         TestBed.overrideComponent(AccountManagementComponent, {
             remove: {
                 imports: [
@@ -30,10 +29,9 @@ describe('AccountManagementComponent', () => {
         await TestBed.configureTestingModule({
             imports: [AccountManagementComponent],
             providers: [
-                { provide: AuthService, useValue: fakeAuthService },
+                { provide: AuthService, useValue: authServiceMock },
             ],
-        })
-            .compileComponents();
+        }).compileComponents();
         fixture = TestBed.createComponent(AccountManagementComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
@@ -47,7 +45,7 @@ describe('AccountManagementComponent', () => {
     });
 
     it('debe existir el título Cambiar la contraseña si el usuario tiene contraseña', () => {
-        fakeAuthService.currentUser.and.returnValue({ hasPass: true });
+        authServiceMock.currentUser.and.returnValue({ hasPass: true });
         const compiled = fixture.debugElement.nativeElement;
         fixture.detectChanges();
         const passwordTitleContainer = compiled.querySelector('.user-settings__password .panel__section-name');
@@ -55,7 +53,7 @@ describe('AccountManagementComponent', () => {
     });
 
     it('debe existir el título Crear una contraseña si el usuario no tiene contraseña', () => {
-        fakeAuthService.currentUser.and.returnValue({ hasPass: false });
+        authServiceMock.currentUser.and.returnValue({ hasPass: false });
         const compiled = fixture.debugElement.nativeElement;
         fixture.detectChanges();
         const passwordTitleContainer = compiled.querySelector('.user-settings__password .panel__section-name');

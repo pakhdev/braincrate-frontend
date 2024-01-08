@@ -1,31 +1,23 @@
-import { TagsService } from './tags.service';
 import { TestBed } from '@angular/core/testing';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { of } from 'rxjs';
+
 import { DashboardState } from '../interfaces/dashboard-state.interface';
 import { DashboardStateService } from './dashboard-state.service';
-import { of, pairwise } from 'rxjs';
+import { TagsService } from './tags.service';
+import { dashboardStateMock } from '../../../mocks/dashboard-state.mock';
+import { dashboardStateServiceMock } from '../../../mocks/dashboard-state.service.mock';
+import { httpMock } from '../../../mocks/http.mock';
 
 describe('TagsService', () => {
-
     let service: TagsService;
-    const fakeHttp = jasmine.createSpyObj('httpClient', ['get']);
-    const baseDashboardState: DashboardState = {
-        selectedTags: [],
-        searchWord: '',
-        notesType: '',
-        page: 0,
-    };
-    const fakeDashboardStateService = {
-        dashboardState$: of([{ ...baseDashboardState }]).pipe(pairwise()),
-        selectedTags: [1, 2],
-    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
                 TagsService,
-                { provide: HttpClient, useValue: fakeHttp },
-                { provide: DashboardStateService, useValue: fakeDashboardStateService },
+                { provide: HttpClient, useValue: httpMock },
+                { provide: DashboardStateService, useValue: dashboardStateServiceMock },
             ],
         });
         service = TestBed.inject(TagsService);
@@ -57,14 +49,14 @@ describe('TagsService', () => {
 
     it('getTags llama a http.get con los parámetros correctos y asigna isLoading', () => {
         const spySet = spyOn(service.isLoading, 'set').and.callThrough();
-        fakeHttp.get.and.returnValue(of([]));
+        httpMock.get.and.returnValue(of([]));
         service.getTags([1, 2], 'search word', 'all').subscribe();
         const params = new HttpParams()
             .append('searchTerm', 'search word')
             .append('parentTagIds[]', '1')
             .append('parentTagIds[]', '2');
 
-        expect(fakeHttp.get).toHaveBeenCalledWith('/tags', { params });
+        expect(httpMock.get).toHaveBeenCalledWith('/tags', { params });
         expect(spySet).toHaveBeenCalledTimes(2);
         expect(spySet).toHaveBeenCalledWith(true);
         expect(spySet).toHaveBeenCalledWith(false);
@@ -101,26 +93,26 @@ describe('TagsService', () => {
     });
 
     it('isTagsLoadRequired devuelve true si notesType ha cambiado', () => {
-        const previous: DashboardState = { ...baseDashboardState, notesType: 'all' };
-        const current: DashboardState = { ...baseDashboardState, notesType: 'for-review' };
+        const previous: DashboardState = { ...dashboardStateMock, notesType: 'all' };
+        const current: DashboardState = { ...dashboardStateMock, notesType: 'for-review' };
         expect(service['isTagsLoadRequired'](previous, current)).toBeTrue();
     });
 
     it('isTagsLoadRequired devuelve false si no ha cambiado selectedTags, notesType o searchWord', () => {
-        const previous: DashboardState = { ...baseDashboardState };
-        const current: DashboardState = { ...baseDashboardState };
+        const previous: DashboardState = { ...dashboardStateMock };
+        const current: DashboardState = { ...dashboardStateMock };
         expect(service['isTagsLoadRequired'](previous, current)).toBeFalse();
     });
 
     it('isTagsLoadRequired devuelve true si searchWord ha cambiado', () => {
-        const previous: DashboardState = { ...baseDashboardState, searchWord: '' };
-        const current: DashboardState = { ...baseDashboardState, searchWord: 'new search word' };
+        const previous: DashboardState = { ...dashboardStateMock, searchWord: '' };
+        const current: DashboardState = { ...dashboardStateMock, searchWord: 'new search word' };
         expect(service['isTagsLoadRequired'](previous, current)).toBeTrue();
     });
 
     it('isTagsLoadRequired devuelve true si selectedTags ha cambiado', () => {
-        const previous: DashboardState = { ...baseDashboardState, selectedTags: [] };
-        const current: DashboardState = { ...baseDashboardState, selectedTags: [1] };
+        const previous: DashboardState = { ...dashboardStateMock, selectedTags: [] };
+        const current: DashboardState = { ...dashboardStateMock, selectedTags: [1] };
         expect(service['isTagsLoadRequired'](previous, current)).toBeTrue();
     });
 

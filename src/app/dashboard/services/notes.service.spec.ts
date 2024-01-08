@@ -2,20 +2,21 @@ import { NotesService } from './notes.service';
 import { TestBed } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
+
 import { Note } from '../interfaces/note.interface';
 import { TagsService } from './tags.service';
+import { httpMock } from '../../../mocks/http.mock';
 
 describe('NotesService', () => {
 
     let service: NotesService;
-    const fakeHttp = jasmine.createSpyObj('httpClient', ['get', 'delete']);
     const fakeTagsService = jasmine.createSpyObj('tagsService', ['updateTags']);
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
                 NotesService,
-                { provide: HttpClient, useValue: fakeHttp },
+                { provide: HttpClient, useValue: httpMock },
                 { provide: TagsService, useValue: fakeTagsService },
             ],
         });
@@ -29,10 +30,10 @@ describe('NotesService', () => {
         service.countNotesForReview.set(5);
         service.notesList.update(() => [fakeNote]);
 
-        fakeHttp.delete.and.returnValue(of({ note: fakeNote, tags: fakeTags }));
+        httpMock.delete.and.returnValue(of({ note: fakeNote, tags: fakeTags }));
         service.remove(1).subscribe();
 
-        expect(fakeHttp.delete).toHaveBeenCalledWith('/notes/1');
+        expect(httpMock.delete).toHaveBeenCalledWith('/notes/1');
         expect(service.countNotesForReview()).toBe(4);
         expect(service.notesOffsetCorrection()).toBe(-1);
         expect(service.notesList()[0].removedAt).toBeDefined();

@@ -7,6 +7,7 @@ import { AuthService } from '../../../../auth/services/auth.service';
 import { ChangePasswordComponent } from './change-password.component';
 import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
 import { ErrorMessageDirective } from '../../../../shared/directives/error-message.directive';
+import { authServiceMock } from '../../../../../mocks/auth.service.mock';
 
 describe('ChangePasswordComponent', () => {
 
@@ -24,13 +25,12 @@ describe('ChangePasswordComponent', () => {
 
     let hostComponent: TestHostComponent;
     let hostFixture: ComponentFixture<TestHostComponent>;
-    const fakeAuthService = jasmine.createSpyObj('AuthService', ['updatePassword', 'hasError']);
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [TestHostComponent, ChangePasswordComponent],
             providers: [
-                { provide: AuthService, useValue: fakeAuthService },
+                { provide: AuthService, useValue: authServiceMock },
             ],
             declarations: [
                 MockDirective(ErrorMessageDirective),
@@ -105,7 +105,7 @@ describe('ChangePasswordComponent', () => {
         hostComponent.showCurrentPasswordInput = false;
         hostFixture.detectChanges();
         const spySet = spyOn(hostComponent.component.isLoading, 'set').and.callThrough();
-        fakeAuthService.updatePassword.and.returnValue(of(true));
+        authServiceMock.updatePassword.and.returnValue(of(true));
         hostComponent.component.backendError.set('error');
 
         hostComponent.component.passwordUpdatingForm.patchValue({ newPassword: '123456', repeatNewPassword: '123456' });
