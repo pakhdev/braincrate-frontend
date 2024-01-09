@@ -17,4 +17,6 @@ export const tagsServiceMock: Partial<TagsService> = {
     },
     tags: signal([]),
     isLoading: signal(false),
+    updateTags: jasmine.createSpy('updateTags'),
+    removeTagsFromList: jasmine.createSpy('updateTags'),
 };

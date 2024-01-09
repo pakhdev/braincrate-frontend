@@ -82,7 +82,6 @@ export class NotesService {
                     this.tagsService.removeTagsFromList(response.tags);
                     this.removeNoteFromList(id);
                 } else {
-                    console.log('set', response.note.nextReviewAt);
                     this.updateNoteList(id, {
                         reviewsLeft: response.note.reviewsLeft,
                         nextReviewAt: response.note.nextReviewAt,
