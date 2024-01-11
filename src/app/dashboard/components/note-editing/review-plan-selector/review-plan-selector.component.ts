@@ -58,7 +58,7 @@ export class ReviewPlanSelectorComponent {
         this.togglePopup();
     }
 
-    changeRemoveAfterReviews(event: boolean): void {
+    public changeRemoveAfterReviews(event: boolean): void {
         this.onRemoveAfterReviewsChange.emit(event);
     }
 }
