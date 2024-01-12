@@ -108,7 +108,7 @@ export class EditNoteComponent implements OnInit {
 
     private createNote(body: NoteManipulationBody): void {
         this.notesService.createNoteQuery(body).subscribe((response) => {
-
+            this.isLoading.set(false);
             const currentSection = this.dashboardState.notesType;
 
             if (response.errors) {

@@ -5,7 +5,9 @@ import { DashboardState } from '../app/dashboard/interfaces/dashboard-state.inte
 
 export const dashboardStateServiceMock = {
     dashboardState$: new BehaviorSubject<DashboardState>({ ...dashboardStateMock }),
-    dashboardState: { ...dashboardStateMock },
+    get dashboardState() {
+        return { ...dashboardStateMock };
+    },
     selectedTags: [1, 2],
     selectedSection: 'all',
     setState: (state: Partial<DashboardState>) => { },

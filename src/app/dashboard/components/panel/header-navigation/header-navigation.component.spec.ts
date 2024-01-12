@@ -6,6 +6,7 @@ import { NotesService } from '../../../services/notes.service';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
 import { routerMock } from '../../../../../mocks/router.mock';
 import { dashboardStateServiceMock } from '../../../../../mocks/dashboard-state.service.mock';
+import { dashboardStateMock } from '../../../../../mocks/dashboard-state.mock';
 
 describe('HeaderNavigationComponent', () => {
 
@@ -103,7 +104,10 @@ describe('HeaderNavigationComponent', () => {
     });
 
     it('cancelNoteCreation redirige a la sección actual', () => {
-        dashboardStateServiceMock.dashboardState.notesType = 'all';
+        spyOnProperty(dashboardStateServiceMock.dashboardState$, 'value').and.returnValue({
+            ...dashboardStateMock,
+            notesType: 'all',
+        });
         component.cancelNoteCreation();
         expect(routerMock.navigate).toHaveBeenCalledWith(['dashboard', 'all'], { queryParams: { preserveState: 'true' } });
     });
