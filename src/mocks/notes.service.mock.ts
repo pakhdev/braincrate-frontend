@@ -25,4 +25,10 @@ export const notesServiceMock = {
     updateNoteList: jasmine.createSpy('updateNoteList').and.callFake(
         () => { },
     ),
+    resetReviews: jasmine.createSpy('resetReviews').and.callFake(
+        () => of({}),
+    ),
+    cancelReviews: jasmine.createSpy('cancelReviews').and.callFake(
+        () => of({}),
+    ),
 };
