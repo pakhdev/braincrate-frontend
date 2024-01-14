@@ -11,13 +11,13 @@ describe('DashboardStateService', () => {
         TestBed.configureTestingModule({
             providers: [
                 DashboardStateService,
-                { provide: Router, useValue: routerMock },
+                { provide: Router, useValue: { ...routerMock } },
             ],
         });
         service = TestBed.inject(DashboardStateService);
     });
 
-    it('setState tiene que actualizar el estado o resetear todo si existe notesType', () => {
+    it('setState() debe actualizar el estado o resetear todo si existe notesType', () => {
         const oldNotesType = service.dashboardState$.value.notesType;
         service.setState({
             selectedTags: [1],
@@ -41,26 +41,26 @@ describe('DashboardStateService', () => {
         });
     });
 
-    it('nextPage tiene que incrementar la página', () => {
+    it('nextPage() debe incrementar la página', () => {
         service.nextPage();
         expect(service.dashboardState$.value.page).toBe(1);
     });
 
-    it('dashboardState tiene que devolver el estado', () => {
+    it('dashboardState() debe devolver el estado', () => {
         expect(service.dashboardState.notesType).toBeDefined();
         expect(service.dashboardState.selectedTags).toBeDefined();
         expect(service.dashboardState.searchWord).toBeDefined();
         expect(service.dashboardState.page).toBeDefined();
     });
 
-    it('selectedTags tiene que devolver los tags seleccionados', () => {
+    it('selectedTags() debe devolver los tags seleccionados', () => {
         service.setState({
             selectedTags: [1, 2],
         });
         expect(service.selectedTags).toEqual([1, 2]);
     });
 
-    it('selectedSection tiene que devolver la sección seleccionada', () => {
+    it('selectedSection() debe devolver la sección seleccionada', () => {
         service.setState({
             notesType: 'all',
         });

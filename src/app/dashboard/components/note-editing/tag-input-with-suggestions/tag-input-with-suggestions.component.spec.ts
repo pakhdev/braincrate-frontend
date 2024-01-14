@@ -22,7 +22,7 @@ describe('TagInputWithSuggestionsComponent', () => {
         await TestBed.configureTestingModule({
             imports: [TagInputWithSuggestionsComponent],
             providers: [
-                { provide: TagsService, useValue: tagsServiceMock },
+                { provide: TagsService, useValue: { ...tagsServiceMock } },
             ],
         }).compileComponents();
 

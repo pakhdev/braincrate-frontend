@@ -23,8 +23,8 @@ describe('NotesService', () => {
             providers: [
                 NotesService,
                 { provide: HttpClient, useValue: httpMock },
-                { provide: TagsService, useValue: tagsServiceMock },
-                { provide: DashboardStateService, useValue: dashboardStateServiceMock },
+                { provide: TagsService, useValue: { ...tagsServiceMock } },
+                { provide: DashboardStateService, useValue: { ...dashboardStateServiceMock } },
             ],
         });
         service = TestBed.inject(NotesService);

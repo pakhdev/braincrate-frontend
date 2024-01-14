@@ -29,7 +29,7 @@ describe('AccountManagementComponent', () => {
         await TestBed.configureTestingModule({
             imports: [AccountManagementComponent],
             providers: [
-                { provide: AuthService, useValue: authServiceMock },
+                { provide: AuthService, useValue: { ...authServiceMock } },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(AccountManagementComponent);

@@ -1,5 +1,6 @@
-import { SelectedTagComponent } from './selected-tag.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { SelectedTagComponent } from './selected-tag.component';
 
 describe('SelectedTagComponents', () => {
     let component: SelectedTagComponent;
@@ -14,7 +15,7 @@ describe('SelectedTagComponents', () => {
         fixture.detectChanges();
     });
 
-    it('debe emitir evento onRemoveTag al hacer click en el botón', () => {
+    it('debe emitir evento onRemoveTag() al hacer click en el botón', () => {
         const closeButton = fixture.nativeElement.querySelector('.note-edition__tag-remove');
         spyOn(component.onRemoveTag, 'emit');
 

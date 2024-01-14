@@ -16,7 +16,7 @@ describe('ChangePasswordComponent', () => {
         imports: [ChangePasswordComponent],
         template: `
             <change-password
-                    [showCurrentPasswordInput]="showCurrentPasswordInput"/> |||| {{ showCurrentPasswordInput }}`,
+                    [showCurrentPasswordInput]="showCurrentPasswordInput"/>`,
     })
     class TestHostComponent {
         public showCurrentPasswordInput = false;
@@ -30,7 +30,7 @@ describe('ChangePasswordComponent', () => {
         await TestBed.configureTestingModule({
             imports: [TestHostComponent, ChangePasswordComponent],
             providers: [
-                { provide: AuthService, useValue: authServiceMock },
+                { provide: AuthService, useValue: { ...authServiceMock } },
             ],
             declarations: [
                 MockDirective(ErrorMessageDirective),
@@ -101,7 +101,7 @@ describe('ChangePasswordComponent', () => {
         expect(hostComponent.component.passwordUpdatingForm.valid).toBeTruthy();
     });
 
-    it('updatePassword actualiza correctamente el estado y llama el método del authService', () => {
+    it('updatePassword() actualiza correctamente el estado y llama el método del authService', () => {
         hostComponent.showCurrentPasswordInput = false;
         hostFixture.detectChanges();
         const spySet = spyOn(hostComponent.component.isLoading, 'set').and.callThrough();

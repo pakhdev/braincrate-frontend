@@ -18,7 +18,7 @@ describe('ChangeEmailComponent', () => {
                 ChangeEmailComponent,
             ],
             providers: [
-                { provide: AuthService, useValue: authServiceMock },
+                { provide: AuthService, useValue: { ...authServiceMock } },
             ],
             declarations: [
                 MockDirective(ErrorMessageDirective),
@@ -44,7 +44,7 @@ describe('ChangeEmailComponent', () => {
         expect(component.emailUpdatingForm.valid).toBeTruthy();
     });
 
-    it('updateEmail actualiza correctamente el estado y llama el método del authService', () => {
+    it('updateEmail() actualiza correctamente el estado y llama el método updateEmail() del authService', () => {
         const spySet = spyOn(component.isLoading, 'set').and.callThrough();
         authServiceMock.updateEmail.and.returnValue(of(true));
         component.backendError.set('error');

@@ -17,13 +17,13 @@ describe('TagsService', () => {
             providers: [
                 TagsService,
                 { provide: HttpClient, useValue: httpMock },
-                { provide: DashboardStateService, useValue: dashboardStateServiceMock },
+                { provide: DashboardStateService, useValue: { ...dashboardStateServiceMock } },
             ],
         });
         service = TestBed.inject(TagsService);
     });
 
-    it('selectedTags devuelve los tags ordenados que se encuentran seleccionados en dashboardStateService ', () => {
+    it('selectedTags() devuelve los tags ordenados que se encuentran seleccionados en dashboardStateService ', () => {
         service.tags.set([
             { id: 1, name: 'tag1', notesCount: 5 },
             { id: 2, name: 'tag2', notesCount: 7 },
@@ -35,7 +35,7 @@ describe('TagsService', () => {
         ]);
     });
 
-    it('notSelectedTags devuelve los tags ordenados que no se encuentran seleccionados en dashboardStateService ', () => {
+    it('notSelectedTags() devuelve los tags ordenados que no se encuentran seleccionados en dashboardStateService ', () => {
         service.tags.set([
             { id: 1, name: 'tag1', notesCount: 5 },
             { id: 3, name: 'tag3', notesCount: 7 },
@@ -47,7 +47,7 @@ describe('TagsService', () => {
         ]);
     });
 
-    it('getTags llama a http.get con los parámetros correctos y asigna isLoading', () => {
+    it('getTags() llama a http.get con los parámetros correctos y asigna isLoading', () => {
         const spySet = spyOn(service.isLoading, 'set').and.callThrough();
         httpMock.get.and.returnValue(of([]));
         service.getTags([1, 2], 'search word', 'all').subscribe();
@@ -62,7 +62,7 @@ describe('TagsService', () => {
         expect(spySet).toHaveBeenCalledWith(false);
     });
 
-    it('updateTags actualiza los tags existentes con los nuevos', () => {
+    it('updateTags() actualiza los tags existentes con los nuevos', () => {
         const existingTags = [
             { id: 1, name: 'tag1', notesCount: 5 },
             { id: 2, name: 'tag2', notesCount: 7 },
@@ -83,7 +83,7 @@ describe('TagsService', () => {
         ]);
     });
 
-    it('removeTagsFromList elimina los tags de la lista', () => {
+    it('removeTagsFromList() elimina los tags de la lista', () => {
         service.tags.set([
             { id: 1, name: 'tag1', notesCount: 5 },
             { id: 2, name: 'tag2', notesCount: 7 },
@@ -92,25 +92,25 @@ describe('TagsService', () => {
         expect(service.tags()).toEqual([{ id: 2, name: 'tag2', notesCount: 7 }]);
     });
 
-    it('isTagsLoadRequired devuelve true si notesType ha cambiado', () => {
+    it('isTagsLoadRequired() devuelve true si notesType ha cambiado', () => {
         const previous: DashboardState = { ...dashboardStateMock, notesType: 'all' };
         const current: DashboardState = { ...dashboardStateMock, notesType: 'for-review' };
         expect(service['isTagsLoadRequired'](previous, current)).toBeTrue();
     });
 
-    it('isTagsLoadRequired devuelve false si no ha cambiado selectedTags, notesType o searchWord', () => {
+    it('isTagsLoadRequired() devuelve false si no ha cambiado selectedTags, notesType o searchWord', () => {
         const previous: DashboardState = { ...dashboardStateMock };
         const current: DashboardState = { ...dashboardStateMock };
         expect(service['isTagsLoadRequired'](previous, current)).toBeFalse();
     });
 
-    it('isTagsLoadRequired devuelve true si searchWord ha cambiado', () => {
+    it('isTagsLoadRequired() devuelve true si searchWord ha cambiado', () => {
         const previous: DashboardState = { ...dashboardStateMock, searchWord: '' };
         const current: DashboardState = { ...dashboardStateMock, searchWord: 'new search word' };
         expect(service['isTagsLoadRequired'](previous, current)).toBeTrue();
     });
 
-    it('isTagsLoadRequired devuelve true si selectedTags ha cambiado', () => {
+    it('isTagsLoadRequired() devuelve true si selectedTags ha cambiado', () => {
         const previous: DashboardState = { ...dashboardStateMock, selectedTags: [] };
         const current: DashboardState = { ...dashboardStateMock, selectedTags: [1] };
         expect(service['isTagsLoadRequired'](previous, current)).toBeTrue();

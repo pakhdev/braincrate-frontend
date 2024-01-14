@@ -25,14 +25,14 @@ describe('ReviewPlanSelectorComponent', () => {
         fixture.detectChanges();
     });
 
-    it('selectedPlanName debe devolver el nombre del plan seleccionado', () => {
+    it('selectedPlanName() debe devolver el nombre del plan seleccionado', () => {
         for (const plan of component.reviewPlans) {
             component.selectedDifficulty = plan.difficulty;
             expect(component.selectedPlanName).toBe(plan.name);
         }
     });
 
-    it('togglePopup debe cambiar el estado al contrario', () => {
+    it('togglePopup() debe cambiar el estado al contrario', () => {
         component.isPopupVisible.set(true);
         component.togglePopup();
         expect(component.isPopupVisible()).toBe(false);
@@ -40,13 +40,13 @@ describe('ReviewPlanSelectorComponent', () => {
         expect(component.isPopupVisible()).toBe(true);
     });
 
-    it('isDifficultySelected debe devolver true si la dificultad es la seleccionada', () => {
+    it('isDifficultySelected() debe devolver true si la dificultad es la seleccionada', () => {
         component.selectedDifficulty = Difficulty.Easy;
         expect(component.isDifficultySelected(Difficulty.Easy)).toBeTruthy();
         expect(component.isDifficultySelected(Difficulty.Hard)).toBeFalsy();
     });
 
-    it('setDifficulty debe cambiar la dificultad seleccionada', () => {
+    it('setDifficulty() debe cambiar la dificultad seleccionada', () => {
         component.setDifficulty(Difficulty.Hard);
         expect(component.selectedDifficulty).toBe(Difficulty.Hard);
     });

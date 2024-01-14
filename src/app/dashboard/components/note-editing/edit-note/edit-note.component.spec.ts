@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { ContenteditableEditor } from '../../../../shared/directives/contenteditable-editor.directive';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
+import { Difficulty } from '../../../enums/difficulty.enum';
 import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
 import { EditNoteComponent } from './edit-note.component';
 import { NotesService } from '../../../services/notes.service';
@@ -12,10 +13,9 @@ import { SelectedTagComponent } from '../selected-tag/selected-tag.component';
 import { TagInputWithSuggestionsComponent } from '../tag-input-with-suggestions/tag-input-with-suggestions.component';
 import { TagsService } from '../../../services/tags.service';
 import { dashboardStateServiceMock } from '../../../../../mocks/dashboard-state.service.mock';
+import { notesServiceMock } from '../../../../../mocks/notes.service.mock';
 import { routerMock } from '../../../../../mocks/router.mock';
 import { tagsServiceMock } from '../../../../../mocks/tags.service.mock';
-import { Difficulty } from '../../../enums/difficulty.enum';
-import { notesServiceMock } from '../../../../../mocks/notes.service.mock';
 
 describe('EditNoteComponent', () => {
     let component: EditNoteComponent;
@@ -30,10 +30,10 @@ describe('EditNoteComponent', () => {
                 MockComponent(ReviewPlanSelectorComponent),
             ],
             providers: [
-                { provide: DashboardStateService, useValue: dashboardStateServiceMock },
-                { provide: NotesService, useValue: notesServiceMock },
-                { provide: Router, useValue: routerMock },
-                { provide: TagsService, useValue: tagsServiceMock },
+                { provide: DashboardStateService, useValue: { ...dashboardStateServiceMock } },
+                { provide: NotesService, useValue: { ...notesServiceMock } },
+                { provide: Router, useValue: { ...routerMock } },
+                { provide: TagsService, useValue: { ...tagsServiceMock } },
             ],
             declarations: [
                 MockDirective(ContenteditableEditor),
