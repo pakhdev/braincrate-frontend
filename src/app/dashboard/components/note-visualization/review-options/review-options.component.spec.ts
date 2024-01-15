@@ -4,12 +4,14 @@ import { MockDirective } from 'ng-mocks';
 import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
 import { NotesService } from '../../../services/notes.service';
 import { ReviewOptionsComponent } from './review-options.component';
-import { noteMock } from '../../../../../mocks/note.mock';
-import { notesServiceMock } from '../../../../../mocks/notes.service.mock';
+import { createNoteMock } from '../../../../../mocks/note.mock';
+import { createNotesServiceMock } from '../../../../../mocks/notes.service.mock';
 
 describe('ReviewOptionsComponent', () => {
     let component: ReviewOptionsComponent;
     let fixture: ComponentFixture<ReviewOptionsComponent>;
+    const noteMock = createNoteMock();
+    const notesServiceMock = createNotesServiceMock();
 
     beforeEach(() => {
         TestBed.configureTestingModule({

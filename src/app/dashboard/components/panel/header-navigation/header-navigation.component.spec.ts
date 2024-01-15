@@ -5,13 +5,14 @@ import { HeaderNavigationComponent } from './header-navigation.component';
 import { NotesService } from '../../../services/notes.service';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
 import { routerMock } from '../../../../../mocks/router.mock';
-import { dashboardStateServiceMock } from '../../../../../mocks/dashboard-state.service.mock';
-import { dashboardStateMock } from '../../../../../mocks/dashboard-state.mock';
+import { createDashboardStateServiceMock } from '../../../../../mocks/dashboard-state.service.mock';
+import { createDashboardStateMock } from '../../../../../mocks/dashboard-state.mock';
 
 describe('HeaderNavigationComponent', () => {
 
     let component: HeaderNavigationComponent;
     let fixture: ComponentFixture<HeaderNavigationComponent>;
+    const dashboardStateServiceMock = createDashboardStateServiceMock();
 
     const fakeNotesService = jasmine.createSpyObj('NotesService', ['countNotesForReview']);
 
@@ -105,7 +106,7 @@ describe('HeaderNavigationComponent', () => {
 
     it('cancelNoteCreation redirige a la sección actual', () => {
         spyOnProperty(dashboardStateServiceMock.dashboardState$, 'value').and.returnValue({
-            ...dashboardStateMock,
+            ...createDashboardStateMock(),
             notesType: 'all',
         });
         component.cancelNoteCreation();

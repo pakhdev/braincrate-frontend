@@ -3,14 +3,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchAndPickTagsComponent } from './search-and-pick-tags.component';
 import { TagsService } from '../../../services/tags.service';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
-import { dashboardStateServiceMock } from '../../../../../mocks/dashboard-state.service.mock';
-import { tagsServiceMock } from '../../../../../mocks/tags.service.mock';
+import { createDashboardStateServiceMock } from '../../../../../mocks/dashboard-state.service.mock';
+import { createTagsServiceMock } from '../../../../../mocks/tags.service.mock';
 import { DashboardState } from '../../../interfaces/dashboard-state.interface';
-import { dashboardStateMock } from '../../../../../mocks/dashboard-state.mock';
+import { createDashboardStateMock } from '../../../../../mocks/dashboard-state.mock';
 
 describe('SearchAndPickTagsComponent', () => {
     let component: SearchAndPickTagsComponent;
     let fixture: ComponentFixture<SearchAndPickTagsComponent>;
+    const tagsServiceMock = createTagsServiceMock();
+    const dashboardStateServiceMock = createDashboardStateServiceMock();
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -77,26 +79,26 @@ describe('SearchAndPickTagsComponent', () => {
     });
 
     it('isSearchTagsInputToBeCleared devuelve true si ha cambiado notesType', () => {
-        const previous: DashboardState = { ...dashboardStateMock, notesType: 'all' };
-        const current: DashboardState = { ...dashboardStateMock, notesType: 'for-review' };
+        const previous: DashboardState = { ...createDashboardStateMock(), notesType: 'all' };
+        const current: DashboardState = { ...createDashboardStateMock(), notesType: 'for-review' };
         expect(component['isSearchTagsInputToBeCleared'](previous, current)).toBeTrue();
     });
 
     it('isSearchTagsInputToBeCleared devuelve true si ha cambiado searchWord', () => {
-        const previous: DashboardState = { ...dashboardStateMock, searchWord: 'previous' };
-        const current: DashboardState = { ...dashboardStateMock, searchWord: 'current' };
+        const previous: DashboardState = { ...createDashboardStateMock(), searchWord: 'previous' };
+        const current: DashboardState = { ...createDashboardStateMock(), searchWord: 'current' };
         expect(component['isSearchTagsInputToBeCleared'](previous, current)).toBeTrue();
     });
 
     it('isSearchTagsInputToBeCleared devuelve true si ha cambiado selectedTags', () => {
-        const previous: DashboardState = { ...dashboardStateMock, selectedTags: [1] };
-        const current: DashboardState = { ...dashboardStateMock, selectedTags: [2] };
+        const previous: DashboardState = { ...createDashboardStateMock(), selectedTags: [1] };
+        const current: DashboardState = { ...createDashboardStateMock(), selectedTags: [2] };
         expect(component['isSearchTagsInputToBeCleared'](previous, current)).toBeTrue();
     });
 
     it('isSearchTagsInputToBeCleared devuelve false si no ha cambiado notesType, searchWord o selectedTags', () => {
-        const previous: DashboardState = { ...dashboardStateMock, notesType: 'all' };
-        const current: DashboardState = { ...dashboardStateMock, notesType: 'all' };
+        const previous: DashboardState = { ...createDashboardStateMock(), notesType: 'all' };
+        const current: DashboardState = { ...createDashboardStateMock(), notesType: 'all' };
         expect(component['isSearchTagsInputToBeCleared'](previous, current)).toBeFalse();
     });
 

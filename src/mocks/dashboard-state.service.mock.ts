@@ -1,14 +1,14 @@
 import { BehaviorSubject } from 'rxjs';
 
-import { dashboardStateMock } from './dashboard-state.mock';
+import { createDashboardStateMock } from './dashboard-state.mock';
 import { DashboardState } from '../app/dashboard/interfaces/dashboard-state.interface';
 
-export const dashboardStateServiceMock = {
-    dashboardState$: new BehaviorSubject<DashboardState>({ ...dashboardStateMock }),
+export const createDashboardStateServiceMock = () => ({
+    dashboardState$: new BehaviorSubject<DashboardState>({ ...createDashboardStateMock() }),
     get dashboardState() {
-        return { ...dashboardStateMock };
+        return { ...createDashboardStateMock() };
     },
     selectedTags: [1, 2],
     selectedSection: 'all',
     setState: (state: Partial<DashboardState>) => { },
-};
+});

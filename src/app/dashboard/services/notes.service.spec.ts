@@ -7,15 +7,18 @@ import { DashboardStateService } from './dashboard-state.service';
 import { Note } from '../interfaces/note.interface';
 import { NoteManipulationBody } from '../interfaces/note-manipulation-body.interface';
 import { TagsService } from './tags.service';
-import { dashboardStateMock } from '../../../mocks/dashboard-state.mock';
-import { dashboardStateServiceMock } from '../../../mocks/dashboard-state.service.mock';
+import { createDashboardStateMock } from '../../../mocks/dashboard-state.mock';
+import { createDashboardStateServiceMock } from '../../../mocks/dashboard-state.service.mock';
 import { httpMock } from '../../../mocks/http.mock';
-import { noteMock } from '../../../mocks/note.mock';
-import { tagsServiceMock } from '../../../mocks/tags.service.mock';
+import { createNoteMock } from '../../../mocks/note.mock';
+import { createTagsServiceMock } from '../../../mocks/tags.service.mock';
 
 describe('NotesService', () => {
 
     let service: NotesService;
+    const noteMock = createNoteMock();
+    const tagsServiceMock = createTagsServiceMock();
+    const dashboardStateServiceMock = createDashboardStateServiceMock();
     const fakeTags = [{ id: 1, name: 'tag1', notesCount: 3 }, { id: 2, name: 'tag2', notesCount: 2 }];
 
     beforeEach(() => {
@@ -23,8 +26,8 @@ describe('NotesService', () => {
             providers: [
                 NotesService,
                 { provide: HttpClient, useValue: httpMock },
-                { provide: TagsService, useValue: { ...tagsServiceMock } },
-                { provide: DashboardStateService, useValue: { ...dashboardStateServiceMock } },
+                { provide: TagsService, useValue: tagsServiceMock },
+                { provide: DashboardStateService, useValue: dashboardStateServiceMock },
             ],
         });
         service = TestBed.inject(NotesService);
@@ -72,7 +75,7 @@ describe('NotesService', () => {
             tags: fakeTags,
         }));
         spyOnProperty(dashboardStateServiceMock.dashboardState$, 'value').and.returnValue({
-            ...dashboardStateMock,
+            ...createDashboardStateMock(),
             notesType: 'for-review',
         });
         service.countNotesForReview.set(5);
@@ -94,7 +97,7 @@ describe('NotesService', () => {
         }));
         spyOn(service, 'updateNoteList');
         spyOnProperty(dashboardStateServiceMock.dashboardState$, 'value').and.returnValue({
-            ...dashboardStateMock,
+            ...createDashboardStateMock(),
             notesType: 'all',
         });
         service.countNotesForReview.set(5);
@@ -114,7 +117,7 @@ describe('NotesService', () => {
             tags: fakeTags,
         }));
         spyOnProperty(dashboardStateServiceMock.dashboardState$, 'value').and.returnValue({
-            ...dashboardStateMock,
+            ...createDashboardStateMock(),
             notesType: 'for-review',
         });
         service.countNotesForReview.set(5);
@@ -134,7 +137,7 @@ describe('NotesService', () => {
         }));
         spyOn(service, 'updateNoteList');
         spyOnProperty(dashboardStateServiceMock.dashboardState$, 'value').and.returnValue({
-            ...dashboardStateMock,
+            ...createDashboardStateMock(),
             notesType: 'all',
         });
         service.countNotesForReview.set(5);

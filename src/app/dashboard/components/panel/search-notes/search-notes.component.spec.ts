@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SearchNotesComponent } from './search-notes.component';
-import { dashboardStateServiceMock } from '../../../../../mocks/dashboard-state.service.mock';
+import { createDashboardStateServiceMock } from '../../../../../mocks/dashboard-state.service.mock';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
 import { DashboardState } from '../../../interfaces/dashboard-state.interface';
 
 describe('SearchNotesComponent', () => {
     let component: SearchNotesComponent;
     let fixture: ComponentFixture<SearchNotesComponent>;
+    const dashboardStateServiceMock = createDashboardStateServiceMock();
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({

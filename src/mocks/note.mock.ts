@@ -1,7 +1,7 @@
 import { Note } from '../app/dashboard/interfaces/note.interface';
 import { Difficulty } from '../app/dashboard/enums/difficulty.enum';
 
-export const noteMock = {
+export const createNoteMock = () => ({
     id: 1,
     title: 'title',
     content: 'content',
@@ -10,4 +10,4 @@ export const noteMock = {
     nextReviewAt: '2024-01-01 00:00:01',
     reviewsLeft: 3,
     removedAt: null,
-} as Note;
+} as Note);

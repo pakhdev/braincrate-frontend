@@ -1,9 +1,8 @@
 import { signal } from '@angular/core';
 
-import { TagsService } from '../app/dashboard/services/tags.service';
 import { of } from 'rxjs';
 
-export const tagsServiceMock: Partial<TagsService> = {
+export const createTagsServiceMock = () => ({
     get selectedTags() {
         return [
             { id: 1, name: 'tag1', notesCount: 5 },
@@ -28,4 +27,4 @@ export const tagsServiceMock: Partial<TagsService> = {
     isLoading: signal(false),
     updateTags: jasmine.createSpy('updateTags'),
     removeTagsFromList: jasmine.createSpy('updateTags'),
-};
+});

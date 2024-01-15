@@ -12,14 +12,17 @@ import { ReviewPlanSelectorComponent } from '../review-plan-selector/review-plan
 import { SelectedTagComponent } from '../selected-tag/selected-tag.component';
 import { TagInputWithSuggestionsComponent } from '../tag-input-with-suggestions/tag-input-with-suggestions.component';
 import { TagsService } from '../../../services/tags.service';
-import { dashboardStateServiceMock } from '../../../../../mocks/dashboard-state.service.mock';
-import { notesServiceMock } from '../../../../../mocks/notes.service.mock';
+import { createDashboardStateServiceMock } from '../../../../../mocks/dashboard-state.service.mock';
+import { createNotesServiceMock } from '../../../../../mocks/notes.service.mock';
 import { routerMock } from '../../../../../mocks/router.mock';
-import { tagsServiceMock } from '../../../../../mocks/tags.service.mock';
+import { createTagsServiceMock } from '../../../../../mocks/tags.service.mock';
 
 describe('EditNoteComponent', () => {
     let component: EditNoteComponent;
     let fixture: ComponentFixture<EditNoteComponent>;
+    const notesServiceMock = createNotesServiceMock();
+    const tagsServiceMock = createTagsServiceMock();
+    const dashboardStateServiceMock = createDashboardStateServiceMock();
 
     beforeEach(() => {
         TestBed.configureTestingModule({

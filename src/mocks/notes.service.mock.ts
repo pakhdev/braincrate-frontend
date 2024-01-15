@@ -1,6 +1,6 @@
 import { of } from 'rxjs';
 
-export const notesServiceMock = {
+export const createNotesServiceMock = () => ({
     createNoteQuery: jasmine.createSpy('createNoteQuery').and.returnValue(of(createNoteResponse())),
     updateNoteQuery: jasmine.createSpy('updateNoteQuery').and.returnValue(of(createNoteResponse())),
     prependNoteToList: jasmine.createSpy('prependNoteToList').and.stub(),
@@ -10,7 +10,7 @@ export const notesServiceMock = {
     remove: jasmine.createSpy('remove').and.returnValue(of({})),
     restore: jasmine.createSpy('restore').and.returnValue(of({})),
     markAsReviewed: jasmine.createSpy('markAsReviewed').and.returnValue(of({})),
-};
+});
 
 function createNoteResponse() {
     return {

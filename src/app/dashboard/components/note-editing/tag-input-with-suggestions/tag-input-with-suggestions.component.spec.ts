@@ -2,12 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TagInputWithSuggestionsComponent } from './tag-input-with-suggestions.component';
 import { TagsService } from '../../../services/tags.service';
-import { tagsServiceMock } from '../../../../../mocks/tags.service.mock';
+import { createTagsServiceMock } from '../../../../../mocks/tags.service.mock';
 import { Tag } from '../../../interfaces/tag.interface';
 
 describe('TagInputWithSuggestionsComponent', () => {
     let component: TagInputWithSuggestionsComponent;
     let fixture: ComponentFixture<TagInputWithSuggestionsComponent>;
+    const tagsServiceMock = createTagsServiceMock();
     const tagsListMock: Tag[] = [
         { id: 1, name: 'Integration', notesCount: 5 },
         { id: 2, name: 'Interface', notesCount: 7 },

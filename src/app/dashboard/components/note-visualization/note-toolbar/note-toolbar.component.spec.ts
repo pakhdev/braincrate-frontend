@@ -3,12 +3,14 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NoteToolbarComponent } from './note-toolbar.component';
 import { NotesService } from '../../../services/notes.service';
-import { noteMock } from '../../../../../mocks/note.mock';
-import { notesServiceMock } from '../../../../../mocks/notes.service.mock';
+import { createNoteMock } from '../../../../../mocks/note.mock';
+import { createNotesServiceMock } from '../../../../../mocks/notes.service.mock';
 
 describe('NoteToolbarComponent', () => {
     let component: NoteToolbarComponent;
     let fixture: ComponentFixture<NoteToolbarComponent>;
+    const noteMock = createNoteMock();
+    const notesServiceMock = createNotesServiceMock();
 
     beforeEach(() => {
         TestBed.configureTestingModule({

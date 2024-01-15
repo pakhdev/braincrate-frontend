@@ -1,8 +1,6 @@
-import { DashboardState } from '../app/dashboard/interfaces/dashboard-state.interface';
-
-export const dashboardStateMock: DashboardState = {
+export const createDashboardStateMock = () => ({
     selectedTags: [1, 2],
     searchWord: '',
     notesType: '',
     page: 0,
-};
+});

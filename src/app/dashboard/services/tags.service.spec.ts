@@ -5,19 +5,21 @@ import { of } from 'rxjs';
 import { DashboardState } from '../interfaces/dashboard-state.interface';
 import { DashboardStateService } from './dashboard-state.service';
 import { TagsService } from './tags.service';
-import { dashboardStateMock } from '../../../mocks/dashboard-state.mock';
-import { dashboardStateServiceMock } from '../../../mocks/dashboard-state.service.mock';
+import { createDashboardStateMock } from '../../../mocks/dashboard-state.mock';
+import { createDashboardStateServiceMock } from '../../../mocks/dashboard-state.service.mock';
 import { httpMock } from '../../../mocks/http.mock';
 
 describe('TagsService', () => {
     let service: TagsService;
+    const dashboardStateMock = createDashboardStateMock();
+    const dashboardStateServiceMock = createDashboardStateServiceMock();
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
                 TagsService,
                 { provide: HttpClient, useValue: httpMock },
-                { provide: DashboardStateService, useValue: { ...dashboardStateServiceMock } },
+                { provide: DashboardStateService, useValue: dashboardStateServiceMock },
             ],
         });
         service = TestBed.inject(TagsService);
