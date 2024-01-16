@@ -19,18 +19,18 @@ export class InfiniteScrollTriggerComponent implements OnInit, OnDestroy {
     private readonly scroll$ = fromEvent(window, 'scroll');
     private scrollSubscription: Subscription | undefined;
 
-    public showLoadingTrigger(): boolean {
-        return !this.notesService.isLoading()
-            && !this.notesService.allNotesLoaded()
-            && this.notesService.notesList().length > 0;
-    }
-
     ngOnInit(): void {
         this.scrollSubscription = this.scroll$.subscribe(() => this.loadNextPage());
     }
 
     ngOnDestroy() {
         this.scrollSubscription?.unsubscribe();
+    }
+
+    public showLoadingTrigger(): boolean {
+        return !this.notesService.isLoading()
+            && !this.notesService.allNotesLoaded()
+            && this.notesService.notesList().length > 0;
     }
 
     private loadNextPage(): void {

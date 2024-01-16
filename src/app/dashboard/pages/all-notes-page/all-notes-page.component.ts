@@ -30,7 +30,6 @@ import { Note } from '../../interfaces/note.interface';
 export class AllNotesPageComponent {
 
     private readonly dashboardStateService = inject(DashboardStateService);
-    private readonly dashboardState = this.dashboardStateService.dashboardState;
     private readonly notesService = inject(NotesService);
 
     get notes(): Note[] {
@@ -38,13 +37,13 @@ export class AllNotesPageComponent {
     }
 
     public showWelcomeMessage(): boolean {
-        return !this.dashboardState.searchWord
+        return !this.dashboardStateService.dashboardState$.value.searchWord
             && !this.notesService.isLoading()
             && this.notesService.notesList().length === 0;
     }
 
     public showEmptySearchResult(): boolean {
-        return this.dashboardState.searchWord.length !== 0
+        return this.dashboardStateService.dashboardState$.value.searchWord.length !== 0
             && !this.notesService.isLoading()
             && this.notesService.notesList().length === 0;
     }

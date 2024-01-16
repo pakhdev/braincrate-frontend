@@ -10,6 +10,9 @@ export const createNotesServiceMock = () => ({
     remove: jasmine.createSpy('remove').and.returnValue(of({})),
     restore: jasmine.createSpy('restore').and.returnValue(of({})),
     markAsReviewed: jasmine.createSpy('markAsReviewed').and.returnValue(of({})),
+    isLoading: jasmine.createSpy('isLoading').and.returnValue(() => false),
+    allNotesLoaded: jasmine.createSpy('allNotesLoaded').and.returnValue(() => false),
+    notesList: jasmine.createSpy('notesList').and.returnValue([]),
 });
 
 function createNoteResponse() {
