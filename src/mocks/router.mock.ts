@@ -14,4 +14,5 @@ export const routerMock = {
         },
     },
     navigate: jasmine.createSpy('navigate').and.returnValue(Promise.resolve(true)),
+    navigateByUrl: jasmine.createSpy('navigateByUrl').and.returnValue(Promise.resolve(true)),
 };
