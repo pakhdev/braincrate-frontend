@@ -53,25 +53,29 @@ https://github.com/pakhdev/braincrate-layout
 ### Detalles de la Aplicación
 <table>
     <tr>
-        <td><img src="https://mir-s3-cdn-cf.behance.net/project_modules/source/698765223817967.67ffab0d98e4d.gif" width="500"/></td>
+        <td><img src="https://mir-s3-cdn-cf.behance.net/project_modules/source/698765223817967.67ffab0d98e4d.gif" 
+        width="300"/></td>
         <td style="vertical-align: top; padding: 25px; width:60%;">
         Navegación por etiquetas: gracias al sistema de filtrado, al seleccionar una etiqueta se muestran 
         únicamente los subtags relacionados con los artículos que la contienen. Además, estos se ordenan por relevancia. Llegar a las notas que necesitas toma solo un par de clics</td>
     </tr>
     <tr>
-        <td><img src="https://mir-s3-cdn-cf.behance.net/project_modules/source/84de9f223817967.67ffab0d98769.gif" width="500"/></td>
+        <td><img src="https://mir-s3-cdn-cf.behance.net/project_modules/source/84de9f223817967.67ffab0d98769.gif" 
+        width="300"/></td>
         <td style="vertical-align: top; padding: 25px;">Gracias al autocompletado, puedes añadir etiquetas 
         existentes de forma muy rápida. Y si aún no existen, basta con escribirlas: se crearán automáticamente sin 
         necesidad de pasos adicionales. ¡Agrega tantas etiquetas cuantas quieras!</td>
     </tr>
     <tr>
-        <td><img src="https://mir-s3-cdn-cf.behance.net/project_modules/source/7fc31d223817967.67ffab0d98248.gif" width="500"/></td>
+        <td><img src="https://mir-s3-cdn-cf.behance.net/project_modules/source/7fc31d223817967.67ffab0d98248.gif" 
+        width="300"/></td>
         <td style="vertical-align: top; padding: 25px;">
             Al crear una nota, elige su nivel de dificultad y el sistema te la mostrará para repaso en intervalos programados desde la sección Repasos. Puedes reiniciar o cancelar los repasos en cualquier momento
         </td>
     </tr>
     <tr>
-        <td><img src="https://mir-s3-cdn-cf.behance.net/project_modules/source/7b14aa223817967.67ffab0d992c2.gif" width="500"/></td>
+        <td><img src="https://mir-s3-cdn-cf.behance.net/project_modules/source/7b14aa223817967.67ffab0d992c2.gif" 
+        width="300"/></td>
         <td style="vertical-align: top; padding: 25px;">
             Al crear una nota, elige su nivel de dificultad y el sistema te la mostrará para repaso en intervalos programados desde la sección Repasos. Puedes reiniciar o cancelar los repasos en cualquier momento
         </td>
