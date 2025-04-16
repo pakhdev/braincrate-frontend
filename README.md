@@ -28,7 +28,7 @@ específicamente para ajustarse a las necesidades del proyecto y lograr una inte
     </td>
   </tr>
   <tr>
-    <td><strong>Back-end</strong><br><a>Repositorio</a></td>
+    <td><strong>Back-end</strong><br><a href="https://github.com/pakhdev/braincrate-backend">Repositorio</a></td>
     <td>
         <li>Basado en TypeScript utilizando NestJS</li>
         <li>Base de datos en MySQL utilizando TypeORM</li>
