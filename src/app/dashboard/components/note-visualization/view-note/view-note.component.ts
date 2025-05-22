@@ -3,20 +3,17 @@ import { NgClass } from '@angular/common';
 
 import { Note } from '../../../interfaces/note.interface';
 import { NoteToolbarComponent } from '../note-toolbar/note-toolbar.component';
-import { ReviewOptionsComponent } from '../review-options/review-options.component';
 import { environments } from '../../../../../environments/environment';
 import { ImageAttributes } from '../../../interfaces/image-attributes.interface';
 import { LargeImageModalComponent } from '../large-image-modal/large-image-modal.component';
 import { SafeHtmlPipe } from '../../../../shared/pipes/trust-html.pipe';
 
 @Component({
-    standalone: true,
     selector: 'view-note',
     templateUrl: './view-note.component.html',
     imports: [
         NgClass,
         NoteToolbarComponent,
-        ReviewOptionsComponent,
         LargeImageModalComponent,
         SafeHtmlPipe,
     ],

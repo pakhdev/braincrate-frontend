@@ -13,7 +13,6 @@ import { EditNoteComponent } from '../../components/note-editing/edit-note/edit-
 import { Note } from '../../interfaces/note.interface';
 
 @Component({
-    standalone: true,
     selector: 'dashboard-review-notes-page',
     templateUrl: './review-notes-page.component.html',
     imports: [
@@ -22,7 +21,7 @@ import { Note } from '../../interfaces/note.interface';
         ReviewsCompletedMessageComponent,
         ViewNoteComponent,
         EditNoteComponent,
-    ],
+    ]
 })
 export class ReviewNotesPageComponent {
 

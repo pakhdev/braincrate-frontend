@@ -16,7 +16,6 @@ import { TagsService } from '../../../services/tags.service';
 import { environments } from '../../../../../environments/environment';
 
 @Component({
-    standalone: true,
     selector: 'edit-note',
     templateUrl: './edit-note.component.html',
     imports: [
@@ -26,7 +25,7 @@ import { environments } from '../../../../../environments/environment';
         FormsModule,
         ContenteditableEditor,
         DynamicButtonTextDirective,
-    ],
+    ]
 })
 export class EditNoteComponent implements OnInit {
 

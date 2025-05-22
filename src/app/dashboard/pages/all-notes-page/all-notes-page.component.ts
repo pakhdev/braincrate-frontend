@@ -15,7 +15,6 @@ import { EditNoteComponent } from '../../components/note-editing/edit-note/edit-
 import { Note } from '../../interfaces/note.interface';
 
 @Component({
-    standalone: true,
     selector: 'dashboard-all-notes-page',
     templateUrl: './all-notes-page.component.html',
     imports: [
@@ -25,7 +24,7 @@ import { Note } from '../../interfaces/note.interface';
         WelcomeMessageComponent,
         ViewNoteComponent,
         EditNoteComponent,
-    ],
+    ]
 })
 export class AllNotesPageComponent {
 

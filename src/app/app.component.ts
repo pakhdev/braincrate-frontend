@@ -5,10 +5,9 @@ import { AuthService } from './auth/services/auth.service';
 import { AuthStatus } from './auth/enums/auth-status.enum';
 
 @Component({
-    standalone: true,
     imports: [RouterOutlet],
     selector: 'app-root',
-    template: '<router-outlet></router-outlet>',
+    template: '<router-outlet></router-outlet>'
 })
 export class AppComponent {
     title = 'BrainCrate';

@@ -23,8 +23,7 @@ import { DynamicButtonTextDirective } from '../../../../shared/directives/dynami
         ]),
     ],
     selector: 'note-toolbar',
-    standalone: true,
-    templateUrl: './note-toolbar.component.html',
+    templateUrl: './note-toolbar.component.html'
 })
 export class NoteToolbarComponent {
     @Input({ required: true }) public note!: Note;

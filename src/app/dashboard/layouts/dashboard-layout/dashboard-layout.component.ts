@@ -25,7 +25,6 @@ import { NotesService } from '../../services/notes.service';
 import { SearchAndPickTagsComponent } from '../../components/panel/search-and-pick-tags/search-and-pick-tags.component';
 
 @Component({
-    standalone: true,
     selector: 'app-dashboard-layout',
     templateUrl: './dashboard-layout.component.html',
     imports: [
@@ -36,7 +35,6 @@ import { SearchAndPickTagsComponent } from '../../components/panel/search-and-pi
         NotesLoadingIndicatorComponent,
         NotesManagementComponent,
         RouterOutlet,
-        SearchAndPickTagsComponent,
     ],
 })
 export class DashboardLayoutComponent implements OnInit, AfterViewChecked, AfterViewInit {

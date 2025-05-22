@@ -12,12 +12,11 @@ import { authServiceMock } from '../../../../../mocks/auth.service.mock';
 describe('ChangePasswordComponent', () => {
 
     @Component({
-        standalone: true,
-        imports: [ChangePasswordComponent],
-        template: `
+    imports: [ChangePasswordComponent],
+    template: `
             <change-password
-                    [showCurrentPasswordInput]="showCurrentPasswordInput"/>`,
-    })
+                    [showCurrentPasswordInput]="showCurrentPasswordInput"/>`
+})
     class TestHostComponent {
         public showCurrentPasswordInput = false;
         @ViewChild(ChangePasswordComponent) public readonly component!: ChangePasswordComponent;

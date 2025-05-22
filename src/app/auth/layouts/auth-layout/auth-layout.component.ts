@@ -3,7 +3,6 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
-    standalone: true,
     selector: 'app-auth-layout',
     templateUrl: './auth-layout.component.html',
     imports: [
@@ -11,7 +10,7 @@ import { CommonModule } from '@angular/common';
         RouterOutlet,
         RouterLink,
         RouterLinkActive,
-    ],
+    ]
 })
 export class AuthLayoutComponent {
 

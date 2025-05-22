@@ -7,14 +7,13 @@ import { ErrorMessageDirective } from '../../../../shared/directives/error-messa
 import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
 
 @Component({
-    standalone: true,
     selector: 'change-password',
     templateUrl: './change-password.component.html',
     imports: [
         ErrorMessageDirective,
         ReactiveFormsModule,
         DynamicButtonTextDirective,
-    ],
+    ]
 })
 export class ChangePasswordComponent {
 

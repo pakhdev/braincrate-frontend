@@ -7,14 +7,13 @@ import { ErrorMessageDirective } from '../../../../shared/directives/error-messa
 import { emailPattern } from '../../../../shared/validators/validators';
 
 @Component({
-    standalone: true,
     selector: 'change-email',
     templateUrl: './change-email.component.html',
     imports: [
         ErrorMessageDirective,
         ReactiveFormsModule,
         DynamicButtonTextDirective,
-    ],
+    ]
 })
 export class ChangeEmailComponent {
 

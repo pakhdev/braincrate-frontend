@@ -7,13 +7,12 @@ import { Difficulty } from '../../../enums/difficulty.enum';
 import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
 
 @Component({
-    standalone: true,
     selector: 'review-options',
     templateUrl: './review-options.component.html',
     imports: [
         DatePipe,
         DynamicButtonTextDirective,
-    ],
+    ]
 })
 export class ReviewOptionsComponent {
     @Input({ required: true }) public note!: Note;

@@ -5,12 +5,11 @@ import { NotesService } from '../../../services/notes.service';
 import { DashboardStateService } from '../../../services/dashboard-state.service';
 
 @Component({
-    standalone: true,
     selector: 'header-navigation',
     templateUrl: './header-navigation.component.html',
     imports: [
         RouterLink,
-    ],
+    ]
 })
 export class HeaderNavigationComponent {
 

@@ -10,12 +10,9 @@ import { WelcomeTagComponent } from '../welcome-tag/welcome-tag.component';
 import { NoResultsTagComponent } from '../no-results-tag/no-results-tag.component';
 
 @Component({
-    standalone: true,
     selector: 'search-and-pick-tags',
     templateUrl: './search-and-pick-tags.component.html',
     imports: [
-        NgIf,
-        NgForOf,
         NgStyle,
         WelcomeTagComponent,
         NoResultsTagComponent,

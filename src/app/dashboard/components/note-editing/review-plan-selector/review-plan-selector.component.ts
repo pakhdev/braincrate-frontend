@@ -8,7 +8,6 @@ import { ClickOutsideDirective } from '../../../../shared/directives/click-outsi
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
-    standalone: true,
     selector: 'review-plan-selector',
     templateUrl: './review-plan-selector.component.html',
     imports: [
@@ -22,7 +21,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
             state('*', style({ opacity: 1, transform: 'scale(1)' })),
             transition('void <=> *', animate('100ms ease-in-out')),
         ]),
-    ],
+    ]
 })
 export class ReviewPlanSelectorComponent {
 

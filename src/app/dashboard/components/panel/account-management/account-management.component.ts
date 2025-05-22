@@ -6,14 +6,13 @@ import { LinkGoogleComponent } from '../link-google/link-google.component';
 import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({
-    standalone: true,
     selector: 'account-management',
     templateUrl: './account-management.component.html',
     imports: [
         ChangePasswordComponent,
         ChangeEmailComponent,
         LinkGoogleComponent,
-    ],
+    ]
 })
 export class AccountManagementComponent {
     private readonly authService = inject(AuthService);

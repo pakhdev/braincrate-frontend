@@ -9,7 +9,6 @@ import { emailPattern } from '../../../shared/validators/validators';
 import { environments } from '../../../../environments/environment';
 
 @Component({
-    standalone: true,
     selector: 'auth-login-page',
     templateUrl: './login-page.component.html',
     imports: [
@@ -17,7 +16,7 @@ import { environments } from '../../../../environments/environment';
         FormsModule,
         ReactiveFormsModule,
         DynamicButtonTextDirective,
-    ],
+    ]
 })
 export class LoginPageComponent {
 

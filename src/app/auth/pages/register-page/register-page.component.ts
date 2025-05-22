@@ -10,7 +10,6 @@ import { DynamicButtonTextDirective } from '../../../shared/directives/dynamic-b
 import { environments } from '../../../../environments/environment';
 
 @Component({
-    standalone: true,
     selector: 'auth-register-page',
     templateUrl: './register-page.component.html',
     imports: [
@@ -18,7 +17,7 @@ import { environments } from '../../../../environments/environment';
         FormsModule,
         ErrorMessageDirective,
         DynamicButtonTextDirective,
-    ],
+    ]
 })
 export class RegisterPageComponent {
 

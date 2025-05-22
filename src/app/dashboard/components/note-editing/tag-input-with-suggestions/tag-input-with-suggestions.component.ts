@@ -6,13 +6,12 @@ import { Tag } from '../../../interfaces/tag.interface';
 import { TagsService } from '../../../services/tags.service';
 
 @Component({
-    standalone: true,
     selector: 'tag-input-with-suggestions',
     templateUrl: './tag-input-with-suggestions.component.html',
     imports: [
         NgClass,
         FormsModule,
-    ],
+    ]
 })
 export class TagInputWithSuggestionsComponent implements OnInit {
 
