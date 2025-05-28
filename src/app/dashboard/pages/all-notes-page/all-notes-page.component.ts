@@ -1,8 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { NgClass } from '@angular/common';
 
-import { NotesService } from '../../services/notes.service';
-import { DashboardStateService } from '../../services/dashboard-state.service';
 import {
     InfiniteScrollTriggerComponent,
 } from '../../components/note-visualization/infinite-scroll-trigger/infinite-scroll-trigger.component';
@@ -13,6 +11,7 @@ import { WelcomeMessageComponent } from '../../components/note-visualization/wel
 import { ViewNoteComponent } from '../../components/note-visualization/view-note/view-note.component';
 import { EditNoteComponent } from '../../components/note-editing/edit-note/edit-note.component';
 import { Note } from '../../interfaces/note.interface';
+import { AppStore } from '../../../shared/store/app.store';
 
 @Component({
     selector: 'dashboard-all-notes-page',
@@ -24,27 +23,11 @@ import { Note } from '../../interfaces/note.interface';
         WelcomeMessageComponent,
         ViewNoteComponent,
         EditNoteComponent,
-    ]
+    ],
 })
 export class AllNotesPageComponent {
-
-    private readonly dashboardStateService = inject(DashboardStateService);
-    private readonly notesService = inject(NotesService);
-
-    get notes(): Note[] {
-        return this.notesService.notesList();
-    }
-
-    public showWelcomeMessage(): boolean {
-        return !this.dashboardStateService.dashboardState$.value.searchWord
-            && !this.notesService.isLoading()
-            && this.notesService.notesList().length === 0;
-    }
-
-    public showEmptySearchResult(): boolean {
-        return this.dashboardStateService.dashboardState$.value.searchWord.length !== 0
-            && !this.notesService.isLoading()
-            && this.notesService.notesList().length === 0;
-    }
-
+    private readonly appStore = inject(AppStore);
+    public readonly notes: Signal<Note[]> = computed(() => this.appStore.notes.list());
+    public readonly showWelcomeMessage: Signal<boolean> = computed(() => this.appStore.showWelcomeMessage());
+    public readonly showEmptySearchResult: Signal<boolean> = computed(() => this.appStore.showEmptySearchResult());
 }

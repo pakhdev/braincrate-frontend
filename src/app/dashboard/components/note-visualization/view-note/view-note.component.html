@@ -1,13 +1,13 @@
 <div class="note__header">
-    <div class="note__title" [ngClass]="{ 'note__title-removed': note.removedAt !== null }">
+    <div class="note__title" [ngClass]="{ 'note__title-removed': isRemoved() }">
         <a>{{ note.title }}</a>
     </div>
     <div class="note__header-toolbar-container">
         <note-toolbar [note]="note"/>
     </div>
 </div>
-<div class="note__content" [innerHTML]="content | safeHtml"></div>
-<div class="note__tags">{{ tags }}</div>
+<div class="note__content" [innerHTML]="content() | safeHtml"></div>
+<div class="note__tags">{{ tags() }}</div>
 <div class="note__footer">
     <div class="note__toolbar">
         <note-toolbar [note]="note"/>

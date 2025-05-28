@@ -1,6 +1,6 @@
 import { Tag } from '../../../dashboard/interfaces/tag.interface';
 
 export interface TagsState {
-    tags: Tag[];
+    list: Tag[];
     isLoading: boolean;
 }

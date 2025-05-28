@@ -1,6 +1,5 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-
-import { DashboardStateService } from '../../../services/dashboard-state.service';
+import { AppStore } from '../../../../shared/store/app.store';
 
 @Component({
     standalone: true,
@@ -8,27 +7,18 @@ import { DashboardStateService } from '../../../services/dashboard-state.service
     templateUrl: './search-notes.component.html',
 })
 export class SearchNotesComponent implements OnInit {
-
     @ViewChild('searchInput') private readonly searchInput: ElementRef | undefined;
-    private readonly dashboardStateService = inject(DashboardStateService);
-    private readonly dashboardState$ = this.dashboardStateService.dashboardState$;
+    private readonly appStore = inject(AppStore);
 
     public searchNotes(): void {
-        const stateSearchWord = this.dashboardState$.value.searchWord;
-        if (this.searchInput?.nativeElement.value === stateSearchWord) return;
-
-        this.dashboardStateService.setState({
-            notesType: 'all',
-            selectedTags: [],
-            searchWord: this.searchInput?.nativeElement.value,
-            page: 1,
-        });
-
+        const inputValue = this.searchInput?.nativeElement.value;
+        const searchNotesTerm = this.appStore.dashboard.searchNotesTerm();
+        if (inputValue === searchNotesTerm) return;
+        this.appStore.setSearchNotesTerm(inputValue);
     }
 
     ngOnInit(): void {
-        this.dashboardState$.subscribe(state => {
-            if (this.searchInput && !state.searchWord) this.searchInput.nativeElement.value = '';
-        });
+        if (this.searchInput && !this.appStore.dashboard.searchNotesTerm())
+            this.searchInput.nativeElement.value = '';
     }
 }

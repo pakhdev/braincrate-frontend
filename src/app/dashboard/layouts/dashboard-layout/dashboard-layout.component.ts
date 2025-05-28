@@ -7,22 +7,22 @@ import {
     ViewChild,
     inject,
     Inject,
-    NgZone, WritableSignal, signal,
+    NgZone, WritableSignal, signal, computed, Signal, effect,
 } from '@angular/core';
 import { DOCUMENT, NgClass } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-import { fromEvent } from 'rxjs';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, fromEvent } from 'rxjs';
 
 import { AccountManagementComponent } from '../../components/panel/account-management/account-management.component';
-import { DashboardStateService } from '../../services/dashboard-state.service';
 import { HeaderNavigationComponent } from '../../components/panel/header-navigation/header-navigation.component';
 import { LeftMenuComponent } from '../../components/panel/left-menu/left-menu.component';
 import {
     NotesLoadingIndicatorComponent,
 } from '../../components/note-visualization/notes-loading-indicator/notes-loading-indicator.component';
 import { NotesManagementComponent } from '../../components/panel/notes-management/notes-management.component';
+import { AppStore } from '../../../shared/store/app.store';
 import { NotesService } from '../../services/notes.service';
-import { SearchAndPickTagsComponent } from '../../components/panel/search-and-pick-tags/search-and-pick-tags.component';
+import { TagsService } from '../../services/tags.service';
 
 @Component({
     selector: 'app-dashboard-layout',
@@ -39,28 +39,51 @@ import { SearchAndPickTagsComponent } from '../../components/panel/search-and-pi
 })
 export class DashboardLayoutComponent implements OnInit, AfterViewChecked, AfterViewInit {
 
+    private readonly appStore = inject(AppStore);
+    private readonly router = inject(Router);
+    private readonly notesService = inject(NotesService);
+    private readonly tagsService = inject(TagsService);
+    private readonly documentBody!: HTMLElement;
+    private readonly ngZone = inject(NgZone);
     @ViewChild('contentMobileHeader') private readonly contentMobileHeaderDiv!: ElementRef;
     @ViewChild('mobilePanelFixer') private readonly mobilePanelFixerDiv!: ElementRef;
     @ViewChild('notesContainer') private readonly notesContainerDiv!: ElementRef;
     @ViewChild('panelCopyright') private readonly panelCopyrightDiv!: ElementRef;
     @ViewChild('panelTopMargin') private readonly panelTopMarginDiv!: ElementRef;
     @ViewChild('stickyPanelContainer') private readonly stickyPanelContainerDiv!: ElementRef;
-    private readonly dashboardStateService = inject(DashboardStateService);
-    private readonly dashboardState$ = this.dashboardStateService.dashboardState$;
-    private readonly documentBody!: HTMLElement;
-    private readonly ngZone = inject(NgZone);
-    private readonly notesService = inject(NotesService);
 
     private lastScrollPos = 0;
     private panelMinHeightCorrection: null | number = null;
     private panelState: 'bottom' | 'up' | 'margin' | boolean = false;
     public openedSection: WritableSignal<string> = signal('notes');
+    public readonly areNotesLoading: Signal<boolean> = computed(() => this.appStore.notes.isLoading());
+
+    private readonly reloadTags = effect(() => {
+        this.tagsService.getTags(
+            this.appStore.dashboard.selectedTags(),
+            this.appStore.dashboard.searchNotesTerm(),
+            this.appStore.dashboard.notesType(),
+        ).subscribe((tags) => {
+            this.appStore.setTagsList(tags);
+        });
+    });
+
+    private readonly scrollToTop = effect(() => {
+        if (!this.appStore.dashboard.notesType()) return;
+        if (this.appStore.dashboard.page() === 1) window.scrollTo(0, 0);
+    });
 
     constructor(@Inject(DOCUMENT) private document: Document) {
         this.documentBody = document.body;
-        this.dashboardState$.subscribe((dashboardState) => {
-            if (!dashboardState.notesType) return;
-            if (dashboardState.page === 1) window.scrollTo(0, 0);
+        this.subscribeToRouter();
+    }
+
+    public ngOnInit(): void {
+        this.ngZone.runOutsideAngular(() => {
+            const scroll$ = fromEvent(window, 'scroll');
+            scroll$.subscribe(() => {
+                this.handlePanelClasses();
+            });
         });
     }
 
@@ -70,6 +93,7 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
         const viewPortHeight = window.innerHeight;
 
         if (viewPortHeight >= stickyPanelHeight) {
+
             let minHeightCorrection = viewPortHeight - notesContainerHeight + 10;
             if (minHeightCorrection < 30) minHeightCorrection = 30;
             if (minHeightCorrection > 100) minHeightCorrection = 100;
@@ -78,6 +102,7 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
             this.panelMinHeightCorrection = minHeightCorrection;
             this.panelCopyrightDiv.nativeElement.style.position = 'sticky';
             this.panelCopyrightDiv.nativeElement.style.bottom = '35px';
+
         } else if (this.panelMinHeightCorrection !== null) {
             this.stickyPanelContainerDiv.nativeElement.removeAttribute('style');
             this.panelCopyrightDiv.nativeElement.removeAttribute('style');
@@ -128,15 +153,6 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
         return direction;
     }
 
-    public ngOnInit(): void {
-        this.ngZone.runOutsideAngular(() => {
-            const scroll$ = fromEvent(window, 'scroll');
-            scroll$.subscribe(() => {
-                this.handlePanelClasses();
-            });
-        });
-    }
-
     public ngAfterViewChecked(): void {
         this.handlePanelClasses();
     }
@@ -165,12 +181,21 @@ export class DashboardLayoutComponent implements OnInit, AfterViewChecked, After
         this.mobilePanelFixerDiv.nativeElement.removeAttribute('style');
     }
 
-    public showLoadingNotes(): boolean {
-        return this.notesService.isLoading();
-    }
-
     public activateManagementViewHandler(view: 'notes' | 'account'): void {
         this.openedSection.set(view);
+    }
+
+    private subscribeToRouter(): void {
+        this.router.events
+            .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+            .subscribe((event: NavigationEnd) => {
+                const url = event.url.split('?')[0];
+                if ((url === '/dashboard/all' || url === '/dashboard') && this.appStore.dashboard.notesType() !== 'all') {
+                    this.appStore.setNotesType('all');
+                } else if (url === '/dashboard/for-review' && this.appStore.dashboard.notesType() !== 'for-review') {
+                    this.appStore.setNotesType('for-review');
+                }
+            });
     }
 
 }

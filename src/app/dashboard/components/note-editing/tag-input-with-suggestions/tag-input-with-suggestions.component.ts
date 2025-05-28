@@ -1,4 +1,15 @@
-import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    Component, computed,
+    ElementRef,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output, Signal,
+    signal,
+    ViewChild,
+    WritableSignal,
+} from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,7 +22,7 @@ import { TagsService } from '../../../services/tags.service';
     imports: [
         NgClass,
         FormsModule,
-    ]
+    ],
 })
 export class TagInputWithSuggestionsComponent implements OnInit {
 
@@ -20,20 +31,13 @@ export class TagInputWithSuggestionsComponent implements OnInit {
     @ViewChild('tagInputElement') public tagInputElement!: ElementRef<HTMLInputElement>;
 
     private readonly tagsService: TagsService = inject(TagsService);
-    private readonly tagsList: Tag[] = [];
+    private readonly tagsList: WritableSignal<Tag[]> = signal([]);
 
     public selectedSuggestionIdx: number = -1;
     public inputText = '';
-
-    ngOnInit(): void {
-        this.tagsService.getTags([], '', 'all').subscribe(tags => {
-            this.tagsList.push(...tags);
-        });
-    }
-
-    get suggestedTags(): Tag[] {
+    public readonly suggestedTags: Signal<Tag[]> = computed(() => {
         if (!this.inputText.length) return [];
-        const suggestedTags = this.tagsList
+        const suggestedTags = this.tagsList()
             .filter(
                 tag => tag.name
                     .toLowerCase()
@@ -42,12 +46,16 @@ export class TagInputWithSuggestionsComponent implements OnInit {
             .slice(0, 5);
         if (suggestedTags.length === 1 && suggestedTags[0].name === this.inputText) return [];
         return suggestedTags;
+    });
+
+    ngOnInit(): void {
+        this.tagsService.getTags([], '', 'all').subscribe(tags => this.tagsList.set(tags));
     }
 
     public isSelectedSuggestion(name: string): boolean {
-        if (!this.suggestedTags.length || !this.suggestedTags[this.selectedSuggestionIdx])
+        if (!this.suggestedTags().length || !this.suggestedTags()[this.selectedSuggestionIdx])
             return false;
-        return name === this.suggestedTags[this.selectedSuggestionIdx].name;
+        return name === this.suggestedTags()[this.selectedSuggestionIdx].name;
     }
 
     public manageKeyPress(event: KeyboardEvent): void {
@@ -64,13 +72,13 @@ export class TagInputWithSuggestionsComponent implements OnInit {
             return;
         }
 
-        if (!this.suggestedTags.length) return;
+        if (!this.suggestedTags().length) return;
         this.selectedSuggestionIdx = -1;
     }
 
     public onEnter(): void {
         if (this.selectedSuggestionIdx !== -1) {
-            this.onInsertTag.emit(this.suggestedTags[this.selectedSuggestionIdx].name);
+            this.onInsertTag.emit(this.suggestedTags()[this.selectedSuggestionIdx].name);
         } else if (this.inputText.length > 1) {
             this.onInsertTag.emit(this.inputText);
         } else {
@@ -87,7 +95,7 @@ export class TagInputWithSuggestionsComponent implements OnInit {
 
     private selectNextSuggestion(): void {
         const nextIdx = this.selectedSuggestionIdx + 1;
-        if (nextIdx < this.suggestedTags.length) {
+        if (nextIdx < this.suggestedTags().length) {
             this.selectedSuggestionIdx = nextIdx;
         }
     }

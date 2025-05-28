@@ -5,9 +5,9 @@
     (keydown)="manageKeyPress($event)"
     [(ngModel)]="inputText"
     placeholder="añadir etiqueta">
-@if (suggestedTags.length) {
+@if (suggestedTags().length) {
     <div class="tag-suggestions">
-        @for (tag of suggestedTags;track $index) {
+        @for (tag of suggestedTags(); track $index) {
             <div class="tag-suggestions__item"
                  [ngClass]="{ 'tag-suggestions__item--selected': isSelectedSuggestion(tag.name) }"
                  (click)="selectSuggestion(tag.name)">{{ tag.name }}

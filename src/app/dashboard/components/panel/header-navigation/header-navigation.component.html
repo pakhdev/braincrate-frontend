@@ -10,7 +10,7 @@
             </div>
         }
 
-        @if (isNoteCreationActive) {
+        @if (isNoteCreationActive()) {
             <div
                 class="button-close-form button" (click)="cancelNoteCreation()">
                 <span class="icon-create"></span>
@@ -24,7 +24,7 @@
             </div>
         }
 
-        @if (isReviewSectionActive) {
+        @if (isReviewSectionActive()) {
             <div
                 class="button-review-notes button" routerLink="/dashboard/all">
                 <span class="icon-review"></span>
@@ -34,7 +34,7 @@
             <div
                 class="button-review-notes button" routerLink="/dashboard/for-review">
                 <span class="icon-review"></span>
-                Repasar{{ notesForReviewCount }}
+                Repasar{{ notesForReviewCount() }}
             </div>
         }
 

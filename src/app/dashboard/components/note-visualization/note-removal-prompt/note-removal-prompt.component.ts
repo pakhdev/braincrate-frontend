@@ -6,11 +6,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
     templateUrl: './note-removal-prompt.component.html',
 })
 export class NoteRemovalPromptComponent {
-    @Output()
-    public closeConfirmation: EventEmitter<void> = new EventEmitter<void>();
-
-    @Output()
-    public removeNote: EventEmitter<void> = new EventEmitter<void>();
+    @Output() public closeConfirmation: EventEmitter<void> = new EventEmitter<void>();
+    @Output() public removeNote: EventEmitter<void> = new EventEmitter<void>();
 
     close(): void {
         this.closeConfirmation.emit();

@@ -1,6 +1,8 @@
 export interface DashboardState {
     selectedTags: number[];
-    searchWord: string;
+    searchNotesTerm: string;
+    searchTagsTerm: string;
     notesType: string;
     page: number;
+    preserveState: boolean;
 }

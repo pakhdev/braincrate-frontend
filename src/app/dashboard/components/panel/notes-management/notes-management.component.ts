@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { SearchNotesComponent } from '../search-notes/search-notes.component';
 import { SearchAndPickTagsComponent } from '../search-and-pick-tags/search-and-pick-tags.component';
 
@@ -9,7 +8,7 @@ import { SearchAndPickTagsComponent } from '../search-and-pick-tags/search-and-p
     imports: [
         SearchNotesComponent,
         SearchAndPickTagsComponent,
-    ]
+    ],
 })
 export class NotesManagementComponent {
 

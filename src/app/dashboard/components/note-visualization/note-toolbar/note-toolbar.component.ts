@@ -1,4 +1,4 @@
-import { Component, inject, Input, signal } from '@angular/core';
+import { Component, computed, inject, Input, Signal, signal } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
 import { Note } from '../../../interfaces/note.interface';
@@ -7,6 +7,7 @@ import { NoteRemovalPromptComponent } from '../note-removal-prompt/note-removal-
 import { ReviewOptionsComponent } from '../review-options/review-options.component';
 import { ClickOutsideDirective } from '../../../../shared/directives/click-outside.directive';
 import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
+import { AppStore } from '../../../../shared/store/app.store';
 
 @Component({
     imports: [
@@ -23,11 +24,12 @@ import { DynamicButtonTextDirective } from '../../../../shared/directives/dynami
         ]),
     ],
     selector: 'note-toolbar',
-    templateUrl: './note-toolbar.component.html'
+    templateUrl: './note-toolbar.component.html',
 })
 export class NoteToolbarComponent {
     @Input({ required: true }) public note!: Note;
 
+    private appStore = inject(AppStore);
     private readonly notesService = inject(NotesService);
     public isRemoveConfirmationVisible = signal(false);
     public isReviewOptionsVisible = signal(false);
@@ -50,25 +52,23 @@ export class NoteToolbarComponent {
         this.isRemoveConfirmationVisible.set(false);
     }
 
-    public isNoteRemoved(): boolean {
-        return this.note.removedAt !== null;
-    }
+    public readonly isNoteRemoved: Signal<boolean> = computed(() => this.note.removedAt !== null);
 
-    public showMarkAsReviewedButton(): boolean {
+    public readonly showMarkAsReviewedButton: Signal<boolean> = computed(() => {
         if (!this.note.nextReviewAt) return false;
         return new Date(this.note.nextReviewAt) <= new Date()
             && !this.isNoteRemoved()
             && this.note.reviewsLeft > 0
             && !this.showDeleteInsteadReview();
-    }
+    });
 
-    public showDeleteInsteadReview(): boolean {
+    public readonly showDeleteInsteadReview: Signal<boolean> = computed(() => {
         if (!this.note.nextReviewAt) return false;
         return new Date(this.note.nextReviewAt) <= new Date()
             && !this.isNoteRemoved()
             && this.note.reviewsLeft === 1
             && this.note.removeAfterReviews;
-    }
+    });
 
     public remove(): void {
         this.isDeleting.set(true);
@@ -95,6 +95,6 @@ export class NoteToolbarComponent {
     }
 
     public edit(): void {
-        this.notesService.updateNoteList(this.note.id, { editMode: true });
+        this.appStore.updateNote(this.note.id, { editMode: true });
     }
 }

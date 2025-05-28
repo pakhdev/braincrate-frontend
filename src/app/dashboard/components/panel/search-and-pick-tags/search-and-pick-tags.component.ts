@@ -1,13 +1,9 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
-import { pairwise } from 'rxjs';
-import { NgForOf, NgIf, NgStyle } from '@angular/common';
-
-import { TagsService } from '../../../services/tags.service';
-import { DashboardStateService } from '../../../services/dashboard-state.service';
-import { DashboardState } from '../../../interfaces/dashboard-state.interface';
+import { AppStore } from '../../../../shared/store/app.store';
+import { Component, computed, effect, inject, Signal } from '@angular/core';
+import { NgStyle } from '@angular/common';
+import { NoResultsTagComponent } from '../no-results-tag/no-results-tag.component';
 import { Tag } from '../../../interfaces/tag.interface';
 import { WelcomeTagComponent } from '../welcome-tag/welcome-tag.component';
-import { NoResultsTagComponent } from '../no-results-tag/no-results-tag.component';
 
 @Component({
     selector: 'search-and-pick-tags',
@@ -19,89 +15,37 @@ import { NoResultsTagComponent } from '../no-results-tag/no-results-tag.componen
     ],
 })
 export class SearchAndPickTagsComponent {
+    private appStore = inject(AppStore);
+    private visibleTagLimit = 30;
 
-    @ViewChild('searchTagsInput') private readonly searchTagsInput!: ElementRef;
-    private readonly tagsService = inject(TagsService);
-    private readonly dashboardStateService = inject(DashboardStateService);
-    private readonly dashboardState = this.dashboardStateService.dashboardState;
-    private readonly dashboardState$ =
-        this.dashboardStateService.dashboardState$.pipe(pairwise());
-    private readonly visibleTagLimit = 30;
-    private searchTagsTerm: string = '';
+    public searchTagsTerm: Signal<string> = computed(() => this.appStore.dashboard.searchTagsTerm());
+    public areTagsLoading: Signal<boolean> = computed(() => this.appStore.tags.isLoading());
+    public selectedTags: Signal<Tag[]> = computed(() => this.appStore.selectedTags());
+    public notSelectedTags: Signal<Tag[]> = computed(() => this.appStore.notSelectedTags());
+    public filteredNotSelectedTags: Signal<Tag[]> = computed(() => {
+        return this.notSelectedTags()
+            .filter(tag => tag.name.toLowerCase().includes(this.appStore.dashboard.searchTagsTerm()))
+            .splice(0, this.visibleTagLimit);
+    });
+    public showNoResultsTag: Signal<boolean> = computed((): boolean => {
+        return (!this.appStore.dashboard.searchTagsTerm() || !this.appStore.dashboard.searchNotesTerm())
+            && !this.appStore.selectedTags().length
+            && !this.filteredNotSelectedTags().length
+            && !this.appStore.tags.isLoading();
+    });
+    public showWelcomeTag = computed((): boolean => {
+            return !this.appStore.tags.list().length
+                && !this.appStore.tags.isLoading()
+                && !this.appStore.dashboard.searchNotesTerm()
+                && this.appStore.dashboard.notesType() === 'all';
+        },
+    );
 
-    constructor() {
-        this.dashboardState$.subscribe(([previous, current]) => {
-            if (this.isSearchTagsInputToBeCleared(previous, current)) {
-                this.searchTagsInput.nativeElement.value = '';
-                this.searchTagsTerm = '';
-            }
-        });
-    }
-
-    get selectedTags(): Tag[] {
-        return this.tagsService.selectedTags;
-    }
-
-    get notSelectedTags(): Tag[] {
-        let tags = this.tagsService.notSelectedTags;
-        if (this.searchTagsTerm) tags = tags.filter(tag => tag.name.toLowerCase().includes(this.searchTagsTerm));
-        return tags.splice(0, this.visibleTagLimit);
-    }
-
-    get areTagsLoading(): boolean {
-        return this.tagsService.isLoading();
-    }
-
-    public selectTag(tagId: number): void {
-        const selectedTags = this.dashboardStateService.selectedTags;
-        if (selectedTags.includes(tagId)) return;
-
-        this.dashboardStateService.setState({
-            page: 1,
-            selectedTags: [
-                ...selectedTags,
-                tagId,
-            ],
-        });
-    }
-
-    public unselectTag(tagId: number): void {
-        const selectedTags = this.dashboardStateService.selectedTags;
-        if (!selectedTags.includes(tagId)) return;
-
-        this.dashboardStateService.setState({
-            page: 1,
-            selectedTags: selectedTags.filter(id => id !== tagId),
-        });
-    }
-
-    public searchTags(): void {
-        const searchTerm = this.searchTagsInput.nativeElement.value;
-        if (!searchTerm && !this.searchTagsTerm) return;
-        this.searchTagsTerm = searchTerm.toLowerCase();
-    }
-
-    public showWelcomeTag(): boolean {
-        return this.tagsService.tags().length === 0
-            && !this.searchTagsTerm
-            && !this.tagsService.isLoading()
-            && !this.dashboardState.searchWord
-            && this.dashboardState.notesType === 'all';
-    }
-
-    public showNoResultsTag(): boolean {
-        return !(this.tagsService.isLoading()
-            || this.notSelectedTags.length > 0
-            || (!this.searchTagsTerm && !this.dashboardState.searchWord));
-    }
-
-    private isSearchTagsInputToBeCleared(previous: DashboardState, current: DashboardState): boolean {
-        if (previous.notesType !== current.notesType) return true;
-        if (previous.searchWord !== current.searchWord) return true;
-
-        const previousTagIds = previous.selectedTags.slice().sort();
-        const currentTagIds = current.selectedTags.slice().sort();
-        return JSON.stringify(previousTagIds) !== JSON.stringify(currentTagIds);
-    }
-
+    public selectTag = (tagId: number) => this.appStore.selectTag(tagId);
+    public unselectTag = (tagId: number) => this.appStore.unselectTag(tagId);
+    public setSearchTagsTerm = (event: Event) => {
+        const searchTerm = (event.target as HTMLInputElement).value;
+        if (!searchTerm && !this.appStore.dashboard.searchTagsTerm()) return;
+        this.appStore.setSearchTagsTerm(searchTerm.toLowerCase());
+    };
 }

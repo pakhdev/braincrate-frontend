@@ -1,6 +1,6 @@
 <div
     (click)="togglePopup()"
-    class="editor-toolbar__review-select-button">{{ selectedPlanName }}
+    class="editor-toolbar__review-select-button">{{ selectedPlanName() }}
 </div>
 @if (isPopupVisible()) {
     <div @popup (clickOutside)="togglePopup()" class="review-settings">
@@ -8,7 +8,7 @@
             <div>Planes de repaso</div>
             <div class="review-settings__option-green">Intervalos (días)</div>
         </div>
-        @for (reviewPlan of reviewPlans;track $index) {
+        @for (reviewPlan of reviewPlans; track $index) {
             <div class="review-settings__option-row"
                  [ngClass]="{ 'review-settings__option-row--selected': isDifficultySelected(reviewPlan.difficulty)}"
                  (click)="setDifficulty(reviewPlan.difficulty)">

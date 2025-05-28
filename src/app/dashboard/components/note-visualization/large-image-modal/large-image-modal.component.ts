@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, computed, EventEmitter, Input, Output, Signal } from '@angular/core';
 import { environments } from '../../../../../environments/environment';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
@@ -18,10 +18,7 @@ export class LargeImageModalComponent {
     @Output() public close: EventEmitter<void> = new EventEmitter();
     @Input({ required: true }) public src!: string;
     private readonly imagesUrl = environments.imagesUrl;
-
-    public get largeImageSrc(): string {
-        return `${ this.imagesUrl }/${ this.src }`;
-    }
+    public readonly largeImageSrc: Signal<string> = computed(() => `${ this.imagesUrl }/${ this.src }`);
 
     public closeModal(): void {
         this.close.emit();

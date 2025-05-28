@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { ContenteditableEditor } from '../../../../shared/directives/contenteditable-editor.directive';
-import { DashboardStateService } from '../../../services/dashboard-state.service';
 import { Difficulty } from '../../../enums/difficulty.enum';
 import { DynamicButtonTextDirective } from '../../../../shared/directives/dynamic-button-text.directive';
 import { Note } from '../../../interfaces/note.interface';
@@ -12,8 +11,8 @@ import { NotesService } from '../../../services/notes.service';
 import { ReviewPlanSelectorComponent } from '../review-plan-selector/review-plan-selector.component';
 import { SelectedTagComponent } from '../selected-tag/selected-tag.component';
 import { TagInputWithSuggestionsComponent } from '../tag-input-with-suggestions/tag-input-with-suggestions.component';
-import { TagsService } from '../../../services/tags.service';
 import { environments } from '../../../../../environments/environment';
+import { AppStore } from '../../../../shared/store/app.store';
 
 @Component({
     selector: 'edit-note',
@@ -25,19 +24,16 @@ import { environments } from '../../../../../environments/environment';
         FormsModule,
         ContenteditableEditor,
         DynamicButtonTextDirective,
-    ]
+    ],
 })
 export class EditNoteComponent implements OnInit {
-
+    private readonly appStore = inject(AppStore);
     @Input() public note?: Note;
     @ViewChild('iconsContainer') public readonly iconsContainer!: ElementRef;
 
-    private readonly dashboardStateService = inject(DashboardStateService);
-    private readonly dashboardState = this.dashboardStateService.dashboardState;
     private readonly imagesUrl = environments.imagesUrl;
     private readonly notesService = inject(NotesService);
     private readonly router = inject(Router);
-    private readonly tagsService = inject(TagsService);
 
     private isNewNote: boolean = false;
     private id: number = 0;
@@ -51,7 +47,7 @@ export class EditNoteComponent implements OnInit {
 
     ngOnInit(): void {
         if (!this.note) {
-            this.tagNames = [...this.tagsService.selectedTags.map(tag => tag.name)];
+            this.tagNames = [...this.appStore.selectedTags().map(tag => tag.name)];
             this.isNewNote = true;
             return;
         }
@@ -108,7 +104,7 @@ export class EditNoteComponent implements OnInit {
     private createNote(body: NoteManipulationBody): void {
         this.notesService.createNoteQuery(body).subscribe((response) => {
             this.isLoading.set(false);
-            const currentSection = this.dashboardState.notesType;
+            const currentSection = this.appStore.dashboard.notesType();
 
             if (response.errors) {
                 console.error(response.errors);
@@ -121,11 +117,12 @@ export class EditNoteComponent implements OnInit {
             }
 
             if (response.note)
-                this.notesService.prependNoteToList(response.note);
+                this.appStore.prependNoteToList(response.note);
             if (response.tags)
-                this.tagsService.updateTags(response.tags);
+                this.appStore.updateTagsList(response.tags);
 
-            this.router.navigate(['dashboard', 'all'], { queryParams: { preserveState: 'true' } });
+            this.appStore.setPreserveState(true);
+            this.router.navigate(['dashboard', 'all']);
         });
     }
 
@@ -137,7 +134,7 @@ export class EditNoteComponent implements OnInit {
                 return;
             }
             if (response.note)
-                this.notesService.updateNoteList(this.id, {
+                this.appStore.updateNote(this.id, {
                     title: response.note.title,
                     content: response.note.content,
                     difficulty: response.note.difficulty,
@@ -146,7 +143,7 @@ export class EditNoteComponent implements OnInit {
                     editMode: false,
                 });
             if (response.tags)
-                this.tagsService.updateTags(response.tags);
+                this.appStore.updateTagsList(response.tags);
         });
     }
 

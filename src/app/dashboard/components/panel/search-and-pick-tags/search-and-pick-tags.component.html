@@ -4,21 +4,22 @@
         type="text"
         class="panel__text-input"
         placeholder="Buscar etiquetas"
-        (keydown.enter)="searchTags()">
+        [value]="searchTagsTerm()"
+        (input)="setSearchTagsTerm($event)">
     <span class="icon-tag"></span>
 </div>
 <div class="panel__tags-container">
-    @for (tag of selectedTags;track tag.id) {
+    @for (tag of selectedTags(); track tag.id) {
         <div
             (click)="unselectTag(tag.id)"
             class="panel__tag panel__tag--selected">{{ tag.name }}
         </div>
     }
 
-    @for (tag of notSelectedTags;track tag.id) {
+    @for (tag of filteredNotSelectedTags(); track tag.id) {
         <div
             (click)="selectTag(tag.id)"
-            [ngStyle]="{ opacity: areTagsLoading ? 0.5 : 1 }"
+            [ngStyle]="{ opacity: areTagsLoading() ? 0.5 : 1 }"
             class="panel__tag">{{ tag.name }}
         </div>
     }

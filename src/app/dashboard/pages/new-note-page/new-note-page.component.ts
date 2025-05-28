@@ -5,9 +5,7 @@ import { EditNoteComponent } from '../../components/note-editing/edit-note/edit-
 @Component({
     selector: 'dashboard-new-note-page',
     templateUrl: './new-note-page.component.html',
-    imports: [
-        EditNoteComponent,
-    ]
+    imports: [EditNoteComponent],
 })
 export class NewNotePageComponent {
 

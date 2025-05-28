@@ -3,14 +3,17 @@ import { Router, RouterOutlet } from '@angular/router';
 
 import { AuthService } from './auth/services/auth.service';
 import { AuthStatus } from './auth/enums/auth-status.enum';
+import { AppStore } from './shared/store/app.store';
 
 @Component({
     imports: [RouterOutlet],
     selector: 'app-root',
-    template: '<router-outlet></router-outlet>'
+    template: '<router-outlet></router-outlet>',
 })
 export class AppComponent {
     title = 'BrainCrate';
+
+    private readonly appStore = inject(AppStore);
     private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
 

@@ -4,17 +4,18 @@ import { catchError, map, Observable, of, tap, throwError } from 'rxjs';
 import { computed, inject, Injectable, signal } from '@angular/core';
 
 import { AuthStatus } from '../enums/auth-status.enum';
-import { DashboardStateService } from '../../dashboard/services/dashboard-state.service';
 import { UserCredentials } from '../interfaces';
+import { AppStore } from '../../shared/store/app.store';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthService {
+
+    private readonly appStore = inject(AppStore);
     private readonly http = inject(HttpClient);
     private _currentUser = signal<UserCredentials | null>(null);
     private _authStatus = signal<AuthStatus>(AuthStatus.checking);
-    private dashboardStateService = inject(DashboardStateService);
 
     public currentUser = computed(() => this._currentUser());
     public authStatus = computed(() => this._authStatus());
@@ -37,12 +38,7 @@ export class AuthService {
         return this.http.post('/auth/login', body)
             .pipe(
                 map(() => this.setAuthentication()),
-                tap(() => this.dashboardStateService.setState({
-                    selectedTags: [0],
-                    searchWord: '',
-                    notesType: '',
-                    page: 0,
-                })),
+                tap(() => this.appStore.resetDashboard()),
                 catchError(err => throwError(() => err.error.errorCode)),
             );
     }

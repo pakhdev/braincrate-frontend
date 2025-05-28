@@ -1,12 +1,21 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, Renderer2, signal, WritableSignal } from '@angular/core';
-import { NgClass } from '@angular/common';
-
-import { Note } from '../../../interfaces/note.interface';
-import { NoteToolbarComponent } from '../note-toolbar/note-toolbar.component';
-import { environments } from '../../../../../environments/environment';
+import {
+    AfterViewInit,
+    Component, computed,
+    ElementRef,
+    inject,
+    Input,
+    Renderer2,
+    Signal,
+    signal,
+    WritableSignal,
+} from '@angular/core';
 import { ImageAttributes } from '../../../interfaces/image-attributes.interface';
 import { LargeImageModalComponent } from '../large-image-modal/large-image-modal.component';
+import { NgClass } from '@angular/common';
+import { Note } from '../../../interfaces/note.interface';
+import { NoteToolbarComponent } from '../note-toolbar/note-toolbar.component';
 import { SafeHtmlPipe } from '../../../../shared/pipes/trust-html.pipe';
+import { environments } from '../../../../../environments/environment';
 
 @Component({
     selector: 'view-note',
@@ -19,23 +28,17 @@ import { SafeHtmlPipe } from '../../../../shared/pipes/trust-html.pipe';
     ],
 })
 export class ViewNoteComponent implements AfterViewInit {
-
     @Input({ required: true }) public note!: Note;
     private readonly renderer = inject(Renderer2);
     private readonly elementRef = inject(ElementRef);
     private readonly imagesUrl = environments.imagesUrl;
-    public openLargeImageSrc: WritableSignal<string | null> = signal(null);
+    public readonly openLargeImageSrc: WritableSignal<string | null> = signal(null);
+    public readonly content: Signal<string> = computed(() => this.note.content);
+    public readonly tags: Signal<string> = computed(() => this.note.tags.map(tag => tag.name).join(', '));
+    public readonly isRemoved: Signal<boolean> = computed(() => this.note.removedAt !== null);
 
     ngAfterViewInit() {
         this.configureImages();
-    }
-
-    public get content(): string {
-        return this.note.content;
-    }
-
-    public get tags(): string {
-        return this.note.tags.map(tag => tag.name).join(', ');
     }
 
     public enlargeImage(largeUrl: string): void {
@@ -90,5 +93,4 @@ export class ViewNoteComponent implements AfterViewInit {
 
         return { id, src, largeImage };
     }
-
 }

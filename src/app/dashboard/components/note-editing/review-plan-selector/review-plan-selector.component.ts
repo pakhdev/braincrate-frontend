@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
+import { Component, computed, EventEmitter, Input, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -21,7 +21,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
             state('*', style({ opacity: 1, transform: 'scale(1)' })),
             transition('void <=> *', animate('100ms ease-in-out')),
         ]),
-    ]
+    ],
 })
 export class ReviewPlanSelectorComponent {
 
@@ -37,11 +37,10 @@ export class ReviewPlanSelectorComponent {
         { name: 'No repasar', difficulty: Difficulty.None, intervals: [] },
     ];
 
-    public isPopupVisible: WritableSignal<boolean> = signal(false);
+    public readonly isPopupVisible: WritableSignal<boolean> = signal(false);
 
-    get selectedPlanName(): string {
-        return this.reviewPlans.find(plan => plan.difficulty === this.selectedDifficulty)?.name || '';
-    }
+    public readonly selectedPlanName: Signal<string> = computed(() =>
+        this.reviewPlans.find(plan => plan.difficulty === this.selectedDifficulty)?.name || '');
 
     public togglePopup(): void {
         this.isPopupVisible.set(!this.isPopupVisible());

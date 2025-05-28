@@ -1,4 +1,4 @@
-import { Component, computed, inject, Input, signal } from '@angular/core';
+import { Component, computed, inject, Input, Signal, signal, WritableSignal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 
 import { NotesService } from '../../../services/notes.service';
@@ -12,17 +12,16 @@ import { DynamicButtonTextDirective } from '../../../../shared/directives/dynami
     imports: [
         DatePipe,
         DynamicButtonTextDirective,
-    ]
+    ],
 })
 export class ReviewOptionsComponent {
-    @Input({ required: true }) public note!: Note;
-
-    public isResettingReviews = signal(false);
-    public isCancelingReviews = signal(false);
-
     private readonly notesService = inject(NotesService);
-
-    public reviewsCount = computed(() => {
+    @Input({ required: true }) public note!: Note;
+    public readonly isResettingReviews: WritableSignal<boolean> = signal(false);
+    public readonly isCancelingReviews: WritableSignal<boolean> = signal(false);
+    public readonly showCancelReviewsButton: Signal<boolean> = computed(() => this.hasProgrammedReviews() && !this.note.removeAfterReviews);
+    public readonly showResetReviewsButton: Signal<boolean> = computed(() => this.hasProgrammedReviews());
+    public readonly reviewsCount: Signal<string> = computed(() => {
         let totalReviews: number;
 
         switch (this.note.difficulty) {
@@ -45,14 +44,11 @@ export class ReviewOptionsComponent {
             ? 'Nada pendiente'
             : totalReviews - this.note.reviewsLeft + '/' + totalReviews;
     });
-
-    public showCancelReviewsButton(): boolean {
-        return this.areProgrammedReviews() && !this.note.removeAfterReviews;
-    }
-
-    public showResetReviewsButton(): boolean {
-        return this.areProgrammedReviews();
-    }
+    private readonly hasProgrammedReviews: Signal<boolean> = computed(() => {
+        return this.note.nextReviewAt !== null
+            && this.note.reviewsLeft > 0
+            && this.note.removedAt === null;
+    });
 
     public resetReviews(): void {
         if (this.isResettingReviews()) return;
@@ -70,11 +66,5 @@ export class ReviewOptionsComponent {
             complete: () => this.isCancelingReviews.set(false),
             error: () => this.isCancelingReviews.set(false),
         });
-    }
-
-    private areProgrammedReviews(): boolean {
-        return this.note.nextReviewAt !== null
-            && this.note.reviewsLeft > 0
-            && this.note.removedAt === null;
     }
 }

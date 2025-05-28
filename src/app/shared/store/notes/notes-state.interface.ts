@@ -1,9 +1,9 @@
 import { Note } from '../../../dashboard/interfaces/note.interface';
 
 export interface NotesState {
-    notesList: Note[];
+    list: Note[];
     isLoading: boolean;
     allNotesLoaded: boolean;
-    countNotesForReview: number;
+    notesForReviewCounter: number;
     notesOffsetCorrection: number;
 }

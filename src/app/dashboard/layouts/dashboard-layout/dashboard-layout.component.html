@@ -1,5 +1,5 @@
 <div class="dashboard-page-centering">
-    <div class="main-container" [ngClass]="{ 'loading-background-animation': showLoadingNotes() }">
+    <div class="main-container" [ngClass]="{ 'loading-background-animation': areNotesLoading() }">
         <div #mobilePanelFixer class="mobile-panel-fixer-container">
             <div class="mobile-panel-background">
 
@@ -40,7 +40,7 @@
                     (openMobilePanel)="openMobilePanel()"/>
             </div>
             <div #notesContainer class="notes-container">
-                @if (showLoadingNotes()) {
+                @if (areNotesLoading()) {
                     <notes-loading-indicator/>
                 }
                 <router-outlet/>

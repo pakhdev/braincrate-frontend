@@ -5,7 +5,7 @@
     <no-results-message/>
 }
 
-@for (note of notes;track note.id) {
+@for (note of notes(); track note.id) {
     <div class="note" [ngClass]="{ 'note-removed': note.removedAt !== null }">
         @if (note.editMode) {
             <edit-note [note]="note"/>
